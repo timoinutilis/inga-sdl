@@ -1,0 +1,79 @@
+-----kernel.c
+
+Hauptlisting
+
+
+-----vp.c
+
+"virtual processor" Interpreter für den IngaSkript-Byte-Code
+
+
+-----grafik.c
+
+Funktionen zum Laden und Anzeigen von Grafiken, sowie Ein- und Ausblendefunktionen
+
+
+-----animation.c
+
+Enthält Funktionen zum Laden und Anzeigen von Animationselementen
+
+
+-----Textausgabe.c
+
+Funktionen zur Texteinblendung
+
+
+-----menu.c
+
+Menübildschirm und Spielstände
+
+
+-----
+elem_felder.c
+elem_objekte.c
+elem_personen.c
+elem_zierden.c
+
+Diverse Verwaltungs- und Anzeigefunktionen für die verschiedenen Elementtypen
+
+
+-----dialog.c
+
+Funktionen für die Multiple-Choice-Auswahl für Dialoge
+
+
+-----inventar.c
+
+Funktionen zur Verwaltung des Inventars
+
+
+-----sequenzen.c
+
+Funktion zum Abspielen der Sequenzdateien
+
+
+-----ingasound.c
+
+Schnittstelle zwischen der Engine und "IngaSound" zum Abspielen von Samples und Sprachausgabe
+
+
+-----ingaaudiocd.c
+
+Funktionen zum Abspielen einer Audio-CD
+
+
+-----ingaplayer.c
+
+Funktionen zum Abspielen von Musik-Modules
+
+
+-----cache.c
+
+Ersetzt die dos-Funktionen Open(), Close(), Read() durch Versionen mit RAM-Cache
+
+
+-----strukturen.h
+
+Enthält alle Inga-spezifischen structs
+
+

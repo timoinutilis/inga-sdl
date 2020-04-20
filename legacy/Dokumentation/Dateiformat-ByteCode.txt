@@ -1,0 +1,26 @@
+***story.inga - Datei***
+
+In dieser Datei wird einfach nur jeder Befehl des original Skriptes nacheinander im Byte-Code geschrieben. Es gibt keinen Header.
+Eine Skriptzeile wird folgendermaßen übersetzt:
+1. Die Nummer des Befehls als UWORD
+2. Parameter nacheinander.
+   · normaler Wert als UWORD
+   · Variable als UWORD mit Nummer+32768
+   · Sprungadresse als ULONG
+   · String als ULONG-Adresse, zeigt auf die Textposition in der Datei "story.itxt"
+
+
+***story.itxt - Datei***
+
+Diese Datei enthält einfach alle Strings mit 0-Byte am Ende.
+
+
+***IngaBefehle - Datei***
+
+Diese Textdatei enthält die Befehlsliste von IngaSkript, die zum "Kompilieren" gebraucht wird.
+Die erste Zeile ist die Versionszeile (z.B.: "$VER: 8d"). Danach folgen die Befehle, wobei jede Zeile aus der Befehlsnummer besteht, dann kommt der Befehlsname, ggf. gefolgt von den Parametern. Bei den Parametern steht je ein Buchstabe für einen Parameter:
+W: Ein Zahlenwert bzw. eine Variablennummer
+T: Ein String
+V: Adresse auf nächsten "Abschluss"-Befehl (Parameter steht nicht im Skript!)
+R: Adresse auf den vorherigen "Beginn"-Befehl (Parameter steht nicht im Skript!)
+S: Adresse auf Sprungmarke

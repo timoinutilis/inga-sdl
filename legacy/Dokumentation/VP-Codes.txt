@@ -1,0 +1,108 @@
+Höchste Nummer: 98
+
+Einrichtung(1) ortid, ibmdat, cdnum
+EinrichtungEnde(2)
+LadeBild(83) T
+Feld(3) id, bez, x, y, xx, yy, gehx, gehy, def
+FeldUnsichtbar(4) id
+Zierde(5) id, ibmdat, x, y, def
+ZierdeUnsichtbar(6) id
+Objekt(7) id, bez, ibmdat, x, y, gehx, gehy, def
+ObjektUnsichtbar(8) id
+ObjektStandbild(62) id, num
+ObjektStandbildAus(63) id
+Person(9) id, bez, ipedat, x, y, def
+PersonProg(82) id, adr
+PersonUnsichtbar(10) id
+PersonVgMaskeAktiv(93) id
+PersonVgMaskeInaktiv(94) id
+Vorladen(76) id, iannum
+Freigeben(77) id, iannum
+Sichtbar(42) ortid, id
+Unsichtbar(18) ortid, id
+ilkOben(72) x, y, xx, yy
+ilkUnten(73) x, y, xx, yy
+LadeLaufkarte(74) ilkdat
+
+Laufschnelligkeit(70) id, wert
+Laufe(11) id, x, y, iannum
+LaufeDirekt(12) id, x, y, iannum
+Rede(13) id, iannum, text, textid
+Anim(14) id, iannum, mal
+Richtung(15) id, richtung
+StelleAuf(16) id, x, y
+Aktiv(30) id
+Inaktiv(31) id
+RichteAuf(32) id, id
+RichteAufeinander(33) id, id
+WechsleHauptIPE(92) ipedat
+PersonenAnims(56) iannum, iannum
+StandAnim(87) id, iannum
+NichtsAnim(84) zeit, iannum, mal
+LöscheNichtsAnims(86)
+
+WarteAuf(17) id
+WarteAufAnim(37) id, iannum
+
+CDNummer(47) cdnum
+CDStopp(48)
+LadeSound(61) sid, snddat
+EntferneSound(64) sid
+SpieleSound(66) sid, vol, pan
+SpieleSoundSchleife(95) sid, vol, pan
+StoppeSoundSchleife(96)
+SoundVolPan(97) vol, pan
+SpieleModule(67) moddat, modnum, neu
+StoppeModule(68)
+ModuleWeiter(69)
+
+Farben(59) randfar, sprechfar, bezfar, meldfar, dialogfar, dialoghellfar
+Schleife(19) adr
+Springe(19) adr
+SpringeOrt(29) adr, x, y, richtung
+SpringeSub(43) adr
+Zurück(44)
+SpringeEsc(57) adr
+EscEnde(58)
+WennGleich(20) wert, wert, adr
+WennAnders(21) wert, wert, adr
+WennGrößer(50) wert, wert, adr
+WennKleiner(51) wert, wert, adr
+WennSichtbar(45) ortid, id, adr
+WennUnsichtbar(46) ortid, id, adr
+WennBenutzt(26) uid, adr
+WennBenutztMit(27) uid, uid, adr
+WennAngesehen(28) uid, adr
+WennGesagt(40) aid, adr
+Stopp(22)
+Liste(23)
+ListeAbbruch(88)
+SetzeVariable(35) vid, wert
+InitVariable(36) vid, wert
+AddVariable(52) vid, wert
+SubVariable(53) vid, wert
+MulVariable(54) vid, wert
+DivVariable(55) vid, wert
+Zähle(85) vid, wert, wert
+DivRestVariable(91) vid, wert
+HolePersVars(60) id, vid, vid, vid, vid
+ExternAmigaOS(65) bef
+ExternAmigaDE(49) bef
+ExternMacOS(71) bef
+ExternMorphOS(98) bef
+--(75)
+Leistensperre(78)
+LeistensperreAus(79)
+Menü(80)
+SpielEnde(81)
+HoleZeit(89) vid, vid
+ZeitDiff(90) wert, wert, vid, vid
+
+InventarNehmen(24) uid, bez, iandat
+InventarWeg(25) uid
+AnimNehmen(41) id, id, iannum, framenum
+
+Sequenz(34) dat
+
+Antwort(38) aid, text, wert, wert
+Dialogliste(39)

@@ -1,0 +1,80 @@
+Definition:
+[X] (
+    BYTE beispiel
+)
+
+=>bedeutet, dass der Teil zwischen den Klammern X mal wiederholt
+wird.
+
+
+---------------------------------------------
+ipe (Personendatei)
+---------------------------------------------
+
+UWORD anzahl
+[anzahl] (
+    UWORD id
+    UBYTE richtung (0=links, 1=rechts, 2=vorne, 3=hinten)
+    char datei[31]
+)
+*eof*
+
+
+---------------------------------------------
+ilk (Laufkartendatei)
+---------------------------------------------
+
+UBYTE oben[640]
+UBYTE unten[640]
+*eof*
+
+Die y-Werte in "oben" und "unten" sind halbiert, da sie sonst nicht
+in die Variablen passen würden (Screenhöhe=480!).
+
+
+---------------------------------------------
+ibm (Grafikdatei)
+---------------------------------------------
+
+ULONG kopf (=0x49424D38, ="IBM8")
+UWORD breite
+UWORD höhe
+UBYTE tiefe (=8)
+UWORD bpr (Bytes pro Reihe; Vielfaches von 16!)
+UBYTE flags (Bit 1: Datei enthält Farbpalette; Bit 2: Datei enthält Animationsdaten)
+ULONG reserve1
+ULONG reserve2
+falls flags-Bit 1, dann: UBYTE rgb[768] (entspricht dem CMAP-Chunk einer ILBM-Datei)
+falls flags-Bit 2, dann: struct IAN (siehe unten!)
+[bpr*höhe] (
+    UBYTE pixel (Grafikdaten im Chunky-Format)
+)
+*eof*
+
+struct IAN {
+    UWORD frames (Anzahl der Frames)
+    UWORD richtung (0=Horizontal, 1=Vertikal)
+    UWORD breite
+    UWORD höhe
+    UWORD greifpunktx
+    UWORD greifpunkty
+    UWORD ppf (Pausen pro Frame)
+    ULONG reserve1
+    ULONG reserve2
+}
+
+
+---------------------------------------------
+imp (Maskendatei)
+---------------------------------------------
+
+ULONG kopf (=0x494D5031, ="IMP1")
+UWORD breite
+UWORD höhe
+ULONG bytes (Größe der Bitplane, Breite als Vielfaches von 16 berechnen!)
+[bytes] (
+    UBYTE 8pixel (Maskenbitplane)
+)
+*eof*
+
+Beachten: Nicht ein Byte pro Pixel, sondern ein Bit pro Pixel.
