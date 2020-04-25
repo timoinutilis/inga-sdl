@@ -14,6 +14,9 @@ struct IBMColor {
     Uint8 b;
 };
 
+struct Animation *CreateAnimationFromStrip(int numFrames, enum StripDirection direction, int width, int height, int pivotX, int pivotY, int ticks);
+void FreeAnimation(struct Animation *animation);
+
 struct Image *LoadImageIBM(const char *filename, SDL_Renderer *renderer, SDL_Palette *defaultPalette, bool createMask) {
     struct Image *image = NULL;
     
@@ -36,6 +39,7 @@ struct Image *LoadImageIBM(const char *filename, SDL_Renderer *renderer, SDL_Pal
             SDL_ReadBE32(file);
             
             struct IBMColor *ibmColors = NULL;
+            struct Animation *animation = NULL;
             if (flags & 1) {
                 // color palette
                 ibmColors = calloc(256, sizeof(struct IBMColor));
@@ -56,6 +60,8 @@ struct Image *LoadImageIBM(const char *filename, SDL_Renderer *renderer, SDL_Pal
                 Uint16 pausesPerFrame = SDL_ReadBE16(file);
                 SDL_ReadBE32(file);
                 SDL_ReadBE32(file);
+                int ticks = (pausesPerFrame + 1) * 50; // based on 20 FPS
+                animation = CreateAnimationFromStrip(numFrames, direction, frameWidth, frameHeight, pivotX, pivotY, ticks);
             }
             
             size_t size = bytesPerRow * height;
@@ -101,6 +107,7 @@ struct Image *LoadImageIBM(const char *filename, SDL_Renderer *renderer, SDL_Pal
                         image = calloc(1, sizeof(struct Image));
                         image->texture = texture;
                         image->palette = copiedPalette;
+                        image->animation = animation;
                         image->width = width;
                         image->height = height;
                     }
@@ -110,6 +117,9 @@ struct Image *LoadImageIBM(const char *filename, SDL_Renderer *renderer, SDL_Pal
             }
             if (ibmColors) {
                 free(ibmColors);
+            }
+            if (animation && !image) {
+                FreeAnimation(animation);
             }
         }
         SDL_RWclose(file);
@@ -121,6 +131,7 @@ void FreeImage(struct Image *image) {
     if (!image) return;
     SDL_DestroyTexture(image->texture);
     SDL_FreePalette(image->palette);
+    FreeAnimation(image->animation);
     free(image);
 }
 
@@ -129,4 +140,49 @@ void DrawImage(struct Image *image, SDL_Renderer *renderer, int x, int y) {
     SDL_Rect src = {0, 0, image->width, image->height};
     SDL_Rect dst = {x, y, image->width, image->height};
     SDL_RenderCopy(renderer, image->texture, &src, &dst);
+}
+
+struct Animation *CreateAnimationFromStrip(int numFrames, enum StripDirection direction, int width, int height, int pivotX, int pivotY, int ticks) {
+    struct Animation *animation = NULL;
+    
+    struct Frame *frames = calloc(numFrames, sizeof(struct Frame));
+    if (frames) {
+        SDL_Rect rect = {0, 0, width, height};
+        for (int i = 0; i < numFrames; i++) {
+            struct Frame *frame = &frames[i];
+            frame->sourceRect = rect;
+            frame->pivotX = pivotX;
+            frame->pivotY = pivotY;
+            frame->ticks = ticks;
+            switch (direction) {
+                case StripDirectionHorizontal:
+                    rect.x += width + 1;
+                    break;
+                case StripDirectionVertical:
+                    rect.y += height + 1;
+                    break;
+            }
+        }
+        animation = calloc(1, sizeof(struct Animation));
+        if (animation) {
+            animation->numFrames = numFrames;
+            animation->frames = frames;
+        } else {
+            free(frames);
+        }
+    }
+    return animation;
+}
+
+void FreeAnimation(struct Animation *animation) {
+    if (!animation) return;
+    free(animation->frames);
+    free(animation);
+}
+
+void DrawAnimationFrame(struct Image *image, SDL_Renderer *renderer, int x, int y, int index) {
+    if (!image || !image->animation) return;
+    struct Frame *frame = &image->animation->frames[index];
+    SDL_Rect dst = {x - frame->pivotX, y - frame->pivotY, frame->sourceRect.w, frame->sourceRect.h};
+    SDL_RenderCopy(renderer, image->texture, &frame->sourceRect, &dst);
 }

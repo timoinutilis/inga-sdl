@@ -36,6 +36,8 @@ int main(int argc, const char * argv[]) {
     int mouseY = 0;
     
     while (!quit) {
+        unsigned long ticks = SDL_GetTicks();
+        
         while (SDL_PollEvent(&event)) {
             switch (event.type) {
                 case SDL_QUIT:
@@ -51,7 +53,7 @@ int main(int argc, const char * argv[]) {
         SDL_RenderClear(renderer);
         
         DrawImage(backgroundImage, renderer, 0, 0);
-        DrawImage(characterImage, renderer, mouseX, mouseY);
+        DrawAnimationFrame(characterImage, renderer, mouseX, mouseY, (ticks / 200) % 4);
         
         SDL_RenderPresent(renderer);
     }
