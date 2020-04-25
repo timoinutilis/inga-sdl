@@ -11,6 +11,8 @@
 		929EDBD6244E32BD00DC64D9 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = 929EDBD5244E32BD00DC64D9 /* main.c */; };
 		929EDBE0244E46E300DC64D9 /* SDL2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 929EDBDF244E46E300DC64D9 /* SDL2.framework */; };
 		929EDBE1244E46E300DC64D9 /* SDL2.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 929EDBDF244E46E300DC64D9 /* SDL2.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		92ABBAD924543AB800218313 /* Image.c in Sources */ = {isa = PBXBuildFile; fileRef = 92ABBAD824543AB800218313 /* Image.c */; };
+		92ABBADB2454545A00218313 /* game in Resources */ = {isa = PBXBuildFile; fileRef = 92ABBADA2454545A00218313 /* game */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -34,6 +36,9 @@
 		929EDBD5244E32BD00DC64D9 /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
 		929EDBD7244E32BD00DC64D9 /* Inga_macOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Inga_macOS.entitlements; sourceTree = "<group>"; };
 		929EDBDF244E46E300DC64D9 /* SDL2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL2.framework; path = ../../../../../../Library/Frameworks/SDL2.framework; sourceTree = "<group>"; };
+		92ABBAD724543AB800218313 /* Image.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Image.h; sourceTree = "<group>"; };
+		92ABBAD824543AB800218313 /* Image.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = Image.c; sourceTree = "<group>"; };
+		92ABBADA2454545A00218313 /* game */ = {isa = PBXFileReference; lastKnownFileType = folder; name = game; path = ../../game; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -51,6 +56,7 @@
 		929EDBC0244E32BA00DC64D9 = {
 			isa = PBXGroup;
 			children = (
+				92ABBADA2454545A00218313 /* game */,
 				929EDBDD244E457600DC64D9 /* sources */,
 				929EDBCB244E32BA00DC64D9 /* Inga macOS */,
 				929EDBCA244E32BA00DC64D9 /* Products */,
@@ -80,6 +86,8 @@
 			isa = PBXGroup;
 			children = (
 				929EDBD5244E32BD00DC64D9 /* main.c */,
+				92ABBAD724543AB800218313 /* Image.h */,
+				92ABBAD824543AB800218313 /* Image.c */,
 			);
 			name = sources;
 			path = ../../sources;
@@ -151,6 +159,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				92ABBADB2454545A00218313 /* game in Resources */,
 				929EDBD0244E32BD00DC64D9 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -163,6 +172,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				929EDBD6244E32BD00DC64D9 /* main.c in Sources */,
+				92ABBAD924543AB800218313 /* Image.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

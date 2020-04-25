@@ -18,6 +18,7 @@
 //
 
 #include <SDL2/SDL.h>
+#include "Image.h"
 
 int main(int argc, const char * argv[]) {
     SDL_Init(SDL_INIT_VIDEO);
@@ -28,19 +29,35 @@ int main(int argc, const char * argv[]) {
     SDL_Event event;
     int quit = 0;
     
+    struct Image *backgroundImage = LoadImageIBM("game/BitMaps/HafenL.ibm", renderer, NULL, false);
+    struct Image *characterImage = LoadImageIBM("game/BitMaps/ErmLaufenLinks.ibm", renderer, backgroundImage->palette, true);
+    
+    int mouseX = 0;
+    int mouseY = 0;
+    
     while (!quit) {
         while (SDL_PollEvent(&event)) {
             switch (event.type) {
                 case SDL_QUIT:
                     quit = 1;
                     break;
+                case SDL_MOUSEMOTION:
+                    mouseX = event.motion.x;
+                    mouseY = event.motion.y;
+                    break;
             }
         }
         
         SDL_RenderClear(renderer);
         
+        DrawImage(backgroundImage, renderer, 0, 0);
+        DrawImage(characterImage, renderer, mouseX, mouseY);
+        
         SDL_RenderPresent(renderer);
     }
+    
+    FreeImage(characterImage);
+    FreeImage(backgroundImage);
     
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
