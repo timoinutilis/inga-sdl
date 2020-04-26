@@ -25,6 +25,7 @@
 #include <SDL2/SDL.h>
 #include "Config.h"
 #include "Image.h"
+#include "Utils.h"
 
 enum ImageSide {
     ImageSideLeft,
@@ -33,23 +34,23 @@ enum ImageSide {
     ImageSideBack
 };
 
-struct ImageSetItem {
+typedef struct ImageSetItem {
     int id;
     enum ImageSide side;
     char filename[FILE_NAME_SIZE];
     struct Image *image;
-};
+} ImageSetItem;
 
-struct ImageSet {
+typedef struct ImageSet {
     int numItems;
     struct ImageSetItem *items;
     SDL_Renderer *renderer;
     SDL_Palette *defaultPalette;
     bool createsMasks;
-};
+} ImageSet;
 
-struct ImageSet *LoadImageSetIPE(const char *filename, SDL_Renderer *renderer, SDL_Palette *defaultPalette, bool createMasks);
-void FreeImageSet(struct ImageSet *imageSet);
-struct Image *GetImageFromSet(struct ImageSet *imageSet, int id, enum ImageSide side);
+ImageSet *LoadImageSetIPE(const char *filename, SDL_Renderer *renderer, SDL_Palette *defaultPalette, bool createMasks);
+void FreeImageSet(ImageSet *imageSet);
+Image *GetImageFromSet(ImageSet *imageSet, int id, Vector direction);
 
 #endif /* ImageSet_h */

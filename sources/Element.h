@@ -26,29 +26,44 @@
 #include "Config.h"
 #include "Image.h"
 #include "ImageSet.h"
+#include "Utils.h"
 
-struct Element {
+enum ElementAction {
+    ElementActionIdle,
+    ElementActionMove,
+    ElementActionTalk,
+    ElementActionAnimate
+};
+
+typedef struct Element {
     int id;
-    float x;
-    float y;
+    Vector position;
     SDL_Rect selectionRect;
-    int targetX;
-    int targetY;
+    Vector target;
     bool isVisible;
     char name[ELEMENT_NAME_SIZE];
     struct Image *image;
     int frameIndex;
     int frameTicks;
     struct ImageSet *imageSet;
-    enum ImageSide side;
+    int imageId;
+    Vector direction;
+    enum ElementAction action;
+    Vector movingTo;
+    float speed;
     struct Element *next;
-};
+} Element;
 
-struct Element *CreateElement(int id);
-void FreeElement(struct Element *element);
-void UpdateElement(struct Element *element, int deltaTicks);
-void DrawElement(struct Element *element, SDL_Renderer *renderer);
-bool IsPointInElement(struct Element *element, int x, int y);
-void SetElementImageFromSet(struct Element *element, int imageId);
+Element *CreateElement(int id);
+void FreeElement(Element *element);
+void UpdateElement(Element *element, int deltaTicks);
+void DrawElement(Element *element, SDL_Renderer *renderer);
+bool IsPointInElement(Element *element, int x, int y);
+
+void ElementStop(Element *element);
+void ElementLookTo(Element *element, int x, int y, int imageId);
+void ElementMoveTo(Element *element, int x, int y, int imageId);
+void ElementTalk(Element *element, const char *text, int imageId);
+void ElementAnimate(Element *element, int imageId);
 
 #endif /* Element_h */

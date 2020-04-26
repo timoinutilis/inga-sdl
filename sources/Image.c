@@ -19,17 +19,17 @@
 
 #include "Image.h"
 
-struct IBMColor {
+typedef struct IBMColor {
     Uint8 r;
     Uint8 g;
     Uint8 b;
-};
+} IBMColor;
 
-struct Animation *CreateAnimationFromStrip(int numFrames, enum StripDirection direction, int width, int height, int pivotX, int pivotY, int ticks);
-void FreeAnimation(struct Animation *animation);
+Animation *CreateAnimationFromStrip(int numFrames, enum StripDirection direction, int width, int height, int pivotX, int pivotY, int ticks);
+void FreeAnimation(Animation *animation);
 
-struct Image *LoadImageIBM(const char *filename, SDL_Renderer *renderer, SDL_Palette *defaultPalette, bool createMask) {
-    struct Image *image = NULL;
+Image *LoadImageIBM(const char *filename, SDL_Renderer *renderer, SDL_Palette *defaultPalette, bool createMask) {
+    Image *image = NULL;
     
     char path[FILENAME_MAX];
     sprintf(path, "game/BitMaps/%s.ibm", filename);
@@ -52,15 +52,15 @@ struct Image *LoadImageIBM(const char *filename, SDL_Renderer *renderer, SDL_Pal
             SDL_ReadBE32(file);
             SDL_ReadBE32(file);
             
-            struct IBMColor *ibmColors = NULL;
-            struct Animation *animation = NULL;
+            IBMColor *ibmColors = NULL;
+            Animation *animation = NULL;
             if (flags & 1) {
                 // color palette
-                ibmColors = calloc(256, sizeof(struct IBMColor));
+                ibmColors = calloc(256, sizeof(IBMColor));
                 if (ibmColors) {
-                    SDL_RWread(file, ibmColors, sizeof(struct IBMColor), 256);
+                    SDL_RWread(file, ibmColors, sizeof(IBMColor), 256);
                 } else {
-                    SDL_RWseek(file, sizeof(struct IBMColor) * 256, RW_SEEK_CUR);
+                    SDL_RWseek(file, sizeof(IBMColor) * 256, RW_SEEK_CUR);
                 }
             }
             if (flags & 2) {
@@ -94,7 +94,7 @@ struct Image *LoadImageIBM(const char *filename, SDL_Renderer *renderer, SDL_Pal
                         SDL_Color colors[surfacePalette->ncolors];
                         for (int i = 0; i < surfacePalette->ncolors; i++) {
                             SDL_Color *sdlColor = &colors[i];
-                            struct IBMColor *ibmColor = &ibmColors[i];
+                            IBMColor *ibmColor = &ibmColors[i];
                             sdlColor->r = ibmColor->r;
                             sdlColor->g = ibmColor->g;
                             sdlColor->b = ibmColor->b;
@@ -118,7 +118,7 @@ struct Image *LoadImageIBM(const char *filename, SDL_Renderer *renderer, SDL_Pal
                     if (!texture) {
                         printf("LoadImageIBM: Create texture failed\n");
                     } else {
-                        image = calloc(1, sizeof(struct Image));
+                        image = calloc(1, sizeof(Image));
                         image->texture = texture;
                         image->palette = copiedPalette;
                         image->animation = animation;
@@ -141,7 +141,7 @@ struct Image *LoadImageIBM(const char *filename, SDL_Renderer *renderer, SDL_Pal
     return image;
 }
 
-void FreeImage(struct Image *image) {
+void FreeImage(Image *image) {
     if (!image) return;
     SDL_DestroyTexture(image->texture);
     SDL_FreePalette(image->palette);
@@ -149,21 +149,21 @@ void FreeImage(struct Image *image) {
     free(image);
 }
 
-void DrawImage(struct Image *image, SDL_Renderer *renderer, int x, int y) {
+void DrawImage(Image *image, SDL_Renderer *renderer, Vector position) {
     if (!image) return;
     SDL_Rect src = {0, 0, image->width, image->height};
-    SDL_Rect dst = {x, y, image->width, image->height};
+    SDL_Rect dst = {position.x, position.y, image->width, image->height};
     SDL_RenderCopy(renderer, image->texture, &src, &dst);
 }
 
-struct Animation *CreateAnimationFromStrip(int numFrames, enum StripDirection direction, int width, int height, int pivotX, int pivotY, int ticks) {
-    struct Animation *animation = NULL;
+Animation *CreateAnimationFromStrip(int numFrames, enum StripDirection direction, int width, int height, int pivotX, int pivotY, int ticks) {
+    Animation *animation = NULL;
     
-    struct Frame *frames = calloc(numFrames, sizeof(struct Frame));
+    Frame *frames = calloc(numFrames, sizeof(Frame));
     if (frames) {
         SDL_Rect rect = {0, 0, width, height};
         for (int i = 0; i < numFrames; i++) {
-            struct Frame *frame = &frames[i];
+            Frame *frame = &frames[i];
             frame->sourceRect = rect;
             frame->pivotX = pivotX;
             frame->pivotY = pivotY;
@@ -177,7 +177,7 @@ struct Animation *CreateAnimationFromStrip(int numFrames, enum StripDirection di
                     break;
             }
         }
-        animation = calloc(1, sizeof(struct Animation));
+        animation = calloc(1, sizeof(Animation));
         if (animation) {
             animation->numFrames = numFrames;
             animation->frames = frames;
@@ -188,15 +188,15 @@ struct Animation *CreateAnimationFromStrip(int numFrames, enum StripDirection di
     return animation;
 }
 
-void FreeAnimation(struct Animation *animation) {
+void FreeAnimation(Animation *animation) {
     if (!animation) return;
     free(animation->frames);
     free(animation);
 }
 
-void DrawAnimationFrame(struct Image *image, SDL_Renderer *renderer, int x, int y, int index) {
+void DrawAnimationFrame(Image *image, SDL_Renderer *renderer, Vector position, int index) {
     if (!image || !image->animation) return;
-    struct Frame *frame = &image->animation->frames[index];
-    SDL_Rect dst = {x - frame->pivotX, y - frame->pivotY, frame->sourceRect.w, frame->sourceRect.h};
+    Frame *frame = &image->animation->frames[index];
+    SDL_Rect dst = {position.x - frame->pivotX, position.y - frame->pivotY, frame->sourceRect.w, frame->sourceRect.h};
     SDL_RenderCopy(renderer, image->texture, &frame->sourceRect, &dst);
 }

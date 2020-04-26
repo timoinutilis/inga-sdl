@@ -31,30 +31,26 @@ int main(int argc, const char * argv[]) {
     SDL_Event event;
     int quit = 0;
     
-    struct Location *location = CreateLocation(1, "HafenL", renderer);
+    Location *location = CreateLocation(1, "HafenL", renderer);
     
-    struct Element *deco1 = CreateElement(1);
+    Element *deco1 = CreateElement(1);
     deco1->image = LoadImageIBM("HafenWasserL", renderer, location->image->palette, false);
-    deco1->x = 210;
-    deco1->y = 440;
+    deco1->position = MakeVector(210, 440);
     AddElement(location, deco1);
     
-    struct Element *deco2 = CreateElement(2);
+    Element *deco2 = CreateElement(2);
     deco2->image = LoadImageIBM("HafenWasserLa", renderer, location->image->palette, false);
-    deco2->x = 0;
-    deco2->y = 450;
+    deco2->position = MakeVector(0, 450);
     AddElement(location, deco2);
     
-    struct Element *deco3 = CreateElement(3);
-    deco3->imageSet = LoadImageSetIPE("Koenigsbote", renderer, location->image->palette, true);
-    deco3->x = 360;
-    deco3->y = 380;
-    deco3->side = ImageSideFront;
-    SetElementImageFromSet(deco3, 1);
-    AddElement(location, deco3);
+    Element *person = CreateElement(3);
+    person->imageSet = LoadImageSetIPE("Koenigsbote", renderer, location->image->palette, true);
+    person->position = MakeVector(360, 380);
+    AddElement(location, person);
     
     int mouseX = 0;
     int mouseY = 0;
+    bool mouseClick = false;
     
     unsigned long lastTicks = SDL_GetTicks();
     
@@ -72,9 +68,13 @@ int main(int argc, const char * argv[]) {
                     mouseY = event.motion.y;
                     break;
                 case SDL_MOUSEBUTTONDOWN:
-                    SetElementImageFromSet(deco3, (rand() % 3) + 1);
+                    mouseClick = true;
                     break;
             }
+        }
+        
+        if (mouseClick) {
+            ElementMoveTo(person, mouseX, mouseY, 2);
         }
         
         UpdateLocation(location, deltaTicks);
@@ -83,6 +83,7 @@ int main(int argc, const char * argv[]) {
         DrawLocation(location, renderer);
         SDL_RenderPresent(renderer);
         
+        mouseClick = false;
         lastTicks = ticks;
     }
     

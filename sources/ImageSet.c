@@ -19,8 +19,8 @@
 
 #include "ImageSet.h"
 
-struct ImageSet *LoadImageSetIPE(const char *filename, SDL_Renderer *renderer, SDL_Palette *defaultPalette, bool createMasks) {
-    struct ImageSet *imageSet = NULL;
+ImageSet *LoadImageSetIPE(const char *filename, SDL_Renderer *renderer, SDL_Palette *defaultPalette, bool createMasks) {
+    ImageSet *imageSet = NULL;
     
     char path[FILENAME_MAX];
     sprintf(path, "game/Dats/%s.ipe", filename);
@@ -31,18 +31,18 @@ struct ImageSet *LoadImageSetIPE(const char *filename, SDL_Renderer *renderer, S
     } else {
         Uint16 numItems = SDL_ReadBE16(file);
         
-        struct ImageSetItem *items = calloc(numItems, sizeof(struct ImageSetItem));
+        ImageSetItem *items = calloc(numItems, sizeof(ImageSetItem));
         if (items) {
             char itemFilename[31];
             for (int i = 0; i < numItems; i++) {
-                struct ImageSetItem *item = &items[i];
+                ImageSetItem *item = &items[i];
                 
                 item->id = SDL_ReadBE16(file);
                 item->side = SDL_ReadU8(file);
                 SDL_RWread(file, itemFilename, sizeof(char), 31);
                 strncpy(item->filename, itemFilename, FILE_NAME_SIZE);
             }
-            imageSet = calloc(1, sizeof(struct ImageSet));
+            imageSet = calloc(1, sizeof(ImageSet));
             if (imageSet) {
                 imageSet->numItems = numItems;
                 imageSet->items = items;
@@ -58,10 +58,10 @@ struct ImageSet *LoadImageSetIPE(const char *filename, SDL_Renderer *renderer, S
 
 }
 
-void FreeImageSet(struct ImageSet *imageSet) {
+void FreeImageSet(ImageSet *imageSet) {
     if (!imageSet) return;
     for (int i = 0; i < imageSet->numItems; i++) {
-        struct ImageSetItem *item = &imageSet->items[i];
+        ImageSetItem *item = &imageSet->items[i];
         if (item->image) {
             FreeImage(item->image);
         }
@@ -70,32 +70,52 @@ void FreeImageSet(struct ImageSet *imageSet) {
     free(imageSet);
 }
 
-struct Image *GetImageFromSet(struct ImageSet *imageSet, int id, enum ImageSide side) {
+Image *GetImageFromSet(ImageSet *imageSet, int id, Vector direction) {
     if (!imageSet) return NULL;
-    struct ImageSetItem *sideItems[4] = {NULL, NULL, NULL, NULL};
+    
+    ImageSetItem *sideItems[4] = {NULL, NULL, NULL, NULL};
+    ImageSetItem *anyItem = NULL;
     for (int i = 0; i < imageSet->numItems; i++) {
-        struct ImageSetItem *item = &imageSet->items[i];
+        ImageSetItem *item = &imageSet->items[i];
         if (item->id == id) {
-            sideItems[side] = item;
-            if (item->side == side) {
-                break;
-            }
+            sideItems[item->side] = item;
+            anyItem = item;
         }
     }
     
-    struct ImageSetItem *bestItem = sideItems[side];
-    if (!bestItem) {
-        bestItem = sideItems[ImageSideFront];
+    ImageSetItem *bestItem = NULL;
+    
+    if (fabs(direction.y) >= fabs(direction.x)) {
+        if (direction.y >= 0) {
+            bestItem = sideItems[ImageSideFront];
+        } else {
+            bestItem = sideItems[ImageSideBack];
+        }
+        if (!bestItem) {
+            if (direction.x <= 0) {
+                bestItem = sideItems[ImageSideLeft];
+            } else {
+                bestItem = sideItems[ImageSideRight];
+            }
+        }
+    } else {
+        if (direction.x <= 0) {
+            bestItem = sideItems[ImageSideLeft];
+        } else {
+            bestItem = sideItems[ImageSideRight];
+        }
+        if (!bestItem) {
+            if (direction.y >= 0) {
+                bestItem = sideItems[ImageSideFront];
+            } else {
+                bestItem = sideItems[ImageSideBack];
+            }
+        }
     }
     if (!bestItem) {
-        bestItem = sideItems[ImageSideLeft];
+        bestItem = anyItem;
     }
-    if (!bestItem) {
-        bestItem = sideItems[ImageSideRight];
-    }
-    if (!bestItem) {
-        bestItem = sideItems[ImageSideBack];
-    }
+    
     if (bestItem) {
         if (!bestItem->image) {
             bestItem->image = LoadImageIBM(bestItem->filename, imageSet->renderer, imageSet->defaultPalette, imageSet->createsMasks);

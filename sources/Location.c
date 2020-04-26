@@ -19,12 +19,12 @@
 
 #include "Location.h"
 
-void FreeElements(struct Location *location);
-void UpdateElements(struct Location *location, int deltaTicks);
-void DrawElements(struct Location *location, SDL_Renderer *renderer);
+void FreeElements(Location *location);
+void UpdateElements(Location *location, int deltaTicks);
+void DrawElements(Location *location, SDL_Renderer *renderer);
 
-struct Location *CreateLocation(int id, const char *background, SDL_Renderer *renderer) {
-    struct Location *location = calloc(1, sizeof(struct Location));
+Location *CreateLocation(int id, const char *background, SDL_Renderer *renderer) {
+    Location *location = calloc(1, sizeof(Location));
     if (!location) {
         printf("CreateLocation: Out of memory\n");
     } else {
@@ -34,33 +34,33 @@ struct Location *CreateLocation(int id, const char *background, SDL_Renderer *re
     return location;
 }
 
-void FreeLocation(struct Location *location) {
+void FreeLocation(Location *location) {
     if (!location) return;
     FreeImage(location->image);
     FreeElements(location);
     free(location);
 }
 
-void UpdateLocation(struct Location *location, int deltaTicks) {
+void UpdateLocation(Location *location, int deltaTicks) {
     if (!location) return;
     UpdateElements(location, deltaTicks);
 }
 
-void DrawLocation(struct Location *location, SDL_Renderer *renderer) {
+void DrawLocation(Location *location, SDL_Renderer *renderer) {
     if (!location) return;
-    DrawImage(location->image, renderer, 0, 0);
+    DrawImage(location->image, renderer, MakeVector(0, 0));
     DrawElements(location, renderer);
 }
 
-void AddElement(struct Location *location, struct Element *element) {
+void AddElement(Location *location, Element *element) {
     if (!location || !element) return;
     element->next = location->rootElement;
     location->rootElement = element;
 }
 
-struct Element *GetElement(struct Location *location, int id) {
+Element *GetElement(Location *location, int id) {
     if (!location) return NULL;
-    struct Element *element = location->rootElement;
+    Element *element = location->rootElement;
     while (element) {
         if (element->id == id) {
             return element;
@@ -70,9 +70,9 @@ struct Element *GetElement(struct Location *location, int id) {
     return NULL;
 }
 
-struct Element *GetElementAt(struct Location *location, int x, int y) {
+Element *GetElementAt(Location *location, int x, int y) {
     if (!location) return NULL;
-    struct Element *element = location->rootElement;
+    Element *element = location->rootElement;
     while (element) {
         if (IsPointInElement(element, x, y)) {
             return element;
@@ -82,9 +82,9 @@ struct Element *GetElementAt(struct Location *location, int x, int y) {
     return NULL;
 }
 
-void FreeElements(struct Location *location) {
+void FreeElements(Location *location) {
     if (!location) return;
-    struct Element *element = location->rootElement;
+    Element *element = location->rootElement;
     while (element) {
         FreeElement(element);
         element = element->next;
@@ -92,18 +92,18 @@ void FreeElements(struct Location *location) {
     location->rootElement = NULL;
 }
 
-void UpdateElements(struct Location *location, int deltaTicks) {
+void UpdateElements(Location *location, int deltaTicks) {
     if (!location) return;
-    struct Element *element = location->rootElement;
+    Element *element = location->rootElement;
     while (element) {
         UpdateElement(element, deltaTicks);
         element = element->next;
     }
 }
 
-void DrawElements(struct Location *location, SDL_Renderer *renderer) {
+void DrawElements(Location *location, SDL_Renderer *renderer) {
     if (!location) return;
-    struct Element *element = location->rootElement;
+    Element *element = location->rootElement;
     while (element) {
         DrawElement(element, renderer);
         element = element->next;

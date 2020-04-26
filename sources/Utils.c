@@ -17,27 +17,9 @@
 // along with LowRes NX.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#ifndef Location_h
-#define Location_h
+#include "Utils.h"
 
-#include <stdio.h>
-#include <SDL2/SDL.h>
-#include "Image.h"
-#include "Element.h"
-
-typedef struct Location {
-    int id;
-    struct Image *image;
-    struct Element *rootElement;
-} Location;
-
-Location *CreateLocation(int id, const char *background, SDL_Renderer *renderer);
-void FreeLocation(Location *location);
-void UpdateLocation(Location *location, int deltaTicks);
-void DrawLocation(Location *location, SDL_Renderer *renderer);
-
-void AddElement(Location *location, Element *element);
-Element *GetElement(Location *location, int id);
-Element *GetElementAt(Location *location, int x, int y);
-
-#endif /* Location_h */
+Vector MakeVector(float x, float y) {
+    Vector vector = {x, y};
+    return vector;
+}
