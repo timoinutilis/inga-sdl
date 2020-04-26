@@ -19,6 +19,7 @@
 
 #include <SDL2/SDL.h>
 #include "Image.h"
+#include "Location.h"
 
 int main(int argc, const char * argv[]) {
     SDL_Init(SDL_INIT_VIDEO);
@@ -29,14 +30,34 @@ int main(int argc, const char * argv[]) {
     SDL_Event event;
     int quit = 0;
     
-    struct Image *backgroundImage = LoadImageIBM("game/BitMaps/HafenL.ibm", renderer, NULL, false);
-    struct Image *characterImage = LoadImageIBM("game/BitMaps/ErmLaufenLinks.ibm", renderer, backgroundImage->palette, true);
+    struct Location *location = CreateLocation(1, "HafenL", renderer);
+    
+    struct Element *deco1 = CreateElement(1);
+    deco1->image = LoadImageIBM("HafenWasserL", renderer, location->image->palette, false);
+    deco1->x = 210;
+    deco1->y = 440;
+    AddElement(location, deco1);
+    
+    struct Element *deco2 = CreateElement(2);
+    deco2->image = LoadImageIBM("HafenWasserLa", renderer, location->image->palette, false);
+    deco2->x = 0;
+    deco2->y = 450;
+    AddElement(location, deco2);
+    
+    struct Element *deco3 = CreateElement(3);
+    deco3->image = LoadImageIBM("ErmLaufenLinks", renderer, location->image->palette, true);
+    deco3->x = 360;
+    deco3->y = 380;
+    AddElement(location, deco3);
     
     int mouseX = 0;
     int mouseY = 0;
     
+    unsigned long lastTicks = SDL_GetTicks();
+    
     while (!quit) {
         unsigned long ticks = SDL_GetTicks();
+        int deltaTicks = (int)(ticks - lastTicks);
         
         while (SDL_PollEvent(&event)) {
             switch (event.type) {
@@ -50,16 +71,16 @@ int main(int argc, const char * argv[]) {
             }
         }
         
+        UpdateLocation(location, deltaTicks);
+        
         SDL_RenderClear(renderer);
-        
-        DrawImage(backgroundImage, renderer, 0, 0);
-        DrawAnimationFrame(characterImage, renderer, mouseX, mouseY, (ticks / 200) % 4);
-        
+        DrawLocation(location, renderer);
         SDL_RenderPresent(renderer);
+        
+        lastTicks = ticks;
     }
     
-    FreeImage(characterImage);
-    FreeImage(backgroundImage);
+    FreeLocation(location);
     
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);

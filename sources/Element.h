@@ -17,41 +17,33 @@
 // along with LowRes NX.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#ifndef Image_h
-#define Image_h
+#ifndef Element_h
+#define Element_h
 
 #include <stdio.h>
 #include <stdbool.h>
 #include <SDL2/SDL.h>
+#include "Config.h"
+#include "Image.h"
 
-struct Frame {
-    SDL_Rect sourceRect;
-    int pivotX;
-    int pivotY;
-    int ticks;
+struct Element {
+    int id;
+    float x;
+    float y;
+    SDL_Rect selectionRect;
+    int targetX;
+    int targetY;
+    bool isVisible;
+    char name[ELEMENT_NAME_SIZE];
+    struct Image *image;
+    int frameIndex;
+    int frameTicks;
+    struct Element *next;
 };
 
-struct Animation {
-    int numFrames;
-    struct Frame *frames;
-};
+struct Element *CreateElement(int id);
+void FreeElement(struct Element *element);
+void UpdateElement(struct Element *element, int deltaTicks);
+void DrawElement(struct Element *element, SDL_Renderer *renderer);
 
-struct Image {
-    SDL_Texture *texture;
-    SDL_Palette *palette;
-    int width;
-    int height;
-    struct Animation *animation;
-};
-
-enum StripDirection {
-    StripDirectionHorizontal,
-    StripDirectionVertical
-};
-
-struct Image *LoadImageIBM(const char *filename, SDL_Renderer *renderer, SDL_Palette *defaultPalette, bool createMask);
-void FreeImage(struct Image *image);
-void DrawImage(struct Image *image, SDL_Renderer *renderer, int x, int y);
-void DrawAnimationFrame(struct Image *image, SDL_Renderer *renderer, int x, int y, int index);
-
-#endif /* Image_h */
+#endif /* Element_h */
