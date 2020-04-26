@@ -18,13 +18,14 @@
 //
 
 #include <SDL2/SDL.h>
+#include "Config.h"
 #include "Image.h"
 #include "Location.h"
 
 int main(int argc, const char * argv[]) {
     SDL_Init(SDL_INIT_VIDEO);
     
-    SDL_Window *window = SDL_CreateWindow("Inga", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 640, 480, SDL_WINDOW_SHOWN);
+    SDL_Window *window = SDL_CreateWindow("Inga", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
     SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
     
     SDL_Event event;
@@ -45,9 +46,11 @@ int main(int argc, const char * argv[]) {
     AddElement(location, deco2);
     
     struct Element *deco3 = CreateElement(3);
-    deco3->image = LoadImageIBM("ErmLaufenLinks", renderer, location->image->palette, true);
+    deco3->imageSet = LoadImageSetIPE("Koenigsbote", renderer, location->image->palette, true);
     deco3->x = 360;
     deco3->y = 380;
+    deco3->side = ImageSideFront;
+    SetElementImageFromSet(deco3, 1);
     AddElement(location, deco3);
     
     int mouseX = 0;
@@ -67,6 +70,9 @@ int main(int argc, const char * argv[]) {
                 case SDL_MOUSEMOTION:
                     mouseX = event.motion.x;
                     mouseY = event.motion.y;
+                    break;
+                case SDL_MOUSEBUTTONDOWN:
+                    SetElementImageFromSet(deco3, (rand() % 3) + 1);
                     break;
             }
         }

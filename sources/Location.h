@@ -37,5 +37,7 @@ void UpdateLocation(struct Location *location, int deltaTicks);
 void DrawLocation(struct Location *location, SDL_Renderer *renderer);
 
 void AddElement(struct Location *location, struct Element *element);
+struct Element *GetElement(struct Location *location, int id);
+struct Element *GetElementAt(struct Location *location, int x, int y);
 
 #endif /* Location_h */

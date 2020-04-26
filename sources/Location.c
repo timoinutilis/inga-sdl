@@ -58,6 +58,30 @@ void AddElement(struct Location *location, struct Element *element) {
     location->rootElement = element;
 }
 
+struct Element *GetElement(struct Location *location, int id) {
+    if (!location) return NULL;
+    struct Element *element = location->rootElement;
+    while (element) {
+        if (element->id == id) {
+            return element;
+        }
+        element = element->next;
+    }
+    return NULL;
+}
+
+struct Element *GetElementAt(struct Location *location, int x, int y) {
+    if (!location) return NULL;
+    struct Element *element = location->rootElement;
+    while (element) {
+        if (IsPointInElement(element, x, y)) {
+            return element;
+        }
+        element = element->next;
+    }
+    return NULL;
+}
+
 void FreeElements(struct Location *location) {
     if (!location) return;
     struct Element *element = location->rootElement;

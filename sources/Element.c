@@ -32,6 +32,11 @@ struct Element *CreateElement(int id) {
 
 void FreeElement(struct Element *element) {
     if (!element) return;
+    if (element->imageSet) {
+        FreeImageSet(element->imageSet);
+    } else {
+        FreeImage(element->image);
+    }
     free(element);
 }
 
@@ -55,4 +60,16 @@ void DrawElement(struct Element *element, SDL_Renderer *renderer) {
     } else {
         DrawImage(element->image, renderer, element->x, element->y);
     }
+}
+
+bool IsPointInElement(struct Element *element, int x, int y) {
+    if (!element || !element->isVisible || element->selectionRect.w == 0) return false;
+    return true;
+}
+
+void SetElementImageFromSet(struct Element *element, int imageId) {
+    if (!element) return;
+    element->image = GetImageFromSet(element->imageSet, imageId, element->side);
+    element->frameIndex = 0;
+    element->frameTicks = 0;
 }

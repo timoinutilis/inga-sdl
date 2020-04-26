@@ -20,6 +20,10 @@
 #ifndef Config_h
 #define Config_h
 
+#define SCREEN_WIDTH 640
+#define SCREEN_HEIGHT 480
+
 #define ELEMENT_NAME_SIZE 61
+#define FILE_NAME_SIZE 31
 
 #endif /* Config_h */

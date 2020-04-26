@@ -17,38 +17,39 @@
 // along with LowRes NX.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#ifndef Element_h
-#define Element_h
+#ifndef ImageSet_h
+#define ImageSet_h
 
 #include <stdio.h>
 #include <stdbool.h>
 #include <SDL2/SDL.h>
 #include "Config.h"
 #include "Image.h"
-#include "ImageSet.h"
 
-struct Element {
-    int id;
-    float x;
-    float y;
-    SDL_Rect selectionRect;
-    int targetX;
-    int targetY;
-    bool isVisible;
-    char name[ELEMENT_NAME_SIZE];
-    struct Image *image;
-    int frameIndex;
-    int frameTicks;
-    struct ImageSet *imageSet;
-    enum ImageSide side;
-    struct Element *next;
+enum ImageSide {
+    ImageSideLeft,
+    ImageSideRight,
+    ImageSideFront,
+    ImageSideBack
 };
 
-struct Element *CreateElement(int id);
-void FreeElement(struct Element *element);
-void UpdateElement(struct Element *element, int deltaTicks);
-void DrawElement(struct Element *element, SDL_Renderer *renderer);
-bool IsPointInElement(struct Element *element, int x, int y);
-void SetElementImageFromSet(struct Element *element, int imageId);
+struct ImageSetItem {
+    int id;
+    enum ImageSide side;
+    char filename[FILE_NAME_SIZE];
+    struct Image *image;
+};
 
-#endif /* Element_h */
+struct ImageSet {
+    int numItems;
+    struct ImageSetItem *items;
+    SDL_Renderer *renderer;
+    SDL_Palette *defaultPalette;
+    bool createsMasks;
+};
+
+struct ImageSet *LoadImageSetIPE(const char *filename, SDL_Renderer *renderer, SDL_Palette *defaultPalette, bool createMasks);
+void FreeImageSet(struct ImageSet *imageSet);
+struct Image *GetImageFromSet(struct ImageSet *imageSet, int id, enum ImageSide side);
+
+#endif /* ImageSet_h */
