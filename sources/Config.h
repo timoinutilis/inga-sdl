@@ -26,4 +26,6 @@
 #define ELEMENT_NAME_SIZE 61
 #define FILE_NAME_SIZE 31
 
+#define MAX_PATH_SIZE 10
+
 #endif /* Config_h */

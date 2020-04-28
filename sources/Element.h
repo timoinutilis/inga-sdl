@@ -24,9 +24,12 @@
 #include <stdbool.h>
 #include <SDL2/SDL.h>
 #include "Config.h"
+#include "Utils.h"
 #include "Image.h"
 #include "ImageSet.h"
-#include "Utils.h"
+#include "NavigationMap.h"
+
+typedef struct Location Location;
 
 enum ElementAction {
     ElementActionIdle,
@@ -37,6 +40,7 @@ enum ElementAction {
 
 typedef struct Element {
     int id;
+    Location *location;
     Vector position;
     SDL_Rect selectionRect;
     Vector target;
@@ -49,7 +53,8 @@ typedef struct Element {
     int imageId;
     Vector direction;
     enum ElementAction action;
-    Vector movingTo;
+    NavigationPath *navigationPath;
+    int navigationIndex;
     float speed;
     struct Element *next;
 } Element;

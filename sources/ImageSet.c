@@ -53,9 +53,9 @@ ImageSet *LoadImageSetIPE(const char *filename, SDL_Renderer *renderer, SDL_Pale
                 free(items);
             }
         }
+        SDL_RWclose(file);
     }
     return imageSet;
-
 }
 
 void FreeImageSet(ImageSet *imageSet) {

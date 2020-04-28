@@ -11,6 +11,7 @@
 		924B17A824556BC8008A9B43 /* Element.c in Sources */ = {isa = PBXBuildFile; fileRef = 924B17A724556BC8008A9B43 /* Element.c */; };
 		924B17AC245585D2008A9B43 /* ImageSet.c in Sources */ = {isa = PBXBuildFile; fileRef = 924B17AB245585D2008A9B43 /* ImageSet.c */; };
 		924B17AF2455D598008A9B43 /* Utils.c in Sources */ = {isa = PBXBuildFile; fileRef = 924B17AE2455D598008A9B43 /* Utils.c */; };
+		924B17B22455EA08008A9B43 /* NavigationMap.c in Sources */ = {isa = PBXBuildFile; fileRef = 924B17B12455EA08008A9B43 /* NavigationMap.c */; };
 		929EDBD0244E32BD00DC64D9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 929EDBCF244E32BD00DC64D9 /* Assets.xcassets */; };
 		929EDBD6244E32BD00DC64D9 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = 929EDBD5244E32BD00DC64D9 /* main.c */; };
 		929EDBE0244E46E300DC64D9 /* SDL2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 929EDBDF244E46E300DC64D9 /* SDL2.framework */; };
@@ -43,6 +44,8 @@
 		924B17AB245585D2008A9B43 /* ImageSet.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ImageSet.c; sourceTree = "<group>"; };
 		924B17AD2455D598008A9B43 /* Utils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Utils.h; sourceTree = "<group>"; };
 		924B17AE2455D598008A9B43 /* Utils.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = Utils.c; sourceTree = "<group>"; };
+		924B17B02455EA08008A9B43 /* NavigationMap.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NavigationMap.h; sourceTree = "<group>"; };
+		924B17B12455EA08008A9B43 /* NavigationMap.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = NavigationMap.c; sourceTree = "<group>"; };
 		929EDBC9244E32BA00DC64D9 /* Inga.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Inga.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		929EDBCF244E32BD00DC64D9 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		929EDBD4244E32BD00DC64D9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -106,6 +109,8 @@
 				92ABBAD824543AB800218313 /* Image.c */,
 				924B17AA245585D2008A9B43 /* ImageSet.h */,
 				924B17AB245585D2008A9B43 /* ImageSet.c */,
+				924B17B02455EA08008A9B43 /* NavigationMap.h */,
+				924B17B12455EA08008A9B43 /* NavigationMap.c */,
 				924B17A324556614008A9B43 /* Location.h */,
 				924B17A424556614008A9B43 /* Location.c */,
 				924B17A624556BC8008A9B43 /* Element.h */,
@@ -195,6 +200,7 @@
 			files = (
 				924B17AC245585D2008A9B43 /* ImageSet.c in Sources */,
 				924B17A824556BC8008A9B43 /* Element.c in Sources */,
+				924B17B22455EA08008A9B43 /* NavigationMap.c in Sources */,
 				929EDBD6244E32BD00DC64D9 /* main.c in Sources */,
 				924B17AF2455D598008A9B43 /* Utils.c in Sources */,
 				92ABBAD924543AB800218313 /* Image.c in Sources */,

@@ -30,6 +30,7 @@ Location *CreateLocation(int id, const char *background, SDL_Renderer *renderer)
     } else {
         location->id = id;
         location->image = LoadImageIBM(background, renderer, NULL, false);
+        location->navigationMap = LoadNavigationMapILK(background);
     }
     return location;
 }
@@ -37,6 +38,7 @@ Location *CreateLocation(int id, const char *background, SDL_Renderer *renderer)
 void FreeLocation(Location *location) {
     if (!location) return;
     FreeImage(location->image);
+    FreeNavigationMap(location->navigationMap);
     FreeElements(location);
     free(location);
 }
@@ -54,6 +56,7 @@ void DrawLocation(Location *location, SDL_Renderer *renderer) {
 
 void AddElement(Location *location, Element *element) {
     if (!location || !element) return;
+    element->location = location;
     element->next = location->rootElement;
     location->rootElement = element;
 }

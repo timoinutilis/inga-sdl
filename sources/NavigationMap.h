@@ -17,29 +17,30 @@
 // along with LowRes NX.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#ifndef Location_h
-#define Location_h
+#ifndef NavigationMap_h
+#define NavigationMap_h
 
 #include <stdio.h>
-#include <SDL2/SDL.h>
-#include "Image.h"
-#include "NavigationMap.h"
-#include "Element.h"
+#include <stdbool.h>
+#include "Utils.h"
+#include "Config.h"
 
-typedef struct Location {
-    int id;
-    Image *image;
-    NavigationMap *navigationMap;
-    Element *rootElement;
-} Location;
+typedef struct NavigationMap {
+    int width;
+    int *topLimits;
+    int *bottomLimits;
+} NavigationMap;
 
-Location *CreateLocation(int id, const char *background, SDL_Renderer *renderer);
-void FreeLocation(Location *location);
-void UpdateLocation(Location *location, int deltaTicks);
-void DrawLocation(Location *location, SDL_Renderer *renderer);
+typedef struct NavigationPath {
+    int numPositions;
+    Vector positions[MAX_PATH_SIZE];
+    bool reachesDestination;
+} NavigationPath;
 
-void AddElement(Location *location, Element *element);
-Element *GetElement(Location *location, int id);
-Element *GetElementAt(Location *location, int x, int y);
+NavigationMap *LoadNavigationMapILK(const char *filename);
+void FreeNavigationMap(NavigationMap *navigationMap);
+NavigationPath *CreateNavigationPath(NavigationMap *navigationMap, Vector origin, Vector destination);
+void FreeNavigationPath(NavigationPath *navigationPath);
+void AdjustPositionForNavigation(NavigationMap *navigationMap, Vector *position);
 
-#endif /* Location_h */
+#endif /* NavigationMap_h */

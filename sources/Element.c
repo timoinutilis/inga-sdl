@@ -18,6 +18,7 @@
 //
 
 #include "Element.h"
+#include "Location.h"
 
 void SetElementImageFromSet(Element *element, int imageId);
 void UpdateMove(Element *element, int deltaTicks);
@@ -41,6 +42,7 @@ void FreeElement(Element *element) {
     } else {
         FreeImage(element->image);
     }
+    FreeNavigationPath(element->navigationPath);
     free(element);
 }
 
@@ -110,9 +112,14 @@ void ElementLookTo(Element *element, int x, int y, int imageId) {
 
 void ElementMoveTo(Element *element, int x, int y, int imageId) {
     if (!element) return;
-    element->action = ElementActionMove;
-    element->movingTo = MakeVector(x, y);
-    ElementLookTo(element, x, y, imageId);
+    FreeNavigationPath(element->navigationPath);
+    element->navigationIndex = 0;
+    element->navigationPath = CreateNavigationPath(element->location->navigationMap, element->position, MakeVector(x, y));
+    if (element->navigationPath) {
+        element->action = ElementActionMove;
+        Vector firstPosition = element->navigationPath->positions[0];
+        ElementLookTo(element, firstPosition.x, firstPosition.y, imageId);
+    }
 }
 
 void ElementTalk(Element *element, const char *text, int imageId) {
@@ -128,8 +135,9 @@ void ElementAnimate(Element *element, int imageId) {
 }
 
 void UpdateMove(Element *element, int deltaTicks) {
-    float vx = (element->movingTo.x - element->position.x);
-    float vy = (element->movingTo.y - element->position.y);
+    Vector currentPathPosition = element->navigationPath->positions[element->navigationIndex];
+    float vx = (currentPathPosition.x - element->position.x);
+    float vy = (currentPathPosition.y - element->position.y);
     float nv = sqrt((vx * vx) + (vy * vy));
     float deltaPixels = deltaTicks * element->speed / 1000.0;
     if (nv > deltaPixels) {
@@ -139,24 +147,23 @@ void UpdateMove(Element *element, int deltaTicks) {
     }
 
     if (nv >= 1) {
-        float tp = element->position.x + (vx / nv);
-//        if ((ilk.oben[(WORD)tp] > ilk.unten[(WORD)tp]) && (akt->p4 != 1)) {
-//            akt->aktion = AKT_NICHTS;
+        element->position.x += (vx / nv);
+        element->position.y += (vy / nv);
+        AdjustPositionForNavigation(element->location->navigationMap, &element->position);
+//        }
+    } else if (element->navigationIndex + 1 < element->navigationPath->numPositions) {
+        element->navigationIndex += 1;
+        Vector position = element->navigationPath->positions[element->navigationIndex];
+        ElementLookTo(element, position.x, position.y, 0);
+    } else {
+        ElementStop(element);
+        if (!element->navigationPath->reachesDestination) {
 //            if ((benutzt + angesehen > 0) && (akt->p4 == 2) && (akt->id == 0)) {
 //                erreicht = TRUE;
 //            } else {
 //                benutzt = 0; invbenutzt = 0; angesehen = 0;
 //            }
-//        } else {
-        element->position.x = tp;
-        element->position.y += (vy / nv);
-//        if (akt->p4 != 1) {
-//            if ((akt->y) > (ilk.unten[(WORD)akt->x] * 2)) akt->y = ilk.unten[(WORD)akt->x] * 2;
-//            if ((akt->y) < (ilk.oben[(WORD)akt->x] * 2)) akt->y = ilk.oben[(WORD)akt->x] * 2;
-//        }
-//        }
-    } else {
-        ElementStop(element);
+        }
     }
 
 }
