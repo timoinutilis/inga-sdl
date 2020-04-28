@@ -39,7 +39,7 @@ typedef struct Animation {
 
 typedef struct Image {
     SDL_Texture *texture;
-    SDL_Palette *palette;
+    SDL_Surface *surface;
     int width;
     int height;
     Animation *animation;
@@ -50,7 +50,8 @@ enum StripDirection {
     StripDirectionVertical
 };
 
-Image *LoadImageIBM(const char *filename, SDL_Renderer *renderer, SDL_Palette *defaultPalette, bool createMask);
+Image *LoadImageIBM(const char *filename, SDL_Renderer *renderer, SDL_Palette *defaultPalette, bool createMask, bool keepSurface);
+Image *LoadImageIMP(const char *filename, Image *sourceImage, SDL_Renderer *renderer);
 void FreeImage(Image *image);
 void DrawImage(Image *image, SDL_Renderer *renderer, Vector position);
 void DrawAnimationFrame(Image *image, SDL_Renderer *renderer, Vector position, int index);

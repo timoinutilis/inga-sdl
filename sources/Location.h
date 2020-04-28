@@ -29,6 +29,7 @@
 typedef struct Location {
     int id;
     Image *image;
+    Image *foregroundImage;
     NavigationMap *navigationMap;
     Element *rootElement;
 } Location;

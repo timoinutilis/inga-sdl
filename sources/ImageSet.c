@@ -118,7 +118,7 @@ Image *GetImageFromSet(ImageSet *imageSet, int id, Vector direction) {
     
     if (bestItem) {
         if (!bestItem->image) {
-            bestItem->image = LoadImageIBM(bestItem->filename, imageSet->renderer, imageSet->defaultPalette, imageSet->createsMasks);
+            bestItem->image = LoadImageIBM(bestItem->filename, imageSet->renderer, imageSet->defaultPalette, imageSet->createsMasks, false);
         }
         return bestItem->image;
     }

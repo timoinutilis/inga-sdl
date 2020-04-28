@@ -29,7 +29,8 @@ Location *CreateLocation(int id, const char *background, SDL_Renderer *renderer)
         printf("CreateLocation: Out of memory\n");
     } else {
         location->id = id;
-        location->image = LoadImageIBM(background, renderer, NULL, false);
+        location->image = LoadImageIBM(background, renderer, NULL, false, true);
+        location->foregroundImage = LoadImageIMP(background, location->image, renderer);
         location->navigationMap = LoadNavigationMapILK(background);
     }
     return location;
@@ -38,6 +39,7 @@ Location *CreateLocation(int id, const char *background, SDL_Renderer *renderer)
 void FreeLocation(Location *location) {
     if (!location) return;
     FreeImage(location->image);
+    FreeImage(location->foregroundImage);
     FreeNavigationMap(location->navigationMap);
     FreeElements(location);
     free(location);
@@ -52,6 +54,7 @@ void DrawLocation(Location *location, SDL_Renderer *renderer) {
     if (!location) return;
     DrawImage(location->image, renderer, MakeVector(0, 0));
     DrawElements(location, renderer);
+    DrawImage(location->foregroundImage, renderer, MakeVector(0, 0));
 }
 
 void AddElement(Location *location, Element *element) {

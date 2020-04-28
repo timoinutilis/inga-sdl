@@ -32,19 +32,20 @@ int main(int argc, const char * argv[]) {
     int quit = 0;
     
     Location *location = CreateLocation(1, "HafenL", renderer);
+    SDL_Palette *palette = location->image->surface->format->palette;
     
     Element *deco1 = CreateElement(1);
-    deco1->image = LoadImageIBM("HafenWasserL", renderer, location->image->palette, false);
+    deco1->image = LoadImageIBM("HafenWasserL", renderer, palette, false, false);
     deco1->position = MakeVector(210, 440);
     AddElement(location, deco1);
     
     Element *deco2 = CreateElement(2);
-    deco2->image = LoadImageIBM("HafenWasserLa", renderer, location->image->palette, false);
+    deco2->image = LoadImageIBM("HafenWasserLa", renderer, palette, false, false);
     deco2->position = MakeVector(0, 450);
     AddElement(location, deco2);
     
     Element *person = CreateElement(3);
-    person->imageSet = LoadImageSetIPE("Koenigsbote", renderer, location->image->palette, true);
+    person->imageSet = LoadImageSetIPE("Hauptperson", renderer, palette, true);
     person->position = MakeVector(360, 380);
     AddElement(location, person);
     

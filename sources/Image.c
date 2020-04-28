@@ -28,7 +28,7 @@ typedef struct IBMColor {
 Animation *CreateAnimationFromStrip(int numFrames, enum StripDirection direction, int width, int height, int pivotX, int pivotY, int ticks);
 void FreeAnimation(Animation *animation);
 
-Image *LoadImageIBM(const char *filename, SDL_Renderer *renderer, SDL_Palette *defaultPalette, bool createMask) {
+Image *LoadImageIBM(const char *filename, SDL_Renderer *renderer, SDL_Palette *defaultPalette, bool createMask, bool keepSurface) {
     Image *image = NULL;
     
     char path[FILENAME_MAX];
@@ -89,7 +89,6 @@ Image *LoadImageIBM(const char *filename, SDL_Renderer *renderer, SDL_Palette *d
                     printf("LoadImageIBM: Create surface failed\n");
                 } else {
                     SDL_Palette *surfacePalette = surface->format->palette;
-                    SDL_Palette *copiedPalette = NULL;
                     if (ibmColors) {
                         SDL_Color colors[surfacePalette->ncolors];
                         for (int i = 0; i < surfacePalette->ncolors; i++) {
@@ -101,10 +100,6 @@ Image *LoadImageIBM(const char *filename, SDL_Renderer *renderer, SDL_Palette *d
                             sdlColor->a = 255;
                         }
                         SDL_SetPaletteColors(surfacePalette, colors, 0, surfacePalette->ncolors);
-                        copiedPalette = SDL_AllocPalette(surfacePalette->ncolors);
-                        if (copiedPalette) {
-                            SDL_SetPaletteColors(copiedPalette, colors, 0, surfacePalette->ncolors);
-                        }
                     } else if (defaultPalette) {
                         SDL_SetPaletteColors(surfacePalette, defaultPalette->colors, 0, surfacePalette->ncolors);
                     }
@@ -120,12 +115,16 @@ Image *LoadImageIBM(const char *filename, SDL_Renderer *renderer, SDL_Palette *d
                     } else {
                         image = calloc(1, sizeof(Image));
                         image->texture = texture;
-                        image->palette = copiedPalette;
+                        if (keepSurface) {
+                            image->surface = surface;
+                        }
                         image->animation = animation;
                         image->width = width;
                         image->height = height;
                     }
-                    SDL_FreeSurface(surface);
+                    if (!keepSurface) {
+                        SDL_FreeSurface(surface);
+                    }
                 }
                 free(pixels);
             }
@@ -141,10 +140,74 @@ Image *LoadImageIBM(const char *filename, SDL_Renderer *renderer, SDL_Palette *d
     return image;
 }
 
+Image *LoadImageIMP(const char *filename, Image *sourceImage, SDL_Renderer *renderer) {
+    if (!sourceImage || !sourceImage->surface) return NULL;
+    Image *image = NULL;
+    
+    char path[FILENAME_MAX];
+    sprintf(path, "game/BitMaps/%s.imp", filename);
+    
+    SDL_RWops *file = SDL_RWFromFile(path, "rb");
+    if (!file) {
+        printf("LoadImageIMP: %s\n", SDL_GetError());
+    } else {
+        Uint32 head = SDL_ReadBE32(file);
+        if (head != 0x494D5031) {
+            printf("LoadImageIMP: Invalid file format\n");
+        } else {
+            Uint16 width = SDL_ReadBE16(file);
+            Uint16 height = SDL_ReadBE16(file);
+            Uint32 size = SDL_ReadBE32(file);
+            
+            Uint8 *pixels = calloc(sizeof(Uint8), size);
+            if (!pixels) {
+                printf("LoadImageIMP: Out of memory\n");
+            } else {
+                SDL_RWread(file, pixels, sizeof(Uint8), size);
+                SDL_Surface *surface = SDL_CreateRGBSurfaceWithFormatFrom(pixels, width, height, 1, size / height, SDL_PIXELFORMAT_INDEX1MSB);
+                if (!surface) {
+                    printf("LoadImageIMP: Create surface failed\n");
+                } else {
+                    SDL_Palette *surfacePalette = surface->format->palette;
+                    SDL_Color colors[] = {{255, 0, 255, 255}, {255, 255, 255, 255}};
+                    SDL_SetPaletteColors(surfacePalette, colors, 0, 2);
+                    Uint32 key = SDL_MapRGB(surface->format, 255, 255, 255);
+                    SDL_SetColorKey(surface, SDL_TRUE, key);
+                    
+                    SDL_Surface *targetSurface = SDL_CreateRGBSurfaceWithFormat(0, width, height, 32, SDL_PIXELFORMAT_RGBA32);
+                    if (!targetSurface) {
+                        printf("LoadImageIMP: Create surface failed\n");
+                    } else {
+                        SDL_BlitSurface(sourceImage->surface, NULL, targetSurface, NULL);
+                        SDL_BlitSurface(surface, NULL, targetSurface, NULL);
+                        Uint32 key2 = SDL_MapRGB(targetSurface->format, 255, 0, 255);
+                        SDL_SetColorKey(targetSurface, SDL_TRUE, key2);
+                        
+                        SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, targetSurface);
+                        if (!texture) {
+                            printf("LoadImageIMP: Create texture failed\n");
+                        } else {
+                            image = calloc(1, sizeof(Image));
+                            image->texture = texture;
+                            image->width = width;
+                            image->height = height;
+                        }
+                        SDL_FreeSurface(targetSurface);
+                    }
+                    SDL_FreeSurface(surface);
+                }
+                free(pixels);
+            }
+        }
+        SDL_RWclose(file);
+    }
+    return image;
+}
+
 void FreeImage(Image *image) {
     if (!image) return;
     SDL_DestroyTexture(image->texture);
-    SDL_FreePalette(image->palette);
+    SDL_FreeSurface(image->surface);
     FreeAnimation(image->animation);
     free(image);
 }
