@@ -26,5 +26,5 @@ The Inga SDL project is a complete reimplementation of all important features of
 
 ## Links
 
-https://www.inutilis.com/portfolio/inga-adventure-game-engine/
-https://www.inutilis.com/portfolio/ermentrud-das-spiel/
+- https://www.inutilis.com/portfolio/inga-adventure-game-engine/
+- https://www.inutilis.com/portfolio/ermentrud-das-spiel/
