@@ -18,12 +18,15 @@
 //
 
 #include <SDL2/SDL.h>
+#include <SDL2_ttf/SDL_ttf.h>
 #include "Config.h"
 #include "Image.h"
 #include "Location.h"
+#include "Font.h"
 
 int main(int argc, const char * argv[]) {
     SDL_Init(SDL_INIT_VIDEO);
+    TTF_Init();
     
     SDL_Window *window = SDL_CreateWindow("Inga", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
     SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
@@ -48,6 +51,9 @@ int main(int argc, const char * argv[]) {
     person->imageSet = LoadImageSetIPE("Hauptperson", renderer, palette, true);
     person->position = MakeVector(360, 380);
     AddElement(location, person);
+    
+    Font *font = LoadFont("Orbitron-Medium", 16, renderer);
+    Image *textImage = CreateImageFromText("Hello Text!", font);
     
     int mouseX = 0;
     int mouseY = 0;
@@ -82,17 +88,21 @@ int main(int argc, const char * argv[]) {
         
         SDL_RenderClear(renderer);
         DrawLocation(location, renderer);
+        DrawImage(textImage, renderer, MakeVector(320 - textImage->width / 2, 240 - textImage->height / 2));
         SDL_RenderPresent(renderer);
-        
+                
         mouseClick = false;
         lastTicks = ticks;
     }
     
     FreeLocation(location);
+    FreeImage(textImage);
+    FreeFont(font);
     
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     
+    TTF_Quit();
     SDL_Quit();
     
     return 0;

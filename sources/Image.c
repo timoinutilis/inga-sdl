@@ -114,13 +114,17 @@ Image *LoadImageIBM(const char *filename, SDL_Renderer *renderer, SDL_Palette *d
                         printf("LoadImageIBM: Create texture failed\n");
                     } else {
                         image = calloc(1, sizeof(Image));
-                        image->texture = texture;
-                        if (keepSurface) {
-                            image->surface = surface;
+                        if (!image) {
+                            printf("LoadImageIBM: Out of memory\n");
+                        } else {
+                            image->texture = texture;
+                            if (keepSurface) {
+                                image->surface = surface;
+                            }
+                            image->animation = animation;
+                            image->width = width;
+                            image->height = height;
                         }
-                        image->animation = animation;
-                        image->width = width;
-                        image->height = height;
                     }
                     if (!keepSurface) {
                         SDL_FreeSurface(surface);
