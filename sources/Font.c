@@ -19,7 +19,7 @@
 
 #include "Font.h"
 
-Font *LoadFont(const char *filename, int size, SDL_Renderer *renderer) {
+Font *LoadFont(const char *filename, int size) {
     Font *font = NULL;
     
     char path[FILENAME_MAX];
@@ -38,7 +38,6 @@ Font *LoadFont(const char *filename, int size, SDL_Renderer *renderer) {
         if (!font) {
             printf("LoadFont: Out of memory\n");
         } else {
-            font->renderer = renderer;
             font->ttfFont = ttfFont;
         }
     }
@@ -51,7 +50,7 @@ void FreeFont(Font *font) {
     free(font);
 }
 
-Image *CreateImageFromText(const char *text, Font *font) {
+Image *CreateImageFromText(const char *text, Font *font, SDL_Renderer *renderer) {
     if (!font) return NULL;
     
     Image *image = NULL;
@@ -69,7 +68,7 @@ Image *CreateImageFromText(const char *text, Font *font) {
     } else {
         SDL_Rect rect = {1, 1, fgSurface->w, fgSurface->h};
         SDL_BlitSurface(fgSurface, NULL, surface, &rect);
-        SDL_Texture *texture = SDL_CreateTextureFromSurface(font->renderer, surface);
+        SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, surface);
         if (!texture) {
             printf("SDL_CreateTextureFromSurface: %s\n", SDL_GetError());
         } else {

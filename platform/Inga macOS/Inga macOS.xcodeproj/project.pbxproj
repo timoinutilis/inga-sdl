@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		922EADDB245C143400E4027E /* Orbitron-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 922EADDA245C143400E4027E /* Orbitron-Medium.ttf */; };
 		922EADDE245C222A00E4027E /* Font.c in Sources */ = {isa = PBXBuildFile; fileRef = 922EADDD245C222A00E4027E /* Font.c */; };
+		922EADE1245C2A5000E4027E /* Game.c in Sources */ = {isa = PBXBuildFile; fileRef = 922EADE0245C2A5000E4027E /* Game.c */; };
 		924B17A524556614008A9B43 /* Location.c in Sources */ = {isa = PBXBuildFile; fileRef = 924B17A424556614008A9B43 /* Location.c */; };
 		924B17A824556BC8008A9B43 /* Element.c in Sources */ = {isa = PBXBuildFile; fileRef = 924B17A724556BC8008A9B43 /* Element.c */; };
 		924B17AC245585D2008A9B43 /* ImageSet.c in Sources */ = {isa = PBXBuildFile; fileRef = 924B17AB245585D2008A9B43 /* ImageSet.c */; };
@@ -43,6 +44,8 @@
 		922EADDA245C143400E4027E /* Orbitron-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Orbitron-Medium.ttf"; path = "../../Orbitron-Medium.ttf"; sourceTree = "<group>"; };
 		922EADDC245C222A00E4027E /* Font.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Font.h; sourceTree = "<group>"; };
 		922EADDD245C222A00E4027E /* Font.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = Font.c; sourceTree = "<group>"; };
+		922EADDF245C2A5000E4027E /* Game.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Game.h; sourceTree = "<group>"; };
+		922EADE0245C2A5000E4027E /* Game.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = Game.c; sourceTree = "<group>"; };
 		924B17A324556614008A9B43 /* Location.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Location.h; sourceTree = "<group>"; };
 		924B17A424556614008A9B43 /* Location.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = Location.c; sourceTree = "<group>"; };
 		924B17A624556BC8008A9B43 /* Element.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Element.h; sourceTree = "<group>"; };
@@ -122,6 +125,8 @@
 				922EADDD245C222A00E4027E /* Font.c */,
 				924B17B02455EA08008A9B43 /* NavigationMap.h */,
 				924B17B12455EA08008A9B43 /* NavigationMap.c */,
+				922EADDF245C2A5000E4027E /* Game.h */,
+				922EADE0245C2A5000E4027E /* Game.c */,
 				924B17A324556614008A9B43 /* Location.h */,
 				924B17A424556614008A9B43 /* Location.c */,
 				924B17A624556BC8008A9B43 /* Element.h */,
@@ -218,6 +223,7 @@
 				924B17AF2455D598008A9B43 /* Utils.c in Sources */,
 				92ABBAD924543AB800218313 /* Image.c in Sources */,
 				924B17A524556614008A9B43 /* Location.c in Sources */,
+				922EADE1245C2A5000E4027E /* Game.c in Sources */,
 				922EADDE245C222A00E4027E /* Font.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -338,7 +344,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = "Inga macOS/Inga_macOS.entitlements";
+				CODE_SIGN_ENTITLEMENTS = "";
 				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
@@ -363,7 +369,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = "Inga macOS/Inga_macOS.entitlements";
+				CODE_SIGN_ENTITLEMENTS = "";
 				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;

@@ -20,8 +20,7 @@
 #include <SDL2/SDL.h>
 #include <SDL2_ttf/SDL_ttf.h>
 #include "Config.h"
-#include "Image.h"
-#include "Location.h"
+#include "Game.h"
 #include "Font.h"
 
 int main(int argc, const char * argv[]) {
@@ -34,27 +33,8 @@ int main(int argc, const char * argv[]) {
     SDL_Event event;
     int quit = 0;
     
-    Location *location = CreateLocation(1, "HafenL", renderer);
-    SDL_Palette *palette = location->image->surface->format->palette;
-    
-    Element *deco1 = CreateElement(1);
-    deco1->image = LoadImageIBM("HafenWasserL", renderer, palette, false, false);
-    deco1->position = MakeVector(210, 440);
-    AddElement(location, deco1);
-    
-    Element *deco2 = CreateElement(2);
-    deco2->image = LoadImageIBM("HafenWasserLa", renderer, palette, false, false);
-    deco2->position = MakeVector(0, 450);
-    AddElement(location, deco2);
-    
-    Element *person = CreateElement(3);
-    person->imageSet = LoadImageSetIPE("Hauptperson", renderer, palette, true);
-    person->position = MakeVector(360, 380);
-    AddElement(location, person);
-    
-    Font *font = LoadFont("Orbitron-Medium", 16, renderer);
-    Image *textImage = CreateImageFromText("Hello Text!", font);
-    
+    Game *game = CreateGame(renderer);
+        
     int mouseX = 0;
     int mouseY = 0;
     bool mouseClick = false;
@@ -81,23 +61,20 @@ int main(int argc, const char * argv[]) {
         }
         
         if (mouseClick) {
-            ElementMoveTo(person, mouseX, mouseY, 2);
+            ElementMoveTo(game->mainPerson, mouseX, mouseY, 2);
         }
         
-        UpdateLocation(location, deltaTicks);
+        UpdateGame(game, deltaTicks);
         
         SDL_RenderClear(renderer);
-        DrawLocation(location, renderer);
-        DrawImage(textImage, renderer, MakeVector(320 - textImage->width / 2, 240 - textImage->height / 2));
+        DrawGame(game, renderer);
         SDL_RenderPresent(renderer);
                 
         mouseClick = false;
         lastTicks = ticks;
     }
     
-    FreeLocation(location);
-    FreeImage(textImage);
-    FreeFont(font);
+    FreeGame(game);
     
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);

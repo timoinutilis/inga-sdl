@@ -85,8 +85,23 @@ void DrawElement(Element *element, SDL_Renderer *renderer) {
 }
 
 bool IsPointInElement(Element *element, int x, int y) {
-    if (!element || !element->isVisible || element->selectionRect.w == 0) return false;
-    return true;
+    if (!element || !element->isVisible) return false;
+    SDL_Rect rect = element->selectionRect;
+    if (rect.w == 0 && element->image) {
+        rect.x = element->position.x;
+        rect.y = element->position.y;
+        if (element->image->animation) {
+            Frame *frame = &element->image->animation->frames[element->frameIndex];
+            rect.w = frame->sourceRect.w;
+            rect.h = frame->sourceRect.h;
+            rect.x -= frame->pivot.x;
+            rect.y -= frame->pivot.y;
+        } else {
+            rect.w = element->image->width;
+            rect.h = element->image->height;
+        }
+    }
+    return x >= rect.x && x < rect.x + rect.w && y >= rect.y && y < rect.y + rect.h;
 }
 
 void SetElementImageFromSet(Element *element, int imageId) {

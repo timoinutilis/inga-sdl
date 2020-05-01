@@ -17,33 +17,23 @@
 // along with LowRes NX.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#ifndef Location_h
-#define Location_h
+#ifndef Game_h
+#define Game_h
 
 #include <stdio.h>
 #include <SDL2/SDL.h>
-#include "Image.h"
-#include "NavigationMap.h"
-#include "Element.h"
+#include "Location.h"
+#include "Font.h"
 
-typedef struct Game Game;
+typedef struct Game {
+    Font *font;
+    Element *mainPerson;
+    Location *location;
+} Game;
 
-typedef struct Location {
-    int id;
-    Game *game;
-    Image *image;
-    Image *foregroundImage;
-    NavigationMap *navigationMap;
-    Element *rootElement;
-} Location;
+Game *CreateGame(SDL_Renderer *renderer);
+void FreeGame(Game *game);
+void UpdateGame(Game *game, int deltaTicks);
+void DrawGame(Game *game, SDL_Renderer *renderer);
 
-Location *CreateLocation(int id, const char *background, SDL_Renderer *renderer);
-void FreeLocation(Location *location);
-void UpdateLocation(Location *location, int deltaTicks);
-void DrawLocation(Location *location, SDL_Renderer *renderer);
-
-void AddElement(Location *location, Element *element);
-Element *GetElement(Location *location, int id);
-Element *GetElementAt(Location *location, int x, int y);
-
-#endif /* Location_h */
+#endif /* Game_h */

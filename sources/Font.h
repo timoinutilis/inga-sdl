@@ -26,12 +26,11 @@
 #include "Image.h"
 
 typedef struct Font {
-    SDL_Renderer *renderer;
     TTF_Font *ttfFont;
 } Font;
 
-Font *LoadFont(const char *filename, int size, SDL_Renderer *renderer);
+Font *LoadFont(const char *filename, int size);
 void FreeFont(Font *font);
-Image *CreateImageFromText(const char *text, Font *font);
+Image *CreateImageFromText(const char *text, Font *font, SDL_Renderer *renderer);
 
 #endif /* Font_h */

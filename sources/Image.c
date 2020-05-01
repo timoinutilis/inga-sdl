@@ -232,8 +232,8 @@ Animation *CreateAnimationFromStrip(int numFrames, enum StripDirection direction
         for (int i = 0; i < numFrames; i++) {
             Frame *frame = &frames[i];
             frame->sourceRect = rect;
-            frame->pivotX = pivotX;
-            frame->pivotY = pivotY;
+            frame->pivot.x = pivotX;
+            frame->pivot.y = pivotY;
             frame->ticks = ticks;
             switch (direction) {
                 case StripDirectionHorizontal:
@@ -264,6 +264,6 @@ void FreeAnimation(Animation *animation) {
 void DrawAnimationFrame(Image *image, SDL_Renderer *renderer, Vector position, int index) {
     if (!image || !image->animation) return;
     Frame *frame = &image->animation->frames[index];
-    SDL_Rect dst = {position.x - frame->pivotX, position.y - frame->pivotY, frame->sourceRect.w, frame->sourceRect.h};
+    SDL_Rect dst = {position.x - frame->pivot.x, position.y - frame->pivot.y, frame->sourceRect.w, frame->sourceRect.h};
     SDL_RenderCopy(renderer, image->texture, &frame->sourceRect, &dst);
 }

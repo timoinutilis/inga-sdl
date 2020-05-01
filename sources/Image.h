@@ -27,8 +27,7 @@
 
 typedef struct Frame {
     SDL_Rect sourceRect;
-    int pivotX;
-    int pivotY;
+    Vector pivot;
     int ticks;
 } Frame;
 
