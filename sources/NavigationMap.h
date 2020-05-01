@@ -37,7 +37,7 @@ typedef struct NavigationPath {
     bool reachesDestination;
 } NavigationPath;
 
-NavigationMap *LoadNavigationMapILK(const char *filename);
+NavigationMap *LoadNavigationMap(const char *filename);
 void FreeNavigationMap(NavigationMap *navigationMap);
 NavigationPath *CreateNavigationPath(NavigationMap *navigationMap, Vector origin, Vector destination);
 void FreeNavigationPath(NavigationPath *navigationPath);

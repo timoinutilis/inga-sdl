@@ -21,19 +21,27 @@
 #define Game_h
 
 #include <stdio.h>
+#include <stdbool.h>
 #include <SDL2/SDL.h>
 #include "Location.h"
 #include "Font.h"
 
+typedef struct Focus {
+    const char *name;
+    Image *image;
+    Vector position;
+} Focus;
+
 typedef struct Game {
     Font *font;
-    Element *mainPerson;
     Location *location;
+    Focus focus;
 } Game;
 
-Game *CreateGame(SDL_Renderer *renderer);
+Game *CreateGame(void);
 void FreeGame(Game *game);
+void HandleMouseInGame(Game *game, int x, int y, bool click);
 void UpdateGame(Game *game, int deltaTicks);
-void DrawGame(Game *game, SDL_Renderer *renderer);
+void DrawGame(Game *game);
 
 #endif /* Game_h */

@@ -31,6 +31,6 @@ typedef struct Font {
 
 Font *LoadFont(const char *filename, int size);
 void FreeFont(Font *font);
-Image *CreateImageFromText(const char *text, Font *font, SDL_Renderer *renderer);
+Image *CreateImageFromText(const char *text, Font *font);
 
 #endif /* Font_h */

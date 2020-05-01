@@ -74,18 +74,18 @@ void UpdateElement(Element *element, int deltaTicks) {
     }
 }
 
-void DrawElement(Element *element, SDL_Renderer *renderer) {
+void DrawElement(Element *element) {
     if (!element || !element->isVisible) return;
     
     if (element->image && element->image->animation) {
-        DrawAnimationFrame(element->image, renderer, element->position, element->frameIndex);
+        DrawAnimationFrame(element->image, element->position, element->frameIndex);
     } else {
-        DrawImage(element->image, renderer, element->position);
+        DrawImage(element->image, element->position);
     }
 }
 
 bool IsPointInElement(Element *element, int x, int y) {
-    if (!element || !element->isVisible) return false;
+    if (!element || !element->isVisible || !element->isSelectable) return false;
     SDL_Rect rect = element->selectionRect;
     if (rect.w == 0 && element->image) {
         rect.x = element->position.x;
@@ -101,7 +101,10 @@ bool IsPointInElement(Element *element, int x, int y) {
             rect.h = element->image->height;
         }
     }
-    return x >= rect.x && x < rect.x + rect.w && y >= rect.y && y < rect.y + rect.h;
+    if (rect.w > 0) {
+        return x >= rect.x && x < rect.x + rect.w && y >= rect.y && y < rect.y + rect.h;
+    }
+    return false;
 }
 
 void SetElementImageFromSet(Element *element, int imageId) {

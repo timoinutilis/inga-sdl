@@ -21,6 +21,7 @@
 #define Utils_h
 
 #include <stdio.h>
+#include <SDL2/SDL.h>
 
 typedef struct Vector {
     float x;
@@ -28,5 +29,7 @@ typedef struct Vector {
 } Vector;
 
 Vector MakeVector(float x, float y);
+SDL_Rect MakeRect(int x, int y, int width, int height);
+SDL_Rect MakeRectFromTo(int x1, int y1, int x2, int y2);
 
 #endif /* Utils_h */

@@ -20,6 +20,7 @@
 #include <SDL2/SDL.h>
 #include <SDL2_ttf/SDL_ttf.h>
 #include "Config.h"
+#include "Global.h"
 #include "Game.h"
 #include "Font.h"
 
@@ -33,7 +34,9 @@ int main(int argc, const char * argv[]) {
     SDL_Event event;
     int quit = 0;
     
-    Game *game = CreateGame(renderer);
+    SetGlobalRenderer(renderer);
+    
+    Game *game = CreateGame();
         
     int mouseX = 0;
     int mouseY = 0;
@@ -59,15 +62,12 @@ int main(int argc, const char * argv[]) {
                     break;
             }
         }
-        
-        if (mouseClick) {
-            ElementMoveTo(game->mainPerson, mouseX, mouseY, 2);
-        }
-        
+                
+        HandleMouseInGame(game, mouseX, mouseY, mouseClick);
         UpdateGame(game, deltaTicks);
         
         SDL_RenderClear(renderer);
-        DrawGame(game, renderer);
+        DrawGame(game);
         SDL_RenderPresent(renderer);
                 
         mouseClick = false;

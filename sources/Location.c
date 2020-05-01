@@ -21,17 +21,17 @@
 
 void FreeElements(Location *location);
 void UpdateElements(Location *location, int deltaTicks);
-void DrawElements(Location *location, SDL_Renderer *renderer);
+void DrawElements(Location *location);
 
-Location *CreateLocation(int id, const char *background, SDL_Renderer *renderer) {
+Location *CreateLocation(int id, const char *background) {
     Location *location = calloc(1, sizeof(Location));
     if (!location) {
         printf("CreateLocation: Out of memory\n");
     } else {
         location->id = id;
-        location->image = LoadImageIBM(background, renderer, NULL, false, true);
-        location->foregroundImage = LoadImageIMP(background, location->image, renderer);
-        location->navigationMap = LoadNavigationMapILK(background);
+        location->image = LoadImage(background, NULL, false, true);
+        location->foregroundImage = LoadMaskedImage(background, location->image);
+        location->navigationMap = LoadNavigationMap(background);
     }
     return location;
 }
@@ -45,16 +45,33 @@ void FreeLocation(Location *location) {
     free(location);
 }
 
+void HandleMouseInLocation(Location *location, int x, int y, bool click) {
+    location->currentFocusName = NULL;
+    Element *focusedElement = GetElementAt(location, x, y);
+    if (focusedElement) {
+        location->currentFocusName = focusedElement->name;
+        if (click) {
+            if (focusedElement->target.y) {
+                Element *person = GetElement(location, 0);
+                ElementMoveTo(person, focusedElement->target.x, focusedElement->target.y, 2);
+            }
+        }
+    } else if (click) {
+        Element *person = GetElement(location, 0);
+        ElementMoveTo(person, x, y, 2);
+    }
+}
+
 void UpdateLocation(Location *location, int deltaTicks) {
     if (!location) return;
     UpdateElements(location, deltaTicks);
 }
 
-void DrawLocation(Location *location, SDL_Renderer *renderer) {
+void DrawLocation(Location *location) {
     if (!location) return;
-    DrawImage(location->image, renderer, MakeVector(0, 0));
-    DrawElements(location, renderer);
-    DrawImage(location->foregroundImage, renderer, MakeVector(0, 0));
+    DrawImage(location->image, MakeVector(0, 0));
+    DrawElements(location);
+    DrawImage(location->foregroundImage, MakeVector(0, 0));
 }
 
 void AddElement(Location *location, Element *element) {
@@ -107,11 +124,11 @@ void UpdateElements(Location *location, int deltaTicks) {
     }
 }
 
-void DrawElements(Location *location, SDL_Renderer *renderer) {
+void DrawElements(Location *location) {
     if (!location) return;
     Element *element = location->rootElement;
     while (element) {
-        DrawElement(element, renderer);
+        DrawElement(element);
         element = element->next;
     }
 }

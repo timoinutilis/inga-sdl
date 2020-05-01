@@ -18,6 +18,7 @@
 //
 
 #include "Font.h"
+#include "Global.h"
 
 Font *LoadFont(const char *filename, int size) {
     Font *font = NULL;
@@ -50,24 +51,25 @@ void FreeFont(Font *font) {
     free(font);
 }
 
-Image *CreateImageFromText(const char *text, Font *font, SDL_Renderer *renderer) {
+Image *CreateImageFromText(const char *text, Font *font) {
     if (!font) return NULL;
     
     Image *image = NULL;
         
     SDL_Color outlineColor = {0, 0, 0, 255};
     TTF_SetFontOutline(font->ttfFont, 1);
-    SDL_Surface *surface = TTF_RenderText_Blended(font->ttfFont, text, outlineColor);
+    SDL_Surface *surface = TTF_RenderUTF8_Blended(font->ttfFont, text, outlineColor);
     
     TTF_SetFontOutline(font->ttfFont, 0);
     SDL_Color color = {255, 255, 255, 255};
-    SDL_Surface *fgSurface = TTF_RenderText_Blended(font->ttfFont, text, color);
+    SDL_Surface *fgSurface = TTF_RenderUTF8_Blended(font->ttfFont, text, color);
             
     if (!surface || !fgSurface) {
         printf("TTF_RenderText_Blended: %s\n", TTF_GetError());
     } else {
         SDL_Rect rect = {1, 1, fgSurface->w, fgSurface->h};
         SDL_BlitSurface(fgSurface, NULL, surface, &rect);
+        SDL_Renderer *renderer = GetGlobalRenderer();
         SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, surface);
         if (!texture) {
             printf("SDL_CreateTextureFromSurface: %s\n", SDL_GetError());

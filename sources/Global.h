@@ -17,19 +17,13 @@
 // along with LowRes NX.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#include "Utils.h"
+#ifndef Global_h
+#define Global_h
 
-Vector MakeVector(float x, float y) {
-    Vector vector = {x, y};
-    return vector;
-}
+#include <stdio.h>
+#include <SDL2/SDL.h>
 
-SDL_Rect MakeRect(int x, int y, int width, int height) {
-    SDL_Rect rect = {x, y, width, height};
-    return rect;
-}
+void SetGlobalRenderer(SDL_Renderer *renderer);
+SDL_Renderer *GetGlobalRenderer(void);
 
-SDL_Rect MakeRectFromTo(int x1, int y1, int x2, int y2) {
-    SDL_Rect rect = {x1, y1, x2 - x1 + 1, y2 - y1 + 1};
-    return rect;
-}
+#endif /* Global_h */

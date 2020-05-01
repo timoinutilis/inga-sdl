@@ -42,6 +42,7 @@ typedef struct Element {
     int id;
     Location *location;
     Vector position;
+    bool isSelectable;
     SDL_Rect selectionRect;
     Vector target;
     bool isVisible;
@@ -62,7 +63,7 @@ typedef struct Element {
 Element *CreateElement(int id);
 void FreeElement(Element *element);
 void UpdateElement(Element *element, int deltaTicks);
-void DrawElement(Element *element, SDL_Renderer *renderer);
+void DrawElement(Element *element);
 bool IsPointInElement(Element *element, int x, int y);
 
 void ElementStop(Element *element);

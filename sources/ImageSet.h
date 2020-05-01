@@ -44,12 +44,11 @@ typedef struct ImageSetItem {
 typedef struct ImageSet {
     int numItems;
     struct ImageSetItem *items;
-    SDL_Renderer *renderer;
     SDL_Palette *defaultPalette;
     bool createsMasks;
 } ImageSet;
 
-ImageSet *LoadImageSetIPE(const char *filename, SDL_Renderer *renderer, SDL_Palette *defaultPalette, bool createMasks);
+ImageSet *LoadImageSet(const char *filename, SDL_Palette *defaultPalette, bool createMasks);
 void FreeImageSet(ImageSet *imageSet);
 Image *GetImageFromSet(ImageSet *imageSet, int id, Vector direction);
 

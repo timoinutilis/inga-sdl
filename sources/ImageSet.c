@@ -19,7 +19,7 @@
 
 #include "ImageSet.h"
 
-ImageSet *LoadImageSetIPE(const char *filename, SDL_Renderer *renderer, SDL_Palette *defaultPalette, bool createMasks) {
+ImageSet *LoadImageSet(const char *filename, SDL_Palette *defaultPalette, bool createMasks) {
     ImageSet *imageSet = NULL;
     
     char path[FILENAME_MAX];
@@ -46,7 +46,6 @@ ImageSet *LoadImageSetIPE(const char *filename, SDL_Renderer *renderer, SDL_Pale
             if (imageSet) {
                 imageSet->numItems = numItems;
                 imageSet->items = items;
-                imageSet->renderer = renderer;
                 imageSet->defaultPalette = defaultPalette;
                 imageSet->createsMasks = createMasks;
             } else {
@@ -118,7 +117,7 @@ Image *GetImageFromSet(ImageSet *imageSet, int id, Vector direction) {
     
     if (bestItem) {
         if (!bestItem->image) {
-            bestItem->image = LoadImageIBM(bestItem->filename, imageSet->renderer, imageSet->defaultPalette, imageSet->createsMasks, false);
+            bestItem->image = LoadImage(bestItem->filename, imageSet->defaultPalette, imageSet->createsMasks, false);
         }
         return bestItem->image;
     }

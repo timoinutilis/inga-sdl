@@ -21,6 +21,7 @@
 #define Location_h
 
 #include <stdio.h>
+#include <stdbool.h>
 #include <SDL2/SDL.h>
 #include "Image.h"
 #include "NavigationMap.h"
@@ -35,12 +36,14 @@ typedef struct Location {
     Image *foregroundImage;
     NavigationMap *navigationMap;
     Element *rootElement;
+    const char *currentFocusName;
 } Location;
 
-Location *CreateLocation(int id, const char *background, SDL_Renderer *renderer);
+Location *CreateLocation(int id, const char *background);
 void FreeLocation(Location *location);
+void HandleMouseInLocation(Location *location, int x, int y, bool click);
 void UpdateLocation(Location *location, int deltaTicks);
-void DrawLocation(Location *location, SDL_Renderer *renderer);
+void DrawLocation(Location *location);
 
 void AddElement(Location *location, Element *element);
 Element *GetElement(Location *location, int id);

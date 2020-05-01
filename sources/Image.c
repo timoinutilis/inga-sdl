@@ -18,6 +18,7 @@
 //
 
 #include "Image.h"
+#include "Global.h"
 
 typedef struct IBMColor {
     Uint8 r;
@@ -28,8 +29,9 @@ typedef struct IBMColor {
 Animation *CreateAnimationFromStrip(int numFrames, enum StripDirection direction, int width, int height, int pivotX, int pivotY, int ticks);
 void FreeAnimation(Animation *animation);
 
-Image *LoadImageIBM(const char *filename, SDL_Renderer *renderer, SDL_Palette *defaultPalette, bool createMask, bool keepSurface) {
+Image *LoadImage(const char *filename, SDL_Palette *defaultPalette, bool createMask, bool keepSurface) {
     Image *image = NULL;
+    SDL_Renderer *renderer = GetGlobalRenderer();
     
     char path[FILENAME_MAX];
     sprintf(path, "game/BitMaps/%s.ibm", filename);
@@ -144,9 +146,10 @@ Image *LoadImageIBM(const char *filename, SDL_Renderer *renderer, SDL_Palette *d
     return image;
 }
 
-Image *LoadImageIMP(const char *filename, Image *sourceImage, SDL_Renderer *renderer) {
+Image *LoadMaskedImage(const char *filename, Image *sourceImage) {
     if (!sourceImage || !sourceImage->surface) return NULL;
     Image *image = NULL;
+    SDL_Renderer *renderer = GetGlobalRenderer();
     
     char path[FILENAME_MAX];
     sprintf(path, "game/BitMaps/%s.imp", filename);
@@ -216,8 +219,9 @@ void FreeImage(Image *image) {
     free(image);
 }
 
-void DrawImage(Image *image, SDL_Renderer *renderer, Vector position) {
+void DrawImage(Image *image, Vector position) {
     if (!image) return;
+    SDL_Renderer *renderer = GetGlobalRenderer();
     SDL_Rect src = {0, 0, image->width, image->height};
     SDL_Rect dst = {position.x, position.y, image->width, image->height};
     SDL_RenderCopy(renderer, image->texture, &src, &dst);
@@ -261,8 +265,9 @@ void FreeAnimation(Animation *animation) {
     free(animation);
 }
 
-void DrawAnimationFrame(Image *image, SDL_Renderer *renderer, Vector position, int index) {
+void DrawAnimationFrame(Image *image, Vector position, int index) {
     if (!image || !image->animation) return;
+    SDL_Renderer *renderer = GetGlobalRenderer();
     Frame *frame = &image->animation->frames[index];
     SDL_Rect dst = {position.x - frame->pivot.x, position.y - frame->pivot.y, frame->sourceRect.w, frame->sourceRect.h};
     SDL_RenderCopy(renderer, image->texture, &frame->sourceRect, &dst);

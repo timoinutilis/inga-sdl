@@ -20,7 +20,7 @@
 #include "NavigationMap.h"
 #include <SDL2/SDL.h>
 
-NavigationMap *LoadNavigationMapILK(const char *filename) {
+NavigationMap *LoadNavigationMap(const char *filename) {
     NavigationMap *navigationMap = NULL;
     
     char path[FILENAME_MAX];
