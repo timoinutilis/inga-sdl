@@ -51,6 +51,7 @@ typedef struct Element {
     struct Image *image;
     int frameIndex;
     int frameTicks;
+    int loopCount;
     struct ImageSet *imageSet;
     int imageId;
     Vector direction;
@@ -76,6 +77,6 @@ void ElementStop(Element *element);
 void ElementLookTo(Element *element, int x, int y, int imageId);
 void ElementMoveTo(Element *element, int x, int y, int imageId);
 void ElementTalk(Element *element, const char *text, int imageId);
-void ElementAnimate(Element *element, int imageId);
+void ElementAnimate(Element *element, int imageId, int loopCount);
 
 #endif /* Element_h */

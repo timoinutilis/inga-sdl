@@ -51,7 +51,7 @@ void FreeFont(Font *font) {
     free(font);
 }
 
-Image *CreateImageFromText(const char *text, Font *font) {
+Image *CreateImageFromText(const char *text, Font *font, SDL_Color color) {
     if (!font) return NULL;
     
     Image *image = NULL;
@@ -61,7 +61,6 @@ Image *CreateImageFromText(const char *text, Font *font) {
     SDL_Surface *surface = TTF_RenderUTF8_Blended(font->ttfFont, text, outlineColor);
     
     TTF_SetFontOutline(font->ttfFont, 0);
-    SDL_Color color = {255, 255, 255, 255};
     SDL_Surface *fgSurface = TTF_RenderUTF8_Blended(font->ttfFont, text, color);
             
     if (!surface || !fgSurface) {

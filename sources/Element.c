@@ -54,14 +54,23 @@ void UpdateElement(Element *element, int deltaTicks) {
         SetElementImageFromSet(element, 1);
     }
     
+    // Animation
     if (element->image && element->image->animation) {
         element->frameTicks += deltaTicks;
         if (element->frameTicks >= element->image->animation->frames[element->frameIndex].ticks) {
             element->frameTicks = 0;
-            element->frameIndex = (element->frameIndex + 1) % element->image->animation->numFrames;
+            element->frameIndex += 1;
+            int numFrames = element->image->animation->numFrames;
+            if (element->frameIndex >= numFrames) {
+                element->frameIndex = 0;
+                if (element->loopCount > 0) {
+                    element->loopCount -= 1;
+                }
+            }
         }
     }
     
+    // Action
     switch (element->action) {
         case ElementActionIdle:
             break;
@@ -76,6 +85,9 @@ void UpdateElement(Element *element, int deltaTicks) {
             }
             break;
         case ElementActionAnimate:
+            if (element->loopCount == 0) {
+                ElementStop(element);
+            }
             break;
     }
 }
@@ -173,15 +185,17 @@ void ElementTalk(Element *element, const char *text, int imageId) {
     ElementFreeAction(element);
     element->action = ElementActionTalk;
     SetElementImageFromSet(element, imageId);
-    element->talkImage = CreateImageFromText(text, element->talkFont);
+    SDL_Color color = {255, 255, 255, 255};
+    element->talkImage = CreateImageFromText(text, element->talkFont, color);
     element->talkOffset = element->talkImage ? MakeVector(element->talkImage->width * -0.5, -200) : MakeVector(0, 0);
-    element->talkTicks = (int)strlen(text) * 100 + 1000;
+    element->talkTicks = (int)strlen(text) * 25 + 1000;
 }
 
-void ElementAnimate(Element *element, int imageId) {
+void ElementAnimate(Element *element, int imageId, int loopCount) {
     if (!element) return;
     ElementFreeAction(element);
     element->action = ElementActionAnimate;
+    element->loopCount = loopCount;
     SetElementImageFromSet(element, imageId);
 }
 
@@ -209,7 +223,11 @@ void UpdateMove(Element *element, int deltaTicks) {
         bool reached = element->navigationPath->reachesDestination;
         ElementStop(element);
         if (reached) {
-            ElementTalk(element, "Das kann ich nicht benutzen.", 3);
+            if (rand() % 2 == 0) {
+                ElementTalk(element, "Das kann ich nicht benutzen.", 3);
+            } else {
+                ElementAnimate(element, 13, 1);
+            }
         } else {
 //            if ((benutzt + angesehen > 0) && (akt->p4 == 2) && (akt->id == 0)) {
 //                erreicht = TRUE;

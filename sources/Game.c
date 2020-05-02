@@ -121,7 +121,8 @@ void SetFocus(Game *game, int x, int y, const char *name) {
         game->focus.image = NULL;
         game->focus.name = name;
         if (name) {
-            game->focus.image = CreateImageFromText(name, game->font);
+            SDL_Color color = {255, 255, 0, 255};
+            game->focus.image = CreateImageFromText(name, game->font, color);
         }
     }
     if (game->focus.image) {
