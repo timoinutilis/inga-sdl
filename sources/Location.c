@@ -22,6 +22,7 @@
 void FreeElements(Location *location);
 void UpdateElements(Location *location, int deltaTicks);
 void DrawElements(Location *location);
+void DrawElementOverlays(Location *location);
 
 Location *CreateLocation(int id, const char *background) {
     Location *location = calloc(1, sizeof(Location));
@@ -72,6 +73,7 @@ void DrawLocation(Location *location) {
     DrawImage(location->image, MakeVector(0, 0));
     DrawElements(location);
     DrawImage(location->foregroundImage, MakeVector(0, 0));
+    DrawElementOverlays(location);
 }
 
 void AddElement(Location *location, Element *element) {
@@ -129,6 +131,15 @@ void DrawElements(Location *location) {
     Element *element = location->rootElement;
     while (element) {
         DrawElement(element);
+        element = element->next;
+    }
+}
+
+void DrawElementOverlays(Location *location) {
+    if (!location) return;
+    Element *element = location->rootElement;
+    while (element) {
+        DrawElementOverlay(element);
         element = element->next;
     }
 }

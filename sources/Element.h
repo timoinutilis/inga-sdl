@@ -28,6 +28,7 @@
 #include "Image.h"
 #include "ImageSet.h"
 #include "NavigationMap.h"
+#include "Font.h"
 
 typedef struct Location Location;
 
@@ -57,6 +58,10 @@ typedef struct Element {
     NavigationPath *navigationPath;
     int navigationIndex;
     float speed;
+    Image *talkImage;
+    Vector talkOffset;
+    int talkTicks;
+    Font *talkFont;
     struct Element *next;
 } Element;
 
@@ -64,6 +69,7 @@ Element *CreateElement(int id);
 void FreeElement(Element *element);
 void UpdateElement(Element *element, int deltaTicks);
 void DrawElement(Element *element);
+void DrawElementOverlay(Element *element);
 bool IsPointInElement(Element *element, int x, int y);
 
 void ElementStop(Element *element);

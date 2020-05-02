@@ -19,6 +19,8 @@
 
 #include "Game.h"
 
+void SetFocus(Game *game, int x, int y, const char *name);
+
 Game *CreateGame() {
     Game *game = calloc(1, sizeof(Game));
     if (!game) {
@@ -33,6 +35,7 @@ Game *CreateGame() {
         Element *person = CreateElement(0);
         person->imageSet = LoadImageSet("Hauptperson", palette, true);
         person->position = MakeVector(360, 380);
+        person->talkFont = game->font;
         AddElement(location, person);
         
         Element *deco1 = CreateElement(1);
@@ -94,20 +97,10 @@ void FreeGame(Game *game) {
 }
 
 void HandleMouseInGame(Game *game, int x, int y, bool click) {
+    if (!game) return;
     HandleMouseInLocation(game->location, x, y, click);
-    
     if (game->location) {
-        if (game->location->currentFocusName != game->focus.name) {
-            FreeImage(game->focus.image);
-            game->focus.image = NULL;
-            game->focus.name = game->location->currentFocusName;
-            if (game->focus.name) {
-                game->focus.image = CreateImageFromText(game->focus.name, game->font);
-            }
-        }
-        if (game->focus.image) {
-            game->focus.position = MakeVector(x - game->focus.image->width * 0.5, y - game->focus.image->height);
-        }
+        SetFocus(game, x, y, game->location->currentFocusName);
     }
 }
 
@@ -120,4 +113,19 @@ void DrawGame(Game *game) {
     if (!game) return;
     DrawLocation(game->location);
     DrawImage(game->focus.image, game->focus.position);
+}
+
+void SetFocus(Game *game, int x, int y, const char *name) {
+    if (name != game->focus.name) {
+        FreeImage(game->focus.image);
+        game->focus.image = NULL;
+        game->focus.name = name;
+        if (name) {
+            game->focus.image = CreateImageFromText(name, game->font);
+        }
+    }
+    if (game->focus.image) {
+        int width = game->focus.image->width;
+        game->focus.position = MakeVector(fmin(fmax(0, x - width * 0.5), SCREEN_WIDTH - width), y - game->focus.image->height - 4);
+    }
 }

@@ -21,6 +21,7 @@
 #include "Location.h"
 
 void SetElementImageFromSet(Element *element, int imageId);
+void ElementFreeAction(Element *element);
 void UpdateMove(Element *element, int deltaTicks);
 
 Element *CreateElement(int id) {
@@ -42,7 +43,7 @@ void FreeElement(Element *element) {
     } else {
         FreeImage(element->image);
     }
-    FreeNavigationPath(element->navigationPath);
+    ElementFreeAction(element);
     free(element);
 }
 
@@ -68,6 +69,11 @@ void UpdateElement(Element *element, int deltaTicks) {
             UpdateMove(element, deltaTicks);
             break;
         case ElementActionTalk:
+            if (element->talkTicks <= 0) {
+                ElementStop(element);
+            } else {
+                element->talkTicks -= deltaTicks;
+            }
             break;
         case ElementActionAnimate:
             break;
@@ -81,6 +87,17 @@ void DrawElement(Element *element) {
         DrawAnimationFrame(element->image, element->position, element->frameIndex);
     } else {
         DrawImage(element->image, element->position);
+    }
+}
+
+void DrawElementOverlay(Element *element) {
+    if (!element || !element->isVisible) return;
+    
+    if (element->talkImage) {
+        Vector position = element->position;
+        position.x = fmin(fmax(0, position.x + element->talkOffset.x), SCREEN_WIDTH - element->talkImage->width);
+        position.y = fmin(fmax(0, position.y + element->talkOffset.y), SCREEN_HEIGHT - element->talkImage->height);
+        DrawImage(element->talkImage, position);
     }
 }
 
@@ -115,8 +132,19 @@ void SetElementImageFromSet(Element *element, int imageId) {
     element->frameTicks = 0;
 }
 
+void ElementFreeAction(Element *element) {
+    if (!element) return;
+    
+    FreeImage(element->talkImage);
+    element->talkImage = NULL;
+    
+    FreeNavigationPath(element->navigationPath);
+    element->navigationPath = NULL;
+}
+
 void ElementStop(Element *element) {
     if (!element) return;
+    ElementFreeAction(element);
     element->action = ElementActionIdle;
     SetElementImageFromSet(element, 1);
 }
@@ -130,7 +158,7 @@ void ElementLookTo(Element *element, int x, int y, int imageId) {
 
 void ElementMoveTo(Element *element, int x, int y, int imageId) {
     if (!element) return;
-    FreeNavigationPath(element->navigationPath);
+    ElementFreeAction(element);
     element->navigationIndex = 0;
     element->navigationPath = CreateNavigationPath(element->location->navigationMap, element->position, MakeVector(x, y));
     if (element->navigationPath) {
@@ -142,12 +170,17 @@ void ElementMoveTo(Element *element, int x, int y, int imageId) {
 
 void ElementTalk(Element *element, const char *text, int imageId) {
     if (!element) return;
+    ElementFreeAction(element);
     element->action = ElementActionTalk;
     SetElementImageFromSet(element, imageId);
+    element->talkImage = CreateImageFromText(text, element->talkFont);
+    element->talkOffset = element->talkImage ? MakeVector(element->talkImage->width * -0.5, -200) : MakeVector(0, 0);
+    element->talkTicks = (int)strlen(text) * 100 + 1000;
 }
 
 void ElementAnimate(Element *element, int imageId) {
     if (!element) return;
+    ElementFreeAction(element);
     element->action = ElementActionAnimate;
     SetElementImageFromSet(element, imageId);
 }
@@ -168,14 +201,16 @@ void UpdateMove(Element *element, int deltaTicks) {
         element->position.x += (vx / nv);
         element->position.y += (vy / nv);
         AdjustPositionForNavigation(element->location->navigationMap, &element->position);
-//        }
     } else if (element->navigationIndex + 1 < element->navigationPath->numPositions) {
         element->navigationIndex += 1;
         Vector position = element->navigationPath->positions[element->navigationIndex];
         ElementLookTo(element, position.x, position.y, 0);
     } else {
+        bool reached = element->navigationPath->reachesDestination;
         ElementStop(element);
-        if (!element->navigationPath->reachesDestination) {
+        if (reached) {
+            ElementTalk(element, "Das kann ich nicht benutzen.", 3);
+        } else {
 //            if ((benutzt + angesehen > 0) && (akt->p4 == 2) && (akt->id == 0)) {
 //                erreicht = TRUE;
 //            } else {
