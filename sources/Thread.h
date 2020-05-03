@@ -14,23 +14,31 @@
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with LowRes NX.  If not, see <http://www.gnu.org/licenses/>.
+// along with Inga.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#ifndef Utils_h
-#define Utils_h
+#ifndef Thread_h
+#define Thread_h
 
 #include <stdio.h>
-#include <SDL2/SDL.h>
+#include <stdbool.h>
+#include "Element.h"
 
-typedef struct Vector {
-    float x;
-    float y;
-} Vector;
+typedef struct Game Game;
 
-Vector MakeVector(float x, float y);
-SDL_Rect MakeRect(int x, int y, int width, int height);
-SDL_Rect MakeRectFromTo(int x1, int y1, int x2, int y2);
-void *LoadFile(const char *path);
+typedef struct Thread {
+    int id;
+    bool isActive;
+    unsigned long ptr;
+    unsigned long subptr;
+    unsigned long listeptr;
+    unsigned long dialoglisteptr;
+    unsigned long escptr;
+    Element *talkingElement;
+} Thread;
 
-#endif /* Utils_h */
+Thread *CreateThread(int id);
+void FreeThread(Thread *thread);
+void UpdateThread(Thread *thread, Game *game);
+
+#endif /* Thread_h */

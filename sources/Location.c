@@ -33,6 +33,11 @@ Location *CreateLocation(int id, const char *background) {
         location->image = LoadImage(background, NULL, false, true);
         location->foregroundImage = LoadMaskedImage(background, location->image);
         location->navigationMap = LoadNavigationMap(background);
+        
+        Element *element = CreateElement(0);
+        element->position = MakeVector(320, 320);
+        element->imageSet = LoadImageSet("Hauptperson", location->image->surface->format->palette, true);
+        AddElement(location, element);
     }
     return location;
 }
@@ -47,6 +52,7 @@ void FreeLocation(Location *location) {
 }
 
 void HandleMouseInLocation(Location *location, int x, int y, bool click) {
+    if (!location) return;
     location->currentFocusName = NULL;
     Element *focusedElement = GetElementAt(location, x, y);
     if (focusedElement) {

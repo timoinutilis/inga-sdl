@@ -14,23 +14,24 @@
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with LowRes NX.  If not, see <http://www.gnu.org/licenses/>.
+// along with Inga.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#ifndef Utils_h
-#define Utils_h
+#ifndef Script_h
+#define Script_h
 
 #include <stdio.h>
-#include <SDL2/SDL.h>
 
-typedef struct Vector {
-    float x;
-    float y;
-} Vector;
+typedef struct Script {
+    unsigned char *inga;
+    char *itxt;
+} Script;
 
-Vector MakeVector(float x, float y);
-SDL_Rect MakeRect(int x, int y, int width, int height);
-SDL_Rect MakeRectFromTo(int x1, int y1, int x2, int y2);
-void *LoadFile(const char *path);
+Script *LoadScript(const char *filename);
+void FreeScript(Script *script);
 
-#endif /* Utils_h */
+unsigned short peekw(Script *script, unsigned long pointer);
+unsigned long peekl(Script *script, unsigned long pointer);
+const char *peeks(Script *script, unsigned long pointer);
+
+#endif /* Script_h */

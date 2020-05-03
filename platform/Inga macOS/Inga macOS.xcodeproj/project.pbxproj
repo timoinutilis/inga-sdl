@@ -11,6 +11,8 @@
 		922EADDE245C222A00E4027E /* Font.c in Sources */ = {isa = PBXBuildFile; fileRef = 922EADDD245C222A00E4027E /* Font.c */; };
 		922EADE1245C2A5000E4027E /* Game.c in Sources */ = {isa = PBXBuildFile; fileRef = 922EADE0245C2A5000E4027E /* Game.c */; };
 		922EADE4245C932A00E4027E /* Global.c in Sources */ = {isa = PBXBuildFile; fileRef = 922EADE3245C932A00E4027E /* Global.c */; };
+		922EADEA245DD1E100E4027E /* Script.c in Sources */ = {isa = PBXBuildFile; fileRef = 922EADE9245DD1E100E4027E /* Script.c */; };
+		922EADED245DE60E00E4027E /* Thread.c in Sources */ = {isa = PBXBuildFile; fileRef = 922EADEC245DE60E00E4027E /* Thread.c */; };
 		924B17A524556614008A9B43 /* Location.c in Sources */ = {isa = PBXBuildFile; fileRef = 924B17A424556614008A9B43 /* Location.c */; };
 		924B17A824556BC8008A9B43 /* Element.c in Sources */ = {isa = PBXBuildFile; fileRef = 924B17A724556BC8008A9B43 /* Element.c */; };
 		924B17AC245585D2008A9B43 /* ImageSet.c in Sources */ = {isa = PBXBuildFile; fileRef = 924B17AB245585D2008A9B43 /* ImageSet.c */; };
@@ -49,6 +51,10 @@
 		922EADE0245C2A5000E4027E /* Game.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = Game.c; sourceTree = "<group>"; };
 		922EADE2245C932A00E4027E /* Global.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Global.h; sourceTree = "<group>"; };
 		922EADE3245C932A00E4027E /* Global.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = Global.c; sourceTree = "<group>"; };
+		922EADE8245DD1E100E4027E /* Script.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Script.h; sourceTree = "<group>"; };
+		922EADE9245DD1E100E4027E /* Script.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = Script.c; sourceTree = "<group>"; };
+		922EADEB245DE60E00E4027E /* Thread.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Thread.h; sourceTree = "<group>"; };
+		922EADEC245DE60E00E4027E /* Thread.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = Thread.c; sourceTree = "<group>"; };
 		924B17A324556614008A9B43 /* Location.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Location.h; sourceTree = "<group>"; };
 		924B17A424556614008A9B43 /* Location.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = Location.c; sourceTree = "<group>"; };
 		924B17A624556BC8008A9B43 /* Element.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Element.h; sourceTree = "<group>"; };
@@ -130,12 +136,16 @@
 				922EADDD245C222A00E4027E /* Font.c */,
 				924B17B02455EA08008A9B43 /* NavigationMap.h */,
 				924B17B12455EA08008A9B43 /* NavigationMap.c */,
+				922EADE8245DD1E100E4027E /* Script.h */,
+				922EADE9245DD1E100E4027E /* Script.c */,
 				922EADDF245C2A5000E4027E /* Game.h */,
 				922EADE0245C2A5000E4027E /* Game.c */,
 				924B17A324556614008A9B43 /* Location.h */,
 				924B17A424556614008A9B43 /* Location.c */,
 				924B17A624556BC8008A9B43 /* Element.h */,
 				924B17A724556BC8008A9B43 /* Element.c */,
+				922EADEB245DE60E00E4027E /* Thread.h */,
+				922EADEC245DE60E00E4027E /* Thread.c */,
 			);
 			name = sources;
 			path = ../../sources;
@@ -223,12 +233,14 @@
 			files = (
 				924B17AC245585D2008A9B43 /* ImageSet.c in Sources */,
 				924B17A824556BC8008A9B43 /* Element.c in Sources */,
+				922EADEA245DD1E100E4027E /* Script.c in Sources */,
 				922EADE4245C932A00E4027E /* Global.c in Sources */,
 				924B17B22455EA08008A9B43 /* NavigationMap.c in Sources */,
 				929EDBD6244E32BD00DC64D9 /* main.c in Sources */,
 				924B17AF2455D598008A9B43 /* Utils.c in Sources */,
 				92ABBAD924543AB800218313 /* Image.c in Sources */,
 				924B17A524556614008A9B43 /* Location.c in Sources */,
+				922EADED245DE60E00E4027E /* Thread.c in Sources */,
 				922EADE1245C2A5000E4027E /* Game.c in Sources */,
 				922EADDE245C222A00E4027E /* Font.c in Sources */,
 			);

@@ -25,6 +25,8 @@
 #include <SDL2/SDL.h>
 #include "Location.h"
 #include "Font.h"
+#include "Script.h"
+#include "Thread.h"
 
 typedef struct Focus {
     const char *name;
@@ -34,6 +36,8 @@ typedef struct Focus {
 
 typedef struct Game {
     Font *font;
+    Script *script;
+    Thread *mainThread;
     Location *location;
     Focus focus;
 } Game;

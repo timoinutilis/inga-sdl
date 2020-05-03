@@ -62,7 +62,6 @@ typedef struct Element {
     Image *talkImage;
     Vector talkOffset;
     int talkTicks;
-    Font *talkFont;
     struct Element *next;
 } Element;
 
@@ -74,9 +73,10 @@ void DrawElementOverlay(Element *element);
 bool IsPointInElement(Element *element, int x, int y);
 
 void ElementStop(Element *element);
+void ElementSetSide(Element *element, ImageSide side, int imageId);
 void ElementLookTo(Element *element, int x, int y, int imageId);
 void ElementMoveTo(Element *element, int x, int y, int imageId);
-void ElementTalk(Element *element, const char *text, int imageId);
+void ElementTalk(Element *element, const char *text, int imageId, Font *font);
 void ElementAnimate(Element *element, int imageId, int loopCount);
 
 #endif /* Element_h */

@@ -161,6 +161,29 @@ void ElementStop(Element *element) {
     SetElementImageFromSet(element, 1);
 }
 
+void ElementSetSide(Element *element, ImageSide side, int imageId) {
+    if (!element) return;
+    switch (side) {
+        case ImageSideFront:
+            element->direction.x = 0;
+            element->direction.y = 1;
+            break;
+        case ImageSideBack:
+            element->direction.x = 0;
+            element->direction.y = -1;
+            break;
+        case ImageSideLeft:
+            element->direction.x = -1;
+            element->direction.y = 0;
+            break;
+        case ImageSideRight:
+            element->direction.x = 1;
+            element->direction.y = 0;
+            break;
+    }
+    SetElementImageFromSet(element, imageId ? imageId : element->imageId);
+}
+
 void ElementLookTo(Element *element, int x, int y, int imageId) {
     if (!element) return;
     element->direction.x = (x - element->position.x);
@@ -180,13 +203,13 @@ void ElementMoveTo(Element *element, int x, int y, int imageId) {
     }
 }
 
-void ElementTalk(Element *element, const char *text, int imageId) {
+void ElementTalk(Element *element, const char *text, int imageId, Font *font) {
     if (!element) return;
     ElementFreeAction(element);
     element->action = ElementActionTalk;
     SetElementImageFromSet(element, imageId);
     SDL_Color color = {255, 255, 255, 255};
-    element->talkImage = CreateImageFromText(text, element->talkFont, color);
+    element->talkImage = CreateImageFromText(text, font, color);
     element->talkOffset = element->talkImage ? MakeVector(element->talkImage->width * -0.5, -200) : MakeVector(0, 0);
     element->talkTicks = (int)strlen(text) * 25 + 1000;
 }
@@ -223,11 +246,6 @@ void UpdateMove(Element *element, int deltaTicks) {
         bool reached = element->navigationPath->reachesDestination;
         ElementStop(element);
         if (reached) {
-            if (rand() % 2 == 0) {
-                ElementTalk(element, "Das kann ich nicht benutzen.", 3);
-            } else {
-                ElementAnimate(element, 13, 1);
-            }
         } else {
 //            if ((benutzt + angesehen > 0) && (akt->p4 == 2) && (akt->id == 0)) {
 //                erreicht = TRUE;

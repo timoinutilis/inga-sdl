@@ -58,11 +58,11 @@ Image *CreateImageFromText(const char *text, Font *font, SDL_Color color) {
         
     SDL_Color outlineColor = {0, 0, 0, 255};
     TTF_SetFontOutline(font->ttfFont, 1);
-    SDL_Surface *surface = TTF_RenderUTF8_Blended(font->ttfFont, text, outlineColor);
+    SDL_Surface *surface = TTF_RenderText_Blended(font->ttfFont, text, outlineColor);
     
     TTF_SetFontOutline(font->ttfFont, 0);
-    SDL_Surface *fgSurface = TTF_RenderUTF8_Blended(font->ttfFont, text, color);
-            
+    SDL_Surface *fgSurface = TTF_RenderText_Blended(font->ttfFont, text, color);
+    
     if (!surface || !fgSurface) {
         printf("TTF_RenderText_Blended: %s\n", TTF_GetError());
     } else {

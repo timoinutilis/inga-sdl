@@ -106,9 +106,8 @@ Image *LoadImage(const char *filename, SDL_Palette *defaultPalette, bool createM
                         SDL_SetPaletteColors(surfacePalette, defaultPalette->colors, 0, surfacePalette->ncolors);
                     }
                     if (createMask) {
-                        SDL_Color transparentColor = {255, 0, 255, 255};
-                        SDL_SetPaletteColors(surfacePalette, &transparentColor, 0, 1);
-                        Uint32 key = SDL_MapRGB(surface->format, 255, 0, 255);
+                        SDL_Color transparentColor = surfacePalette->colors[0];
+                        Uint32 key = SDL_MapRGB(surface->format, transparentColor.r, transparentColor.g, transparentColor.b);
                         SDL_SetColorKey(surface, SDL_TRUE, key);
                     }
                     SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, surface);

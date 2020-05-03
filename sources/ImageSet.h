@@ -27,16 +27,16 @@
 #include "Image.h"
 #include "Utils.h"
 
-enum ImageSide {
+typedef enum ImageSide {
     ImageSideLeft,
     ImageSideRight,
     ImageSideFront,
     ImageSideBack
-};
+} ImageSide;
 
 typedef struct ImageSetItem {
     int id;
-    enum ImageSide side;
+    ImageSide side;
     char filename[FILE_NAME_SIZE];
     struct Image *image;
 } ImageSetItem;

@@ -33,3 +33,25 @@ SDL_Rect MakeRectFromTo(int x1, int y1, int x2, int y2) {
     SDL_Rect rect = {x1, y1, x2 - x1 + 1, y2 - y1 + 1};
     return rect;
 }
+
+void *LoadFile(const char *path) {
+    void *content = NULL;
+    SDL_RWops *file = SDL_RWFromFile(path, "rb");
+    if (!file) {
+        printf("LoadFile: %s\n", SDL_GetError());
+    } else {
+        Sint64 size = SDL_RWsize(file);
+        if (size < 0) {
+            printf("LoadFile: %s\n", SDL_GetError());
+        } else {
+            content = malloc(size);
+            if (!SDL_RWread(file, content, size, 1)) {
+                printf("LoadFile: %s\n", SDL_GetError());
+                free(content);
+                content = NULL;
+            }
+        }
+        SDL_RWclose(file);
+    }
+    return content;
+}
