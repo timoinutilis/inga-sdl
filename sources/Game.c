@@ -18,6 +18,7 @@
 //
 
 #include "Game.h"
+#include "Global.h"
 
 void SetFocus(Game *game, int x, int y, const char *name);
 
@@ -29,6 +30,13 @@ Game *CreateGame() {
         game->font = LoadFont("Orbitron-Medium", 16);
         game->script = LoadScript("story");
         game->mainThread = CreateThread(0);
+        game->paletteImage = LoadImage("Thronsaal", NULL, false, true);
+        
+        // Main Person
+        Element *element = CreateElement(MainPersonID);
+        element->position = MakeVector(320, 360);
+        element->imageSet = LoadImageSet("Hauptperson", game->paletteImage->surface->format->palette, true);
+        game->mainPerson = element;
     }
     return game;
 }
@@ -37,6 +45,8 @@ void FreeGame(Game *game) {
     if (!game) return;
     FreeImage(game->focus.image);
     FreeLocation(game->location);
+    FreeElement(game->mainPerson);
+    FreeImage(game->paletteImage);
     FreeThread(game->mainThread);
     FreeScript(game->script);
     FreeFont(game->font);
@@ -45,12 +55,38 @@ void FreeGame(Game *game) {
 
 void HandleMouseInGame(Game *game, int x, int y, bool click) {
     if (!game) return;
-    if (game->mainThread->isActive) {
+    if (game->mainThread && game->mainThread->isActive) {
         SetFocus(game, x, y, NULL);
     } else {
-        HandleMouseInLocation(game->location, x, y, click);
-        if (game->location) {
-            SetFocus(game, x, y, game->location->currentFocusName);
+        if (!game->location) return;
+        Element *focusedElement = GetElementAt(game->location, x, y);
+        if (focusedElement) {
+            SetFocus(game, x, y, focusedElement->name);
+            if (click) {
+                game->selectedId = focusedElement->id;
+                Element *person = GetElement(game->location, MainPersonID);
+                if (focusedElement->target.y) {
+                    ElementMoveTo(person, focusedElement->target.x, focusedElement->target.y, 2);
+                } else {
+                    ElementMoveTo(person, focusedElement->position.x, focusedElement->position.y, 2);
+                }
+            }
+        } else {
+            SetFocus(game, x, y, NULL);
+            if (click) {
+                game->selectedId = 0;
+                Element *person = GetElement(game->location, MainPersonID);
+                ElementMoveTo(person, x, y, 2);
+            }
+        }
+    }
+}
+
+void HandleKeyInGame(Game *game, SDL_Keysym keysym) {
+    if (keysym.sym == SDLK_ESCAPE) {
+        if (game->mainThread && game->mainThread->escptr) {
+            game->mainThread->ptr = game->mainThread->escptr;
+            game->mainThread->escptr = 0;
         }
     }
 }
@@ -80,5 +116,21 @@ void SetFocus(Game *game, int x, int y, const char *name) {
     if (game->focus.image) {
         int width = game->focus.image->width;
         game->focus.position = MakeVector(fmin(fmax(0, x - width * 0.5), SCREEN_WIDTH - width), y - game->focus.image->height - 4);
+    }
+}
+
+void SetLocation(Game *game, int id, const char *background) {
+    game->mainThread->talkingElement = NULL;
+    ElementStop(game->mainPerson);
+    FreeLocation(game->location);
+    game->location = CreateLocation(id, background);
+    game->location->game = game;
+    AddElement(game->location, game->mainPerson);
+}
+
+void MainPersonDidFinishWalking(Game *game) {
+    if (game->selectedId) {
+        StartInteraction(game->mainThread, game->selectedId);
+        game->selectedId = 0;
     }
 }

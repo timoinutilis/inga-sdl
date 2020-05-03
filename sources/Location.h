@@ -36,12 +36,10 @@ typedef struct Location {
     Image *foregroundImage;
     NavigationMap *navigationMap;
     Element *rootElement;
-    const char *currentFocusName;
 } Location;
 
 Location *CreateLocation(int id, const char *background);
 void FreeLocation(Location *location);
-void HandleMouseInLocation(Location *location, int x, int y, bool click);
 void UpdateLocation(Location *location, int deltaTicks);
 void DrawLocation(Location *location);
 

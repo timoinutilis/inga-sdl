@@ -18,6 +18,7 @@
 //
 
 #include "Location.h"
+#include "Global.h"
 
 void FreeElements(Location *location);
 void UpdateElements(Location *location, int deltaTicks);
@@ -33,11 +34,6 @@ Location *CreateLocation(int id, const char *background) {
         location->image = LoadImage(background, NULL, false, true);
         location->foregroundImage = LoadMaskedImage(background, location->image);
         location->navigationMap = LoadNavigationMap(background);
-        
-        Element *element = CreateElement(0);
-        element->position = MakeVector(320, 320);
-        element->imageSet = LoadImageSet("Hauptperson", location->image->surface->format->palette, true);
-        AddElement(location, element);
     }
     return location;
 }
@@ -49,24 +45,6 @@ void FreeLocation(Location *location) {
     FreeNavigationMap(location->navigationMap);
     FreeElements(location);
     free(location);
-}
-
-void HandleMouseInLocation(Location *location, int x, int y, bool click) {
-    if (!location) return;
-    location->currentFocusName = NULL;
-    Element *focusedElement = GetElementAt(location, x, y);
-    if (focusedElement) {
-        location->currentFocusName = focusedElement->name;
-        if (click) {
-            if (focusedElement->target.y) {
-                Element *person = GetElement(location, 0);
-                ElementMoveTo(person, focusedElement->target.x, focusedElement->target.y, 2);
-            }
-        }
-    } else if (click) {
-        Element *person = GetElement(location, 0);
-        ElementMoveTo(person, x, y, 2);
-    }
 }
 
 void UpdateLocation(Location *location, int deltaTicks) {
@@ -117,7 +95,9 @@ void FreeElements(Location *location) {
     if (!location) return;
     Element *element = location->rootElement;
     while (element) {
-        FreeElement(element);
+        if (element->id != MainPersonID) {
+            FreeElement(element);
+        }
         element = element->next;
     }
     location->rootElement = NULL;

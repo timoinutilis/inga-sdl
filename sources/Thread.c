@@ -50,30 +50,20 @@ unsigned long LaufeINGA(Thread *thread, Game *game, unsigned long ptr, bool *wie
     Script *script = game->script;
     unsigned short opc;
     unsigned long use;
-//    struct PERSON *person;
 
     opc = peekw(script, ptr);
-    *wieder = false;
+    *wieder = true;
 
     /*==Einrichtung==*/
     if (opc == 1) { //Einrichtung.
-        thread->talkingElement = NULL;
-        FreeLocation(game->location);
-        game->location = CreateLocation(peekw(script, ptr + 2), peeks(script, ptr + 4));
-//        StoppeReden();
+        SetLocation(game, peekw(script, ptr + 2), peeks(script, ptr + 4));
 //        SndSchleifeAbbruch();
 //        FadeOut(8);
 //        MeldungAbbruch();
-//        EntferneAllePersonen(FALSE);
-//        EntferneAlleZierden();
-//        EntferneAlleObjekte();
-//        EntferneAlleFelder();
 //        ort.id=peekw(script, ptr + 2);
 //        if (peekw(script, ptr + 8) > 0) SpieleCDTrack(peekw(script, ptr + 8)); else StoppeCD();
-//        LadeHintergrund(peeks(script, ptr + 4));
-//        LadeLaufkarte(peeks(script, ptr + 4));
 //        person=SucheIDPerson(0); person->standiannum = 1;
-//        iannumgehen = 2; hauptsichtbar = TRUE;
+//        iannumgehen = 2; hauptsichtbar = true;
 //        invbar.sperre = FALSE; invbar.aktiv = FALSE;
 //        modus = 0;
         return(ptr + 10);
@@ -155,7 +145,7 @@ unsigned long LaufeINGA(Thread *thread, Game *game, unsigned long ptr, bool *wie
 //        person=SucheIDPerson(peekw(script, ptr + 2));
 //        if (person) {
 //            person->pc = ptr + 8;
-//            person->isfaktiv = TRUE;
+//            person->isfaktiv = true;
 //        }
         return(peekl(script, ptr + 4));
     }
@@ -166,7 +156,7 @@ unsigned long LaufeINGA(Thread *thread, Game *game, unsigned long ptr, bool *wie
     }
     if (opc == 93) { //PersonVgMaskeAktiv
 //        person = SucheIDPerson(peekw(script, ptr + 2));
-//        if (person) person->vgmaske = TRUE;
+//        if (person) person->vgmaske = true;
         return(ptr + 4);
     }
     if (opc == 94) { //PersonVgMaskeInaktiv
@@ -188,9 +178,9 @@ unsigned long LaufeINGA(Thread *thread, Game *game, unsigned long ptr, bool *wie
             element->isVisible = true;
         }
 //        if (peekw(script, ptr + 4) == 0) {
-//            hauptsichtbar = TRUE
+//            hauptsichtbar = true
 //        } else {
-//            SetzeSicht(peekw(script, ptr + 2), peekw(script, ptr + 4), TRUE);
+//            SetzeSicht(peekw(script, ptr + 2), peekw(script, ptr + 4), true);
 //        }
 //        AktualisiereSichtbarkeit();
         return(ptr + 6);
@@ -236,6 +226,7 @@ unsigned long LaufeINGA(Thread *thread, Game *game, unsigned long ptr, bool *wie
             ElementMoveTo(element, peekw(script, ptr + 4), peekw(script, ptr + 6), peekw(script, ptr + 8));
             return(ptr + 10);
         }
+        *wieder = false;
         return(ptr);
     }
     if (opc == 12) { //LaufeDirekt.
@@ -245,11 +236,13 @@ unsigned long LaufeINGA(Thread *thread, Game *game, unsigned long ptr, bool *wie
             ElementMoveTo(element, peekw(script, ptr + 4), peekw(script, ptr + 6), peekw(script, ptr + 8));
             return(ptr + 10);
         }
+        *wieder = false;
         return(ptr);
     }
     if (opc == 13) { //Rede.
         if (thread->talkingElement) {
             if (thread->talkingElement->action == ElementActionTalk) {
+                *wieder = false;
                 return(ptr);
             } else {
                 thread->talkingElement = NULL;
@@ -262,6 +255,7 @@ unsigned long LaufeINGA(Thread *thread, Game *game, unsigned long ptr, bool *wie
             // sound: peeks(script, ptr + 10)
             return(ptr + 14);
         }
+        *wieder = false;
         return(ptr);
     }
     if (opc == 14) { //Anim.
@@ -270,6 +264,7 @@ unsigned long LaufeINGA(Thread *thread, Game *game, unsigned long ptr, bool *wie
             ElementAnimate(element, peekw(script, ptr + 4), peekw(script, ptr + 6));
             return(ptr + 8);
         }
+        *wieder = false;
         return(ptr);
     }
     if (opc == 41) { //AnimNehmen.
@@ -297,6 +292,7 @@ unsigned long LaufeINGA(Thread *thread, Game *game, unsigned long ptr, bool *wie
             ElementSetSide(element, peekw(script, ptr + 4), 0);
             return(ptr + 6);
         }
+        *wieder = false;
         return(ptr);
     }
     if (opc == 32) { //RichteAuf.
@@ -306,6 +302,7 @@ unsigned long LaufeINGA(Thread *thread, Game *game, unsigned long ptr, bool *wie
             ElementLookTo(element, targetElement->position.x, targetElement->position.y, 0);
             return(ptr + 6);
         }
+        *wieder = false;
         return(ptr);
     }
     if (opc == 33) { //RichteAufeinander.
@@ -318,6 +315,7 @@ unsigned long LaufeINGA(Thread *thread, Game *game, unsigned long ptr, bool *wie
                 return(ptr + 6);
             }
         }
+        *wieder = false;
         return(ptr);
     }
     if (opc == 16) { //StelleAuf.
@@ -328,6 +326,7 @@ unsigned long LaufeINGA(Thread *thread, Game *game, unsigned long ptr, bool *wie
             ElementSetSide(element, peekw(script, ptr + 8), 0);
             return(ptr + 10);
         }
+        *wieder = false;
         return(ptr);
     }
     if (opc == 17) { //WarteAuf.
@@ -335,6 +334,7 @@ unsigned long LaufeINGA(Thread *thread, Game *game, unsigned long ptr, bool *wie
         if (element->action == ElementActionIdle) {
             return(ptr + 4);
         }
+        *wieder = false;
         return(ptr);
     }
     if (opc == 37) { //WarteAufAnim.
@@ -347,7 +347,7 @@ unsigned long LaufeINGA(Thread *thread, Game *game, unsigned long ptr, bool *wie
     }
     if (opc == 30) { //Aktiv.
 //        person = SucheIDPerson(peekw(script, ptr + 2));
-//        if (person->pc > 0) person->isfaktiv = TRUE;
+//        if (person->pc > 0) person->isfaktiv = true;
         return(ptr + 4);
     }
     if (opc == 31) { //Inaktiv.
@@ -389,10 +389,8 @@ unsigned long LaufeINGA(Thread *thread, Game *game, unsigned long ptr, bool *wie
         return(peekl(script, ptr + 2));
     }
     if (opc == 29) { //SpringeOrt.
-//        person = SucheIDPerson(0); modus = 0;
-//        person->x = peekw(script, ptr + 6);
-//        person->y = peekw(script, ptr + 8);
-//        person->richtung = peekw(script, ptr + 10);
+        game->mainPerson->position = MakeVector(peekw(script, ptr + 6), peekw(script, ptr + 8));
+        ElementSetSide(game->mainPerson, peekw(script, ptr + 10), 0);
 //        ort.ptr = peekl(script, ptr + 2);
         return(peekl(script, ptr + 2));
     }
@@ -417,41 +415,43 @@ unsigned long LaufeINGA(Thread *thread, Game *game, unsigned long ptr, bool *wie
         return(ptr + 2);
     }
     if (opc == 22) { //Stopp.
-//        MausStatusSichtbar(TRUE);
-//        modus = 2; benutzt = 0; invbenutzt = 0; angesehen = 0; gesagt = 0;
+//        MausStatusSichtbar(true);
+        thread->benutzt = 0;
+        thread->invbenutzt = 0;
+        thread->angesehen = 0;
+        thread->gesagt = 0;
         thread->isActive = false;
         return(ptr + 2);
     }
     if (opc == 88) { //ListeAbbruch.
-//        modus = 1; benutzt = 0; invbenutzt = 0; angesehen = 0; gesagt = 0;
+        thread->benutzt = 0;
+        thread->invbenutzt = 0;
+        thread->angesehen = 0;
+        thread->gesagt = 0;
         return(ptr + 2);
     }
     if (opc == 23) { //Liste.
-//        MausStatusSichtbar(TRUE);
+//        MausStatusSichtbar(true);
         thread->listeptr = ptr + 2;
         thread->isActive = false;
-//        modus = 2;
         return(ptr + 2);
     }
     if (opc == 39) { //Dialogliste.
-//        MausStatusSichtbar(TRUE);
+//        MausStatusSichtbar(true);
         thread->dialoglisteptr = ptr + 2;
-//        dialog.aktiv = TRUE;
-//        modus = 2;
+//        dialog.aktiv = true;
         thread->isActive = false;
         return(ptr + 2);
     }
     if (opc == 26) { //WennBenutzt.
-//        *wieder = TRUE;
-//        if ((benutzt == 0) || (invbenutzt > 0)) return(peekl(script, ptr + 4));
-//        if ((peekw(script, ptr + 2) == benutzt) || (peekw(script, ptr + 2) == 0)) {
-//            benutzt = 0; modus = 1; return(ptr + 8);
-//        } else {
+        if ((thread->benutzt == 0) || (thread->invbenutzt > 0)) return(peekl(script, ptr + 4));
+        if ((peekw(script, ptr + 2) == thread->benutzt) || (peekw(script, ptr + 2) == 0)) {
+            return(ptr + 8);
+        } else {
             return(peekl(script, ptr + 4));
-//        }
+        }
     }
     if (opc == 27) { //WennBenutztMit.
-//        *wieder = TRUE;
 //        if ((benutzt > 0) && (invbenutzt > 0)) {
 //            if (((peekw(script, ptr + 2) == benutzt) && (peekw(script, ptr + 4) == invbenutzt)) ||
 //                ((peekw(script, ptr + 2) == invbenutzt) && (peekw(script, ptr + 4) == benutzt))) {
@@ -467,7 +467,6 @@ unsigned long LaufeINGA(Thread *thread, Game *game, unsigned long ptr, bool *wie
         return(peekl(script, ptr + 6));
     }
     if (opc == 28) { //WennAngesehen.
-//        *wieder = TRUE;
 //        if (angesehen == 0) return(peekl(script, ptr + 4));
 //        if ((peekw(script, ptr + 2) == angesehen) || (peekw(script, ptr + 2) == 0)) {
 //            angesehen = 0; modus = 1;
@@ -477,7 +476,6 @@ unsigned long LaufeINGA(Thread *thread, Game *game, unsigned long ptr, bool *wie
 //        }
     }
     if (opc == 40) { //WennGesagt.
-//        *wieder = TRUE;
 //        if (peekw(script, ptr + 2) == gesagt) {
 //            gesagt = 0; modus = 1; return(ptr + 8);
 //        } else {
@@ -490,12 +488,10 @@ unsigned long LaufeINGA(Thread *thread, Game *game, unsigned long ptr, bool *wie
         return(ptr + 6);
     }
     if (opc == 47) { //CDNummer.
-//        *wieder = TRUE;
 //        SpieleCDTrack(peekw(script, ptr + 2));
         return(ptr + 4);
     }
     if (opc == 48) { //CDStopp.
-//        *wieder = TRUE;
 //        StoppeCD();
         return(ptr + 2);
     }
@@ -550,69 +546,58 @@ unsigned long LaufeINGA(Thread *thread, Game *game, unsigned long ptr, bool *wie
         return(ptr + 6);
     }
     if (opc == 24) { //InventarNehmen.
-//        *wieder = TRUE;
 //        AddInventar(peeks(script, ptr + 8), peeks(script, ptr + 4), peekw(script, ptr + 2));
         return(ptr + 12);
     }
     if (opc == 25) { //InventarWeg.
-//        *wieder = TRUE;
 //        EntferneInventar(peekw(script, ptr + 2));
         return(ptr + 4);
     }
     if (opc == 20) { //WennGleich.
-//        *wieder = TRUE;
 //        if (peekw(script, ptr + 2) != peekw(script, ptr + 4))
 //            return(peekl(script, ptr + 6));
 //        else
             return(ptr + 10);
     }
     if (opc == 21) { //WennAnders.
-//        *wieder = TRUE;
 //        if (peekw(script, ptr + 2) == peekw(script, ptr + 4))
 //            return(peekl(script, ptr + 6));
 //        else
             return(ptr + 10);
     }
     if (opc == 50) { //WennGrößer.
-//        *wieder = TRUE;
 //        if (peekw(script, ptr + 2) <= peekw(script, ptr + 4))
 //            return(peekl(script, ptr + 6));
 //        else
             return(ptr + 10);
     }
     if (opc == 51) { //WennKleiner.
-//        *wieder = TRUE;
 //        if (peekw(script, ptr + 2) >= peekw(script, ptr + 4))
 //            return(peekl(script, ptr + 6));
 //        else
             return(ptr + 10);
     }
     if (opc == 45) { //WennSichtbar.
-//        *wieder = TRUE;
 //        if (SichtWert(peekw(script, ptr + 2), peekw(script, ptr + 4)))
 //            return(ptr + 10);
 //        else
             return(peekl(script, ptr + 6));
     }
     if (opc == 46) { //WennUnsichtbar.
-//        *wieder = TRUE;
 //        if (SichtWert(peekw(script, ptr + 2), peekw(script, ptr + 4)))
 //            return(peekl(script, ptr + 6));
 //        else
             return(ptr + 10);
     }
     if (opc == 35) { //SetzeVariable.
-//        *wieder = TRUE;
 //        SetzeVar(peekw(script, ptr + 2), peekw(script, ptr + 4));
         return(ptr + 6);
     }
     if (opc == 36) { //InitVariable.
-//        *wieder = TRUE;
 //        VarInit(peekw(script, ptr + 2), peekw(script, ptr + 4));
         return(ptr + 6);
     }
     if (opc == 60) { //HolePersVars.
-//        *wieder = TRUE;
 //        person = SucheIDPerson(peekw(script, ptr + 2));
 //        if (peekw(script, ptr + 4) > 0) SetzeVar(peekw(script, ptr + 4), (WORD)person->x);
 //        if (peekw(script, ptr + 6) > 0) SetzeVar(peekw(script, ptr + 6), (WORD)person->y);
@@ -621,44 +606,37 @@ unsigned long LaufeINGA(Thread *thread, Game *game, unsigned long ptr, bool *wie
         return(ptr + 12);
     }
     if (opc == 52) { //AddVariable.
-//        *wieder = TRUE;
 //        SetzeVar(peekw(script, ptr + 2), VarWert(peekw(script, ptr + 2)) + peekw(script, ptr + 4));
         return(ptr + 6);
     }
     if (opc == 53) { //SubVariable.
-//        *wieder = TRUE;
 //        SetzeVar(peekw(script, ptr + 2), VarWert(peekw(script, ptr + 2)) - peekw(script, ptr + 4));
         return(ptr + 6);
     }
     if (opc == 54) { //MulVariable.
-//        *wieder = TRUE;
 //        SetzeVar(peekw(script, ptr + 2), VarWert(peekw(script, ptr + 2)) * peekw(script, ptr + 4));
         return(ptr + 6);
     }
     if (opc == 55) { //DivVariable.
-//        *wieder = TRUE;
 //        SetzeVar(peekw(script, ptr + 2), VarWert(peekw(script, ptr + 2)) / peekw(script, ptr + 4));
         return(ptr + 6);
     }
     if (opc == 85) { //Zähle.
-//        *wieder = TRUE;
 //        use = VarWert(peekw(script, ptr + 2)); use ++;
 //        if (use > peekw(script, ptr + 6)) use = peekw(script, ptr + 4);
 //        SetzeVar(peekw(script, ptr + 2), use);
         return(ptr + 8);
     }
     if (opc == 91) { //DivRestVariable.
-//        *wieder = TRUE;
 //        SetzeVar(peekw(script, ptr + 2), VarWert(peekw(script, ptr + 2)) % peekw(script, ptr + 4));
         return(ptr + 6);
     }
     if (opc == 38) { //Antwort.
-//        *wieder = TRUE;
 //        if (peekw(script, ptr + 8) == peekw(script, ptr + 10)) AddAntwort(peekw(script, ptr + 2), peeks(script, ptr + 4));
         return(ptr + 12);
     }
     if (opc == 78) { //Leistensperre.
-//        invbar.sperre = TRUE;
+//        invbar.sperre = true;
 //        if (invbar.aktiv) InvBarWeg();
         return(ptr + 2);
     }
@@ -667,7 +645,7 @@ unsigned long LaufeINGA(Thread *thread, Game *game, unsigned long ptr, bool *wie
         return(ptr + 2);
     }
     if (opc == 80) { //Menü.
-//        zmenu = TRUE;
+//        zmenu = true;
         return(ptr + 2);
     }
     if (opc == 81) { //SpielEnde.
@@ -687,12 +665,10 @@ unsigned long LaufeINGA(Thread *thread, Game *game, unsigned long ptr, bool *wie
         return(ptr + 10);
     }
     if (opc == 100) { //print.
-//        *wieder = TRUE;
 //        if (devmodus) printf("%s\n", peeks(script, ptr + 2));
         return(ptr + 6);
     }
     if (opc == 101) { //printn.
-//        *wieder = TRUE;
 //        if (devmodus) printf("%d\n", peekw(script, ptr + 2));
         return(ptr + 4);
     }
@@ -701,4 +677,10 @@ unsigned long LaufeINGA(Thread *thread, Game *game, unsigned long ptr, bool *wie
     thread->isActive = false;
 //    Fehler(6, "Unbekannter Skriptbefehl");
     return(ptr);
+}
+
+void StartInteraction(Thread *thread, int id) {
+    thread->benutzt = id;
+    thread->ptr = thread->listeptr;
+    thread->isActive = true;
 }

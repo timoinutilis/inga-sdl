@@ -74,9 +74,9 @@ NavigationPath *CreateNavigationPath(NavigationMap *navigationMap, Vector origin
                 
         // check for end of way
         int dir = (destination.x > origin.x) ? 1 : -1;
-        int safeX = origin.x;
-        int dstX = destination.x;
-        for (int x = origin.x; x != dstX; x += dir) {
+        int safeX = fmin(fmax(0, origin.x), navigationMap->width - 1);
+        int dstX = fmin(fmax(0, destination.x), navigationMap->width - 1);
+        for (int x = safeX; x != dstX; x += dir) {
             if (navigationMap->topLimits[x] > navigationMap->bottomLimits[x]) {
                 destination.x = safeX;
                 destination.y = (navigationMap->topLimits[safeX] + navigationMap->bottomLimits[safeX]) * 0.5;
@@ -105,8 +105,9 @@ void FreeNavigationPath(NavigationPath *navigationPath) {
 
 void AdjustPositionForNavigation(NavigationMap *navigationMap, Vector *position) {
     if (!navigationMap) return;
-    int top = navigationMap->topLimits[(int)position->x];
-    int bottom = navigationMap->bottomLimits[(int)position->x];
+    int x = fmin(fmax(0, position->x), navigationMap->width - 1);
+    int top = navigationMap->topLimits[x];
+    int bottom = navigationMap->bottomLimits[x];
     if (position->y < top) {
         position->y = top;
     } else if (position->y > bottom) {

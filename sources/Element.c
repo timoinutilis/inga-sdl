@@ -19,6 +19,8 @@
 
 #include "Element.h"
 #include "Location.h"
+#include "Global.h"
+#include "Game.h"
 
 void SetElementImageFromSet(Element *element, int imageId);
 void ElementFreeAction(Element *element);
@@ -243,16 +245,19 @@ void UpdateMove(Element *element, int deltaTicks) {
         Vector position = element->navigationPath->positions[element->navigationIndex];
         ElementLookTo(element, position.x, position.y, 0);
     } else {
-        bool reached = element->navigationPath->reachesDestination;
+//        bool reached = element->navigationPath->reachesDestination;
         ElementStop(element);
-        if (reached) {
-        } else {
+        if (element->id == MainPersonID) {
+            MainPersonDidFinishWalking(element->location->game);
+        }
+//        if (reached) {
+//        } else {
 //            if ((benutzt + angesehen > 0) && (akt->p4 == 2) && (akt->id == 0)) {
 //                erreicht = TRUE;
 //            } else {
 //                benutzt = 0; invbenutzt = 0; angesehen = 0;
 //            }
-        }
+//        }
     }
 
 }

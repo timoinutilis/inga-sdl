@@ -20,6 +20,7 @@
 #include "Global.h"
 
 SDL_Renderer *globalRenderer = NULL;
+int MainPersonID = 0;
 
 void SetGlobalRenderer(SDL_Renderer *renderer) {
     globalRenderer = renderer;

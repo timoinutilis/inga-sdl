@@ -24,6 +24,8 @@
 #include <stdbool.h>
 #include <SDL2/SDL.h>
 #include "Location.h"
+#include "Image.h"
+#include "Element.h"
 #include "Font.h"
 #include "Script.h"
 #include "Thread.h"
@@ -38,14 +40,21 @@ typedef struct Game {
     Font *font;
     Script *script;
     Thread *mainThread;
+    Image *paletteImage;
+    Element *mainPerson;
     Location *location;
     Focus focus;
+    int selectedId;
 } Game;
 
 Game *CreateGame(void);
 void FreeGame(Game *game);
 void HandleMouseInGame(Game *game, int x, int y, bool click);
+void HandleKeyInGame(Game *game, SDL_Keysym keysym);
 void UpdateGame(Game *game, int deltaTicks);
 void DrawGame(Game *game);
+
+void SetLocation(Game *game, int id, const char *background);
+void MainPersonDidFinishWalking(Game *game);
 
 #endif /* Game_h */

@@ -23,6 +23,8 @@
 #include <stdio.h>
 #include <SDL2/SDL.h>
 
+extern int MainPersonID;
+
 void SetGlobalRenderer(SDL_Renderer *renderer);
 SDL_Renderer *GetGlobalRenderer(void);
 

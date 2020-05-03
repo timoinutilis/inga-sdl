@@ -60,6 +60,9 @@ int main(int argc, const char * argv[]) {
                 case SDL_MOUSEBUTTONDOWN:
                     mouseClick = true;
                     break;
+                case SDL_KEYDOWN:
+                    HandleKeyInGame(game, event.key.keysym);
+                    break;
             }
         }
                 

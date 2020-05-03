@@ -35,10 +35,16 @@ typedef struct Thread {
     unsigned long dialoglisteptr;
     unsigned long escptr;
     Element *talkingElement;
+    int benutzt;
+    int invbenutzt;
+    int gesagt;
+    int angesehen;
 } Thread;
 
 Thread *CreateThread(int id);
 void FreeThread(Thread *thread);
 void UpdateThread(Thread *thread, Game *game);
+
+void StartInteraction(Thread *thread, int id);
 
 #endif /* Thread_h */
