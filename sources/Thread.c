@@ -268,11 +268,15 @@ unsigned long LaufeINGA(Thread *thread, Game *game, unsigned long ptr, bool *wie
         return(ptr);
     }
     if (opc == 41) { //AnimNehmen.
-//        person = SucheIDPerson(peekw(script, ptr + 2));
-//        if (person->aktion == AKT_NICHTS) {
+        Element *element = GetElement(game->location, peekw(script, ptr + 2));
+        if (element->action == ElementActionIdle) {
+            ElementAnimate(element, peekw(script, ptr + 6), 1);
+            //TODO: hide object
 //            PersonenAktion(peekw(script, ptr + 2), AKT_NEHMEN, peekw(script, ptr + 4), peekw(script, ptr + 6), peekw(script, ptr + 8), 0);
             return(ptr + 10);
-//        } else return(ptr);
+        }
+        *wieder = false;
+        return(ptr);
     }
     if (opc == 84) { //NichtsProg.
 //        nichtsprog.frame = 0;
@@ -452,35 +456,39 @@ unsigned long LaufeINGA(Thread *thread, Game *game, unsigned long ptr, bool *wie
         }
     }
     if (opc == 27) { //WennBenutztMit.
-//        if ((benutzt > 0) && (invbenutzt > 0)) {
-//            if (((peekw(script, ptr + 2) == benutzt) && (peekw(script, ptr + 4) == invbenutzt)) ||
-//                ((peekw(script, ptr + 2) == invbenutzt) && (peekw(script, ptr + 4) == benutzt))) {
-//                benutzt = 0; invbenutzt = 0; modus = 1; return(ptr + 10);
-//            }
-//            if ((peekw(script, ptr + 2) == 0) && ((peekw(script, ptr + 4) == benutzt) || (peekw(script, ptr + 4) == invbenutzt))) {
-//                benutzt = 0; invbenutzt = 0; modus = 1; return(ptr + 10);
-//            }
-//            if ((peekw(script, ptr + 2) == 0) && (peekw(script, ptr + 4) == 0)) {
-//                benutzt = 0; invbenutzt = 0; modus = 1; return(ptr + 10);
-//            }
-//        }
+        if ((thread->benutzt > 0) && (thread->invbenutzt > 0)) {
+            if (((peekw(script, ptr + 2) == thread->benutzt) && (peekw(script, ptr + 4) == thread->invbenutzt)) ||
+                ((peekw(script, ptr + 2) == thread->invbenutzt) && (peekw(script, ptr + 4) == thread->benutzt))) {
+//                benutzt = 0; invbenutzt = 0; modus = 1;
+                return(ptr + 10);
+            }
+            if ((peekw(script, ptr + 2) == 0) && ((peekw(script, ptr + 4) == thread->benutzt) || (peekw(script, ptr + 4) == thread->invbenutzt))) {
+//                benutzt = 0; invbenutzt = 0; modus = 1;
+                return(ptr + 10);
+            }
+            if ((peekw(script, ptr + 2) == 0) && (peekw(script, ptr + 4) == 0)) {
+//                benutzt = 0; invbenutzt = 0; modus = 1;
+                return(ptr + 10);
+            }
+        }
         return(peekl(script, ptr + 6));
     }
     if (opc == 28) { //WennAngesehen.
-//        if (angesehen == 0) return(peekl(script, ptr + 4));
-//        if ((peekw(script, ptr + 2) == angesehen) || (peekw(script, ptr + 2) == 0)) {
+        if (thread->angesehen == 0) return(peekl(script, ptr + 4));
+        if ((peekw(script, ptr + 2) == thread->angesehen) || (peekw(script, ptr + 2) == 0)) {
 //            angesehen = 0; modus = 1;
-//            return(ptr + 8);
-//        } else {
+            return(ptr + 8);
+        } else {
             return(peekl(script, ptr + 4));
-//        }
+        }
     }
     if (opc == 40) { //WennGesagt.
-//        if (peekw(script, ptr + 2) == gesagt) {
-//            gesagt = 0; modus = 1; return(ptr + 8);
-//        } else {
+        if (peekw(script, ptr + 2) == thread->gesagt) {
+//            gesagt = 0; modus = 1;
+            return(ptr + 8);
+        } else {
             return(peekl(script, ptr + 4));
-//        }
+        }
     }
     if (opc == 34) { //Sequenz.
 //        SndSchleifeAbbruch();
@@ -679,8 +687,15 @@ unsigned long LaufeINGA(Thread *thread, Game *game, unsigned long ptr, bool *wie
     return(ptr);
 }
 
-void StartInteraction(Thread *thread, int id) {
-    thread->benutzt = id;
+void StartInteraction(Thread *thread, int id, Verb verb) {
+    switch (verb) {
+        case VerbUse:
+            thread->benutzt = id;
+            break;
+        case VerbLook:
+            thread->angesehen = id;
+            break;
+    }
     thread->ptr = thread->listeptr;
     thread->isActive = true;
 }

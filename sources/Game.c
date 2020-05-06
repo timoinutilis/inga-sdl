@@ -53,7 +53,7 @@ void FreeGame(Game *game) {
     free(game);
 }
 
-void HandleMouseInGame(Game *game, int x, int y, bool click) {
+void HandleMouseInGame(Game *game, int x, int y, int buttonIndex) {
     if (!game) return;
     if (game->mainThread && game->mainThread->isActive) {
         SetFocus(game, x, y, NULL);
@@ -62,8 +62,9 @@ void HandleMouseInGame(Game *game, int x, int y, bool click) {
         Element *focusedElement = GetElementAt(game->location, x, y);
         if (focusedElement) {
             SetFocus(game, x, y, focusedElement->name);
-            if (click) {
+            if (buttonIndex > 0) {
                 game->selectedId = focusedElement->id;
+                game->selectedVerb = buttonIndex == SDL_BUTTON_RIGHT ? VerbLook : VerbUse;
                 Element *person = GetElement(game->location, MainPersonID);
                 if (focusedElement->target.y) {
                     ElementMoveTo(person, focusedElement->target.x, focusedElement->target.y, 2);
@@ -73,7 +74,7 @@ void HandleMouseInGame(Game *game, int x, int y, bool click) {
             }
         } else {
             SetFocus(game, x, y, NULL);
-            if (click) {
+            if (buttonIndex == SDL_BUTTON_LEFT) {
                 game->selectedId = 0;
                 Element *person = GetElement(game->location, MainPersonID);
                 ElementMoveTo(person, x, y, 2);
@@ -130,7 +131,7 @@ void SetLocation(Game *game, int id, const char *background) {
 
 void MainPersonDidFinishWalking(Game *game) {
     if (game->selectedId) {
-        StartInteraction(game->mainThread, game->selectedId);
+        StartInteraction(game->mainThread, game->selectedId, game->selectedVerb);
         game->selectedId = 0;
     }
 }

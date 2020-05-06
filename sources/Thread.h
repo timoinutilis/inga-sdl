@@ -26,6 +26,11 @@
 
 typedef struct Game Game;
 
+typedef enum Verb {
+    VerbUse,
+    VerbLook
+} Verb;
+
 typedef struct Thread {
     int id;
     bool isActive;
@@ -45,6 +50,6 @@ Thread *CreateThread(int id);
 void FreeThread(Thread *thread);
 void UpdateThread(Thread *thread, Game *game);
 
-void StartInteraction(Thread *thread, int id);
+void StartInteraction(Thread *thread, int id, Verb verb);
 
 #endif /* Thread_h */

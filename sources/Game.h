@@ -45,11 +45,12 @@ typedef struct Game {
     Location *location;
     Focus focus;
     int selectedId;
+    Verb selectedVerb;
 } Game;
 
 Game *CreateGame(void);
 void FreeGame(Game *game);
-void HandleMouseInGame(Game *game, int x, int y, bool click);
+void HandleMouseInGame(Game *game, int x, int y, int buttonIndex);
 void HandleKeyInGame(Game *game, SDL_Keysym keysym);
 void UpdateGame(Game *game, int deltaTicks);
 void DrawGame(Game *game);

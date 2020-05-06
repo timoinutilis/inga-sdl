@@ -28,8 +28,10 @@ int main(int argc, const char * argv[]) {
     SDL_Init(SDL_INIT_VIDEO);
     TTF_Init();
     
-    SDL_Window *window = SDL_CreateWindow("Inga", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
+    SDL_Window *window = SDL_CreateWindow("Inga", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
     SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+//    SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
+    SDL_RenderSetLogicalSize(renderer, SCREEN_WIDTH, SCREEN_HEIGHT);
     
     SDL_Event event;
     int quit = 0;
@@ -40,7 +42,7 @@ int main(int argc, const char * argv[]) {
         
     int mouseX = 0;
     int mouseY = 0;
-    bool mouseClick = false;
+    int mouseButtonIndex = 0;
     
     unsigned long lastTicks = SDL_GetTicks();
     
@@ -58,7 +60,7 @@ int main(int argc, const char * argv[]) {
                     mouseY = event.motion.y;
                     break;
                 case SDL_MOUSEBUTTONDOWN:
-                    mouseClick = true;
+                    mouseButtonIndex = event.button.button;
                     break;
                 case SDL_KEYDOWN:
                     HandleKeyInGame(game, event.key.keysym);
@@ -66,14 +68,14 @@ int main(int argc, const char * argv[]) {
             }
         }
                 
-        HandleMouseInGame(game, mouseX, mouseY, mouseClick);
+        HandleMouseInGame(game, mouseX, mouseY, mouseButtonIndex);
         UpdateGame(game, deltaTicks);
         
         SDL_RenderClear(renderer);
         DrawGame(game);
         SDL_RenderPresent(renderer);
                 
-        mouseClick = false;
+        mouseButtonIndex = 0;
         lastTicks = ticks;
     }
     
