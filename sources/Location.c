@@ -95,10 +95,11 @@ void FreeElements(Location *location) {
     if (!location) return;
     Element *element = location->rootElement;
     while (element) {
+        Element *next = element->next;
         if (element->id != MainPersonID) {
             FreeElement(element);
         }
-        element = element->next;
+        element = next;
     }
     location->rootElement = NULL;
 }

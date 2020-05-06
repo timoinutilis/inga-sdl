@@ -29,6 +29,7 @@ Game *CreateGame() {
     } else {
         game->font = LoadFont("Orbitron-Medium", 16);
         game->script = LoadScript("story");
+        game->gameState = CreateGameState();
         game->mainThread = CreateThread(0);
         game->paletteImage = LoadImage("Thronsaal", NULL, false, true);
         
@@ -48,6 +49,7 @@ void FreeGame(Game *game) {
     FreeElement(game->mainPerson);
     FreeImage(game->paletteImage);
     FreeThread(game->mainThread);
+    FreeGameState(game->gameState);
     FreeScript(game->script);
     FreeFont(game->font);
     free(game);
@@ -66,7 +68,9 @@ void HandleMouseInGame(Game *game, int x, int y, int buttonIndex) {
                 game->selectedId = focusedElement->id;
                 game->selectedVerb = buttonIndex == SDL_BUTTON_RIGHT ? VerbLook : VerbUse;
                 Element *person = GetElement(game->location, MainPersonID);
-                if (focusedElement->target.y) {
+                if (!person->isVisible) {
+                    MainPersonDidFinishWalking(game);
+                } else if (focusedElement->target.y) {
                     ElementMoveTo(person, focusedElement->target.x, focusedElement->target.y, 2);
                 } else {
                     ElementMoveTo(person, focusedElement->position.x, focusedElement->position.y, 2);
@@ -109,7 +113,7 @@ void SetFocus(Game *game, int x, int y, const char *name) {
         FreeImage(game->focus.image);
         game->focus.image = NULL;
         game->focus.name = name;
-        if (name) {
+        if (name && name[0] != 0) {
             SDL_Color color = {255, 255, 0, 255};
             game->focus.image = CreateImageFromText(name, game->font, color);
         }
@@ -123,6 +127,7 @@ void SetFocus(Game *game, int x, int y, const char *name) {
 void SetLocation(Game *game, int id, const char *background) {
     game->mainThread->talkingElement = NULL;
     ElementStop(game->mainPerson);
+    game->mainPerson->isVisible = true;
     FreeLocation(game->location);
     game->location = CreateLocation(id, background);
     game->location->game = game;

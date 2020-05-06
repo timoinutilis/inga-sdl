@@ -29,6 +29,7 @@
 #include "Font.h"
 #include "Script.h"
 #include "Thread.h"
+#include "GameState.h"
 
 typedef struct Focus {
     const char *name;
@@ -39,6 +40,7 @@ typedef struct Focus {
 typedef struct Game {
     Font *font;
     Script *script;
+    GameState *gameState;
     Thread *mainThread;
     Image *paletteImage;
     Element *mainPerson;

@@ -13,6 +13,7 @@
 		922EADE4245C932A00E4027E /* Global.c in Sources */ = {isa = PBXBuildFile; fileRef = 922EADE3245C932A00E4027E /* Global.c */; };
 		922EADEA245DD1E100E4027E /* Script.c in Sources */ = {isa = PBXBuildFile; fileRef = 922EADE9245DD1E100E4027E /* Script.c */; };
 		922EADED245DE60E00E4027E /* Thread.c in Sources */ = {isa = PBXBuildFile; fileRef = 922EADEC245DE60E00E4027E /* Thread.c */; };
+		923DAD3A2463221F0094F825 /* GameState.c in Sources */ = {isa = PBXBuildFile; fileRef = 923DAD392463221F0094F825 /* GameState.c */; };
 		924B17A524556614008A9B43 /* Location.c in Sources */ = {isa = PBXBuildFile; fileRef = 924B17A424556614008A9B43 /* Location.c */; };
 		924B17A824556BC8008A9B43 /* Element.c in Sources */ = {isa = PBXBuildFile; fileRef = 924B17A724556BC8008A9B43 /* Element.c */; };
 		924B17AC245585D2008A9B43 /* ImageSet.c in Sources */ = {isa = PBXBuildFile; fileRef = 924B17AB245585D2008A9B43 /* ImageSet.c */; };
@@ -55,6 +56,8 @@
 		922EADE9245DD1E100E4027E /* Script.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = Script.c; sourceTree = "<group>"; };
 		922EADEB245DE60E00E4027E /* Thread.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Thread.h; sourceTree = "<group>"; };
 		922EADEC245DE60E00E4027E /* Thread.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = Thread.c; sourceTree = "<group>"; };
+		923DAD382463221F0094F825 /* GameState.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GameState.h; sourceTree = "<group>"; };
+		923DAD392463221F0094F825 /* GameState.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = GameState.c; sourceTree = "<group>"; };
 		924B17A324556614008A9B43 /* Location.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Location.h; sourceTree = "<group>"; };
 		924B17A424556614008A9B43 /* Location.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = Location.c; sourceTree = "<group>"; };
 		924B17A624556BC8008A9B43 /* Element.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Element.h; sourceTree = "<group>"; };
@@ -140,6 +143,8 @@
 				922EADE9245DD1E100E4027E /* Script.c */,
 				922EADDF245C2A5000E4027E /* Game.h */,
 				922EADE0245C2A5000E4027E /* Game.c */,
+				923DAD382463221F0094F825 /* GameState.h */,
+				923DAD392463221F0094F825 /* GameState.c */,
 				924B17A324556614008A9B43 /* Location.h */,
 				924B17A424556614008A9B43 /* Location.c */,
 				924B17A624556BC8008A9B43 /* Element.h */,
@@ -236,6 +241,7 @@
 				922EADEA245DD1E100E4027E /* Script.c in Sources */,
 				922EADE4245C932A00E4027E /* Global.c in Sources */,
 				924B17B22455EA08008A9B43 /* NavigationMap.c in Sources */,
+				923DAD3A2463221F0094F825 /* GameState.c in Sources */,
 				929EDBD6244E32BD00DC64D9 /* main.c in Sources */,
 				924B17AF2455D598008A9B43 /* Utils.c in Sources */,
 				92ABBAD924543AB800218313 /* Image.c in Sources */,

@@ -33,7 +33,7 @@ Element *CreateElement(int id) {
     } else {
         element->id = id;
         element->isVisible = true;
-        element->speed = 300;
+        element->speed = 240;
     }
     return element;
 }
