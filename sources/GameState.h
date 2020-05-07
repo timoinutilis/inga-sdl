@@ -25,20 +25,12 @@
 
 typedef struct Variable {
     int id;
-    int value;
+    unsigned short value;
     struct Variable *next;
 } Variable;
 
-typedef struct Visibility {
-    int locationId;
-    int elementId;
-    unsigned short value;
-    struct Visibility *next;
-} Visibility;
-
 typedef struct GameState {
     Variable *rootVariable;
-    Visibility *rootVisibility;
 } GameState;
 
 GameState *CreateGameState(void);
@@ -46,5 +38,8 @@ void FreeGameState(GameState *gameState);
 
 unsigned short GetVariable(GameState *gameState, int id);
 void SetVariable(GameState *gameState, int id, unsigned short value, bool skipIfExists);
+
+bool GetVisibility(GameState *gameState, int locationId, int elementId);
+void SetVisibility(GameState *gameState, int locationId, int elementId, bool value, bool skipIfExists);
 
 #endif /* GameState_h */

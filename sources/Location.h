@@ -26,6 +26,7 @@
 #include "Image.h"
 #include "NavigationMap.h"
 #include "Element.h"
+#include "GameState.h"
 
 typedef struct Game Game;
 
@@ -46,5 +47,7 @@ void DrawLocation(Location *location);
 void AddElement(Location *location, Element *element);
 Element *GetElement(Location *location, int id);
 Element *GetElementAt(Location *location, int x, int y);
+
+void UpdateElementVisibilities(Location *location, GameState *gameState);
 
 #endif /* Location_h */

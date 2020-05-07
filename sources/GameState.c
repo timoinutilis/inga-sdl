@@ -21,7 +21,6 @@
 #include <stdlib.h>
 
 void FreeVariables(GameState *gameState);
-void FreeVisibilities(GameState *gameState);
 
 GameState *CreateGameState(void) {
     GameState *gameState = calloc(1, sizeof(GameState));
@@ -35,7 +34,6 @@ GameState *CreateGameState(void) {
 void FreeGameState(GameState *gameState) {
     if (!gameState) return;
     FreeVariables(gameState);
-    FreeVisibilities(gameState);
     free(gameState);
 }
 
@@ -90,13 +88,16 @@ void FreeVariables(GameState *gameState) {
     gameState->rootVariable = NULL;
 }
 
-void FreeVisibilities(GameState *gameState) {
-    if (!gameState) return;
-    Visibility *visibility = gameState->rootVisibility;
-    while (visibility) {
-        Visibility *next = visibility->next;
-        free(visibility);
-        visibility = next;
+bool GetVisibility(GameState *gameState, int locationId, int elementId) {
+    int id = (locationId << 16) + elementId;
+    Variable *variable = GetVariableObject(gameState, id);
+    if (variable) {
+        return variable->value == 1;
     }
-    gameState->rootVisibility = NULL;
+    return true;
+}
+
+void SetVisibility(GameState *gameState, int locationId, int elementId, bool value, bool skipIfExists) {
+    int id = (locationId << 16) + elementId;
+    SetVariable(gameState, id, value ? 1 : 0, skipIfExists);
 }

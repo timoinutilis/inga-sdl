@@ -130,3 +130,14 @@ void DrawElementOverlays(Location *location) {
         element = element->next;
     }
 }
+
+void UpdateElementVisibilities(Location *location, GameState *gameState) {
+    if (!location || !gameState) return;
+    Element *element = location->rootElement;
+    while (element) {
+        if (element->id != MainPersonID) {
+            element->isVisible = GetVisibility(gameState, location->id, element->id);
+        }
+        element = element->next;
+    }
+}
