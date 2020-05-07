@@ -57,7 +57,7 @@ void UpdateElement(Element *element, int deltaTicks) {
     }
     
     // Animation
-    if (element->image && element->image->animation) {
+    if (!element->isPaused && element->image && element->image->animation) {
         element->frameTicks += deltaTicks;
         if (element->frameTicks >= element->image->animation->frames[element->frameIndex].ticks) {
             element->frameTicks = 0;
@@ -210,9 +210,10 @@ void ElementTalk(Element *element, const char *text, int imageId, Font *font) {
     ElementFreeAction(element);
     element->action = ElementActionTalk;
     SetElementImageFromSet(element, imageId);
+    Frame *frame = &element->image->animation->frames[element->frameIndex];
     SDL_Color color = {255, 255, 255, 255};
     element->talkImage = CreateImageFromText(text, font, color);
-    element->talkOffset = element->talkImage ? MakeVector(element->talkImage->width * -0.5, -200) : MakeVector(0, 0);
+    element->talkOffset = element->talkImage ? MakeVector(element->talkImage->width * -0.5, -frame->pivot.y - 24) : MakeVector(0, 0);
     element->talkTicks = (int)strlen(text) * 25 + 1000;
 }
 

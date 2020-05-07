@@ -52,6 +52,7 @@ typedef struct Element {
     int frameIndex;
     int frameTicks;
     int loopCount;
+    bool isPaused;
     struct ImageSet *imageSet;
     int imageId;
     Vector direction;

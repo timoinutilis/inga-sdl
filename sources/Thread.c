@@ -127,11 +127,14 @@ unsigned long LaufeINGA(Thread *thread, Game *game, unsigned long ptr, bool *wie
         return(ptr + 4);
     }
     if (opc == 62) { //ObjektStandbild.
-//        ObjektStandbild(peekv(game, ptr + 2), peekv(game, ptr + 4));
+        Element *element = GetElement(game->location, peekv(game, ptr + 2));
+        element->frameIndex = peekv(game, ptr + 4);
+        element->isPaused = true;
         return(ptr + 6);
     }
     if (opc == 63) { //ObjektStandbildAus.
-//        ObjektStandbild(peekv(game, ptr + 2), -1);
+        Element *element = GetElement(game->location, peekv(game, ptr + 2));
+        element->isPaused = false;
         return(ptr + 4);
     }
     if (opc == 9) { //Person.
