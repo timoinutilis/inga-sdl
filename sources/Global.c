@@ -14,12 +14,13 @@
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with LowRes NX.  If not, see <http://www.gnu.org/licenses/>.
+// along with Inga.  If not, see <http://www.gnu.org/licenses/>.
 //
 
 #include "Global.h"
 
 SDL_Renderer *globalRenderer = NULL;
+SDL_Palette *globalPalette = NULL;
 int MainPersonID = 0;
 
 void SetGlobalRenderer(SDL_Renderer *renderer) {
@@ -28,4 +29,12 @@ void SetGlobalRenderer(SDL_Renderer *renderer) {
 
 SDL_Renderer *GetGlobalRenderer() {
     return globalRenderer;
+}
+
+void SetGlobalPalette(SDL_Palette *palette) {
+    globalPalette = palette;
+}
+
+SDL_Palette *GetGlobalPalette(void) {
+    return globalPalette;
 }

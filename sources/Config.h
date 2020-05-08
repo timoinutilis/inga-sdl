@@ -14,7 +14,7 @@
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with LowRes NX.  If not, see <http://www.gnu.org/licenses/>.
+// along with Inga.  If not, see <http://www.gnu.org/licenses/>.
 //
 
 #ifndef Config_h
@@ -27,5 +27,7 @@
 #define FILE_NAME_SIZE 31
 
 #define MAX_PATH_SIZE 10
+
+#define INVENTORY_BAR_SIZE 8
 
 #endif /* Config_h */

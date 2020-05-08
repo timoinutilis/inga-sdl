@@ -14,6 +14,7 @@
 		922EADEA245DD1E100E4027E /* Script.c in Sources */ = {isa = PBXBuildFile; fileRef = 922EADE9245DD1E100E4027E /* Script.c */; };
 		922EADED245DE60E00E4027E /* Thread.c in Sources */ = {isa = PBXBuildFile; fileRef = 922EADEC245DE60E00E4027E /* Thread.c */; };
 		923DAD3A2463221F0094F825 /* GameState.c in Sources */ = {isa = PBXBuildFile; fileRef = 923DAD392463221F0094F825 /* GameState.c */; };
+		923DAD3D2465C4F10094F825 /* InventoryBar.c in Sources */ = {isa = PBXBuildFile; fileRef = 923DAD3C2465C4F10094F825 /* InventoryBar.c */; };
 		924B17A524556614008A9B43 /* Location.c in Sources */ = {isa = PBXBuildFile; fileRef = 924B17A424556614008A9B43 /* Location.c */; };
 		924B17A824556BC8008A9B43 /* Element.c in Sources */ = {isa = PBXBuildFile; fileRef = 924B17A724556BC8008A9B43 /* Element.c */; };
 		924B17AC245585D2008A9B43 /* ImageSet.c in Sources */ = {isa = PBXBuildFile; fileRef = 924B17AB245585D2008A9B43 /* ImageSet.c */; };
@@ -58,6 +59,8 @@
 		922EADEC245DE60E00E4027E /* Thread.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = Thread.c; sourceTree = "<group>"; };
 		923DAD382463221F0094F825 /* GameState.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GameState.h; sourceTree = "<group>"; };
 		923DAD392463221F0094F825 /* GameState.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = GameState.c; sourceTree = "<group>"; };
+		923DAD3B2465C4F10094F825 /* InventoryBar.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = InventoryBar.h; sourceTree = "<group>"; };
+		923DAD3C2465C4F10094F825 /* InventoryBar.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = InventoryBar.c; sourceTree = "<group>"; };
 		924B17A324556614008A9B43 /* Location.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Location.h; sourceTree = "<group>"; };
 		924B17A424556614008A9B43 /* Location.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = Location.c; sourceTree = "<group>"; };
 		924B17A624556BC8008A9B43 /* Element.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Element.h; sourceTree = "<group>"; };
@@ -151,6 +154,8 @@
 				924B17A724556BC8008A9B43 /* Element.c */,
 				922EADEB245DE60E00E4027E /* Thread.h */,
 				922EADEC245DE60E00E4027E /* Thread.c */,
+				923DAD3B2465C4F10094F825 /* InventoryBar.h */,
+				923DAD3C2465C4F10094F825 /* InventoryBar.c */,
 			);
 			name = sources;
 			path = ../../sources;
@@ -246,6 +251,7 @@
 				924B17AF2455D598008A9B43 /* Utils.c in Sources */,
 				92ABBAD924543AB800218313 /* Image.c in Sources */,
 				924B17A524556614008A9B43 /* Location.c in Sources */,
+				923DAD3D2465C4F10094F825 /* InventoryBar.c in Sources */,
 				922EADED245DE60E00E4027E /* Thread.c in Sources */,
 				922EADE1245C2A5000E4027E /* Game.c in Sources */,
 				922EADDE245C222A00E4027E /* Font.c in Sources */,

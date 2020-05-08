@@ -14,7 +14,7 @@
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with LowRes NX.  If not, see <http://www.gnu.org/licenses/>.
+// along with Inga.  If not, see <http://www.gnu.org/licenses/>.
 //
 
 #ifndef Global_h
@@ -27,5 +27,8 @@ extern int MainPersonID;
 
 void SetGlobalRenderer(SDL_Renderer *renderer);
 SDL_Renderer *GetGlobalRenderer(void);
+
+void SetGlobalPalette(SDL_Palette *palette);
+SDL_Palette *GetGlobalPalette(void);
 
 #endif /* Global_h */

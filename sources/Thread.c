@@ -475,15 +475,12 @@ unsigned long LaufeINGA(Thread *thread, Game *game, unsigned long ptr, bool *wie
         if ((thread->benutzt > 0) && (thread->invbenutzt > 0)) {
             if (((peekv(game, ptr + 2) == thread->benutzt) && (peekv(game, ptr + 4) == thread->invbenutzt)) ||
                 ((peekv(game, ptr + 2) == thread->invbenutzt) && (peekv(game, ptr + 4) == thread->benutzt))) {
-//                benutzt = 0; invbenutzt = 0; modus = 1;
                 return(ptr + 10);
             }
             if ((peekv(game, ptr + 2) == 0) && ((peekv(game, ptr + 4) == thread->benutzt) || (peekv(game, ptr + 4) == thread->invbenutzt))) {
-//                benutzt = 0; invbenutzt = 0; modus = 1;
                 return(ptr + 10);
             }
             if ((peekv(game, ptr + 2) == 0) && (peekv(game, ptr + 4) == 0)) {
-//                benutzt = 0; invbenutzt = 0; modus = 1;
                 return(ptr + 10);
             }
         }
@@ -492,7 +489,6 @@ unsigned long LaufeINGA(Thread *thread, Game *game, unsigned long ptr, bool *wie
     if (opc == 28) { //WennAngesehen.
         if (thread->angesehen == 0) return(peekl(script, ptr + 4));
         if ((peekv(game, ptr + 2) == thread->angesehen) || (peekv(game, ptr + 2) == 0)) {
-//            angesehen = 0; modus = 1;
             return(ptr + 8);
         } else {
             return(peekl(script, ptr + 4));
@@ -500,7 +496,6 @@ unsigned long LaufeINGA(Thread *thread, Game *game, unsigned long ptr, bool *wie
     }
     if (opc == 40) { //WennGesagt.
         if (peekv(game, ptr + 2) == thread->gesagt) {
-//            gesagt = 0; modus = 1;
             return(ptr + 8);
         } else {
             return(peekl(script, ptr + 4));
@@ -556,8 +551,6 @@ unsigned long LaufeINGA(Thread *thread, Game *game, unsigned long ptr, bool *wie
         return(ptr + 2);
     }
     if (opc == 65) { //ExternAmigaOS.
-//        Execute(peeks(script, ptr + 2), NULL, NULL);
-//        ScreenToFront(schirm);
         return(ptr + 6);
     }
     if (opc == 49) { //ExternAmigaDE.
@@ -570,11 +563,11 @@ unsigned long LaufeINGA(Thread *thread, Game *game, unsigned long ptr, bool *wie
         return(ptr + 6);
     }
     if (opc == 24) { //InventarNehmen.
-//        AddInventar(peeks(script, ptr + 8), peeks(script, ptr + 4), peekv(game, ptr + 2));
+        AddInventoryItem(game->gameState, peekv(game, ptr + 2), peeks(script, ptr + 4), peeks(script, ptr + 8));
         return(ptr + 12);
     }
     if (opc == 25) { //InventarWeg.
-//        EntferneInventar(peekv(game, ptr + 2));
+        RemoveInventoryItem(game->gameState, peekv(game, ptr + 2));
         return(ptr + 4);
     }
     if (opc == 20) { //WennGleich.

@@ -14,7 +14,7 @@
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with LowRes NX.  If not, see <http://www.gnu.org/licenses/>.
+// along with Inga.  If not, see <http://www.gnu.org/licenses/>.
 //
 
 #include "Game.h"
@@ -30,13 +30,13 @@ Game *CreateGame() {
         game->font = LoadFont("Orbitron-Medium", 16);
         game->script = LoadScript("story");
         game->gameState = CreateGameState();
+        game->inventoryBar = CreateInventoryBar(game->gameState);
         game->mainThread = CreateThread(0);
-        game->paletteImage = LoadImage("Thronsaal", NULL, false, true);
         
         // Main Person
         Element *element = CreateElement(MainPersonID);
         element->position = MakeVector(320, 360);
-        element->imageSet = LoadImageSet("Hauptperson", game->paletteImage->surface->format->palette, true);
+        element->imageSet = LoadImageSet("Hauptperson", GetGlobalPalette(), true);
         game->mainPerson = element;
     }
     return game;
@@ -47,8 +47,8 @@ void FreeGame(Game *game) {
     FreeImage(game->focus.image);
     FreeLocation(game->location);
     FreeElement(game->mainPerson);
-    FreeImage(game->paletteImage);
     FreeThread(game->mainThread);
+    FreeInventoryBar(game->inventoryBar);
     FreeGameState(game->gameState);
     FreeScript(game->script);
     FreeFont(game->font);
@@ -60,6 +60,20 @@ void HandleMouseInGame(Game *game, int x, int y, int buttonIndex) {
     if (game->mainThread && game->mainThread->isActive) {
         SetFocus(game, x, y, NULL);
     } else {
+        if (HandleMouseInInventoryBar(game->inventoryBar, x, y, buttonIndex)) {
+            InventoryItem *focusedItem = GetItemInInventoryBarAt(game->inventoryBar, x, y);
+            if (focusedItem) {
+                SetFocus(game, x, y, focusedItem->name);
+                if (buttonIndex == SDL_BUTTON_LEFT) {
+                    //TODO: drag
+                } else if (buttonIndex == SDL_BUTTON_RIGHT) {
+                    StartInteraction(game->mainThread, focusedItem->id, VerbLook);
+                }
+            } else {
+                SetFocus(game, x, y, NULL);
+            }
+            return;
+        }
         if (!game->location) return;
         Element *focusedElement = GetElementAt(game->location, x, y);
         if (focusedElement) {
@@ -100,11 +114,13 @@ void UpdateGame(Game *game, int deltaTicks) {
     if (!game) return;
     UpdateThread(game->mainThread, game);
     UpdateLocation(game->location, deltaTicks);
+    UpdateInventoryBar(game->inventoryBar, deltaTicks);
 }
 
 void DrawGame(Game *game) {
     if (!game) return;
     DrawLocation(game->location);
+    DrawInventoryBar(game->inventoryBar);
     DrawImage(game->focus.image, game->focus.position);
 }
 

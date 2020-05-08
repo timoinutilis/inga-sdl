@@ -14,7 +14,7 @@
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with LowRes NX.  If not, see <http://www.gnu.org/licenses/>.
+// along with Inga.  If not, see <http://www.gnu.org/licenses/>.
 //
 
 #include <SDL2/SDL.h>
@@ -37,6 +37,9 @@ int main(int argc, const char * argv[]) {
     int quit = 0;
     
     SetGlobalRenderer(renderer);
+    
+    Image *paletteImage = LoadImage("Thronsaal", NULL, false, true);
+    SetGlobalPalette(paletteImage->surface->format->palette);
     
     Game *game = CreateGame();
         
@@ -80,6 +83,7 @@ int main(int argc, const char * argv[]) {
     }
     
     FreeGame(game);
+    FreeImage(paletteImage);
     
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);

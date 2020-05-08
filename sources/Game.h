@@ -14,7 +14,7 @@
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with LowRes NX.  If not, see <http://www.gnu.org/licenses/>.
+// along with Inga.  If not, see <http://www.gnu.org/licenses/>.
 //
 
 #ifndef Game_h
@@ -30,6 +30,7 @@
 #include "Script.h"
 #include "Thread.h"
 #include "GameState.h"
+#include "InventoryBar.h"
 
 typedef struct Focus {
     const char *name;
@@ -42,7 +43,7 @@ typedef struct Game {
     Script *script;
     GameState *gameState;
     Thread *mainThread;
-    Image *paletteImage;
+    InventoryBar *inventoryBar;
     Element *mainPerson;
     Location *location;
     Focus focus;

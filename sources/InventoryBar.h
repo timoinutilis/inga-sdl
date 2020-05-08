@@ -17,39 +17,33 @@
 // along with Inga.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#ifndef ImageSet_h
-#define ImageSet_h
+#ifndef InventoryBar_h
+#define InventoryBar_h
 
 #include <stdio.h>
 #include <stdbool.h>
-#include <SDL2/SDL.h>
-#include "Config.h"
-#include "Image.h"
+#include "GameState.h"
 #include "Utils.h"
+#include "Image.h"
 
-typedef enum ImageSide {
-    ImageSideLeft,
-    ImageSideRight,
-    ImageSideFront,
-    ImageSideBack
-} ImageSide;
+typedef struct InventoryItemView {
+    InventoryItem *item;
+    Vector position;
+} InventoryItemView;
 
-typedef struct ImageSetItem {
-    int id;
-    ImageSide side;
-    char filename[FILE_NAME_SIZE];
-    struct Image *image;
-} ImageSetItem;
+typedef struct InventoryBar {
+    GameState *gameState;
+    Image *image;
+    InventoryItemView itemViews[INVENTORY_BAR_SIZE];
+    bool isVisible;
+} InventoryBar;
 
-typedef struct ImageSet {
-    int numItems;
-    struct ImageSetItem *items;
-    SDL_Palette *defaultPalette;
-    bool createsMasks;
-} ImageSet;
+InventoryBar *CreateInventoryBar(GameState *gameState);
+void FreeInventoryBar(InventoryBar *bar);
+bool HandleMouseInInventoryBar(InventoryBar *bar, int x, int y, int buttonIndex);
+void UpdateInventoryBar(InventoryBar *bar, int deltaTicks);
+void DrawInventoryBar(InventoryBar *bar);
 
-ImageSet *LoadImageSet(const char *filename, SDL_Palette *defaultPalette, bool createMasks);
-void FreeImageSet(ImageSet *imageSet);
-Image *GetImageFromSet(ImageSet *imageSet, int id, Vector direction);
+InventoryItem *GetItemInInventoryBarAt(InventoryBar *bar, int x, int y);
 
-#endif /* ImageSet_h */
+#endif /* InventoryBar_h */
