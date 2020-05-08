@@ -58,11 +58,14 @@ typedef struct Element {
     Vector direction;
     enum ElementAction action;
     NavigationPath *navigationPath;
+    bool navigationIgnoresMap;
     int navigationIndex;
     float speed;
     Image *talkImage;
     Vector talkOffset;
     int talkTicks;
+    int defaultIdleImageId;
+    int defaultWalkImageId;
     struct Element *next;
 } Element;
 
@@ -72,11 +75,12 @@ void UpdateElement(Element *element, int deltaTicks);
 void DrawElement(Element *element);
 void DrawElementOverlay(Element *element);
 bool IsPointInElement(Element *element, int x, int y);
+void ResetDefaultAnimations(Element *element);
 
 void ElementStop(Element *element);
 void ElementSetSide(Element *element, ImageSide side, int imageId);
 void ElementLookTo(Element *element, int x, int y, int imageId);
-void ElementMoveTo(Element *element, int x, int y, int imageId);
+void ElementMoveTo(Element *element, int x, int y, int imageId, bool ignoreNavMap);
 void ElementTalk(Element *element, const char *text, int imageId, Font *font);
 void ElementAnimate(Element *element, int imageId, int loopCount);
 

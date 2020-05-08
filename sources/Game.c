@@ -71,9 +71,9 @@ void HandleMouseInGame(Game *game, int x, int y, int buttonIndex) {
                 if (!person->isVisible) {
                     MainPersonDidFinishWalking(game);
                 } else if (focusedElement->target.y) {
-                    ElementMoveTo(person, focusedElement->target.x, focusedElement->target.y, 2);
+                    ElementMoveTo(person, focusedElement->target.x, focusedElement->target.y, 0, false);
                 } else {
-                    ElementMoveTo(person, focusedElement->position.x, focusedElement->position.y, 2);
+                    ElementMoveTo(person, focusedElement->position.x, focusedElement->position.y, 0, false);
                 }
             }
         } else {
@@ -81,7 +81,7 @@ void HandleMouseInGame(Game *game, int x, int y, int buttonIndex) {
             if (buttonIndex == SDL_BUTTON_LEFT) {
                 game->selectedId = 0;
                 Element *person = GetElement(game->location, MainPersonID);
-                ElementMoveTo(person, x, y, 2);
+                ElementMoveTo(person, x, y, 0, false);
             }
         }
     }
@@ -128,6 +128,7 @@ void SetLocation(Game *game, int id, const char *background) {
     game->mainThread->talkingElement = NULL;
     ElementStop(game->mainPerson);
     game->mainPerson->isVisible = true;
+    ResetDefaultAnimations(game->mainPerson);
     FreeLocation(game->location);
     game->location = CreateLocation(id, background);
     game->location->game = game;

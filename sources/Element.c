@@ -34,6 +34,7 @@ Element *CreateElement(int id) {
         element->id = id;
         element->isVisible = true;
         element->speed = 240;
+        ResetDefaultAnimations(element);
     }
     return element;
 }
@@ -53,7 +54,7 @@ void UpdateElement(Element *element, int deltaTicks) {
     if (!element || !element->isVisible) return;
     
     if (!element->image && element->imageSet) {
-        SetElementImageFromSet(element, 1);
+        SetElementImageFromSet(element, element->defaultIdleImageId);
     }
     
     // Animation
@@ -138,6 +139,12 @@ bool IsPointInElement(Element *element, int x, int y) {
     return false;
 }
 
+void ResetDefaultAnimations(Element *element) {
+    if (!element) return;
+    element->defaultIdleImageId = 1;
+    element->defaultWalkImageId = 2;
+}
+
 void SetElementImageFromSet(Element *element, int imageId) {
     if (!element || !element->imageSet) return;
     element->imageId = imageId;
@@ -160,7 +167,7 @@ void ElementStop(Element *element) {
     if (!element) return;
     ElementFreeAction(element);
     element->action = ElementActionIdle;
-    SetElementImageFromSet(element, 1);
+    SetElementImageFromSet(element, element->defaultIdleImageId);
 }
 
 void ElementSetSide(Element *element, ImageSide side, int imageId) {
@@ -193,15 +200,16 @@ void ElementLookTo(Element *element, int x, int y, int imageId) {
     SetElementImageFromSet(element, imageId ? imageId : element->imageId);
 }
 
-void ElementMoveTo(Element *element, int x, int y, int imageId) {
+void ElementMoveTo(Element *element, int x, int y, int imageId, bool ignoreNavMap) {
     if (!element) return;
     ElementFreeAction(element);
     element->navigationIndex = 0;
-    element->navigationPath = CreateNavigationPath(element->location->navigationMap, element->position, MakeVector(x, y));
+    element->navigationIgnoresMap = ignoreNavMap;
+    element->navigationPath = CreateNavigationPath(ignoreNavMap ? NULL : element->location->navigationMap, element->position, MakeVector(x, y));
     if (element->navigationPath) {
         element->action = ElementActionMove;
         Vector firstPosition = element->navigationPath->positions[0];
-        ElementLookTo(element, firstPosition.x, firstPosition.y, imageId);
+        ElementLookTo(element, firstPosition.x, firstPosition.y, imageId ? imageId : element->defaultWalkImageId);
     }
 }
 
@@ -240,7 +248,9 @@ void UpdateMove(Element *element, int deltaTicks) {
     if (nv >= 1) {
         element->position.x += (vx / nv);
         element->position.y += (vy / nv);
-        AdjustPositionForNavigation(element->location->navigationMap, &element->position);
+        if (!element->navigationIgnoresMap) {
+            AdjustPositionForNavigation(element->location->navigationMap, &element->position);
+        }
     } else if (element->navigationIndex + 1 < element->navigationPath->numPositions) {
         element->navigationIndex += 1;
         Vector position = element->navigationPath->positions[element->navigationIndex];

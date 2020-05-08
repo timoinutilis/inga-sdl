@@ -235,7 +235,7 @@ unsigned long LaufeINGA(Thread *thread, Game *game, unsigned long ptr, bool *wie
     if (opc == 11) { //Laufe.
         Element *element = GetElement(game->location, peekv(game, ptr + 2));
         if (element->action == ElementActionIdle) {
-            ElementMoveTo(element, peekv(game, ptr + 4), peekv(game, ptr + 6), peekv(game, ptr + 8));
+            ElementMoveTo(element, peekv(game, ptr + 4), peekv(game, ptr + 6), peekv(game, ptr + 8), false);
             return(ptr + 10);
         }
         *wieder = false;
@@ -245,7 +245,7 @@ unsigned long LaufeINGA(Thread *thread, Game *game, unsigned long ptr, bool *wie
         Element *element = GetElement(game->location, peekv(game, ptr + 2));
         if (element->action == ElementActionIdle) {
             //TODO: skip navigation
-            ElementMoveTo(element, peekv(game, ptr + 4), peekv(game, ptr + 6), peekv(game, ptr + 8));
+            ElementMoveTo(element, peekv(game, ptr + 4), peekv(game, ptr + 6), peekv(game, ptr + 8), true);
             return(ptr + 10);
         }
         *wieder = false;
@@ -384,14 +384,14 @@ unsigned long LaufeINGA(Thread *thread, Game *game, unsigned long ptr, bool *wie
         return(ptr + 6);
     }
     if (opc == 56) { //PersonenAnims.
-//        person = SucheIDPerson(0);
-//        person->standiannum = peekv(game, ptr + 2);
-//        iannumgehen = peekv(game, ptr + 4);
+        Element *element = GetElement(game->location, MainPersonID);
+        element->defaultIdleImageId = peekv(game, ptr + 2);
+        element->defaultWalkImageId = peekv(game, ptr + 4);
         return(ptr + 6);
     }
     if (opc == 87) { //StandAnim.
-//        person = SucheIDPerson(peekv(game, ptr + 2));
-//        person->standiannum = peekv(game, ptr + 4);
+        Element *element = GetElement(game->location, peekv(game, ptr + 2));
+        element->defaultIdleImageId = peekv(game, ptr + 4);
         return(ptr + 6);
     }
 
@@ -606,16 +606,18 @@ unsigned long LaufeINGA(Thread *thread, Game *game, unsigned long ptr, bool *wie
         }
     }
     if (opc == 45) { //WennSichtbar.
-//        if (SichtWert(peekv(game, ptr + 2), peekv(game, ptr + 4)))
-//            return(ptr + 10);
-//        else
+        if (GetVisibility(game->gameState, peekv(game, ptr + 2), peekv(game, ptr + 4))) {
+            return(ptr + 10);
+        } else {
             return(peekl(script, ptr + 6));
+        }
     }
     if (opc == 46) { //WennUnsichtbar.
-//        if (SichtWert(peekv(game, ptr + 2), peekv(game, ptr + 4)))
-//            return(peekl(script, ptr + 6));
-//        else
+        if (GetVisibility(game->gameState, peekv(game, ptr + 2), peekv(game, ptr + 4))) {
+            return(peekl(script, ptr + 6));
+        } else {
             return(ptr + 10);
+        }
     }
     if (opc == 35) { //SetzeVariable.
         SetVariable(game->gameState, peekv(game, ptr + 2), peekv(game, ptr + 4), false);
