@@ -50,6 +50,6 @@ Thread *CreateThread(int id);
 void FreeThread(Thread *thread);
 void UpdateThread(Thread *thread, Game *game);
 
-void StartInteraction(Thread *thread, int id, Verb verb);
+void StartInteraction(Thread *thread, int id1, int id2, Verb verb);
 
 #endif /* Thread_h */

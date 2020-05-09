@@ -436,10 +436,6 @@ unsigned long LaufeINGA(Thread *thread, Game *game, unsigned long ptr, bool *wie
     }
     if (opc == 22) { //Stopp.
 //        MausStatusSichtbar(true);
-        thread->benutzt = 0;
-        thread->invbenutzt = 0;
-        thread->angesehen = 0;
-        thread->gesagt = 0;
         thread->isActive = false;
         return(ptr + 2);
     }
@@ -564,10 +560,12 @@ unsigned long LaufeINGA(Thread *thread, Game *game, unsigned long ptr, bool *wie
     }
     if (opc == 24) { //InventarNehmen.
         AddInventoryItem(game->gameState, peekv(game, ptr + 2), peeks(script, ptr + 4), peeks(script, ptr + 8));
+        RefreshInventoryBar(game->inventoryBar);
         return(ptr + 12);
     }
     if (opc == 25) { //InventarWeg.
         RemoveInventoryItem(game->gameState, peekv(game, ptr + 2));
+        RefreshInventoryBar(game->inventoryBar);
         return(ptr + 4);
     }
     if (opc == 20) { //WennGleich.
@@ -712,13 +710,19 @@ unsigned long LaufeINGA(Thread *thread, Game *game, unsigned long ptr, bool *wie
     return(ptr);
 }
 
-void StartInteraction(Thread *thread, int id, Verb verb) {
+void StartInteraction(Thread *thread, int id1, int id2, Verb verb) {
+    thread->angesehen = 0;
+    thread->gesagt = 0;
+    thread->benutzt = 0;
+    thread->invbenutzt = 0;
+    
     switch (verb) {
         case VerbUse:
-            thread->benutzt = id;
+            thread->benutzt = id1;
+            thread->invbenutzt = id2;
             break;
         case VerbLook:
-            thread->angesehen = id;
+            thread->angesehen = id1;
             break;
     }
     thread->ptr = thread->listeptr;

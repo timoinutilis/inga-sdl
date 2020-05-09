@@ -40,10 +40,13 @@ typedef struct InventoryBar {
 
 InventoryBar *CreateInventoryBar(GameState *gameState);
 void FreeInventoryBar(InventoryBar *bar);
+void RefreshInventoryBar(InventoryBar *bar);
 bool HandleMouseInInventoryBar(InventoryBar *bar, int x, int y, int buttonIndex);
 void UpdateInventoryBar(InventoryBar *bar, int deltaTicks);
 void DrawInventoryBar(InventoryBar *bar);
 
 InventoryItem *GetItemInInventoryBarAt(InventoryBar *bar, int x, int y);
+
+void DrawInventoryItemView(InventoryItemView *itemView);
 
 #endif /* InventoryBar_h */

@@ -107,16 +107,6 @@ void SetVisibility(GameState *gameState, int locationId, int elementId, bool val
     SetVariable(gameState, id, value ? 1 : 0, skipIfExists);
 }
 
-void PrintInventory(GameState *gameState) {
-    if (!gameState) return;
-    printf("--Inventory--\n");
-    InventoryItem *item = gameState->rootInventoryItem;
-    while (item) {
-        printf("%s\n", item->name);
-        item = item->next;
-    }
-}
-
 void AddInventoryItem(GameState *gameState, int id, const char *name, const char *filename) {
     if (!gameState) return;
     InventoryItem *item = calloc(1, sizeof(InventoryItem));
@@ -130,7 +120,6 @@ void AddInventoryItem(GameState *gameState, int id, const char *name, const char
         item->next = gameState->rootInventoryItem;
         gameState->rootInventoryItem = item;
     }
-    PrintInventory(gameState);
 }
 
 void RemoveInventoryItem(GameState *gameState, int id) {
@@ -152,7 +141,6 @@ void RemoveInventoryItem(GameState *gameState, int id) {
             currItem = currItem->next;
         };
     }
-    PrintInventory(gameState);
 }
 
 void FreeInventoryItems(GameState *gameState) {

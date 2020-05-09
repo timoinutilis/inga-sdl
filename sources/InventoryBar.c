@@ -40,6 +40,23 @@ void FreeInventoryBar(InventoryBar *bar) {
     free(bar);
 }
 
+void RefreshInventoryBar(InventoryBar *bar) {
+    if (!bar) return;
+    InventoryItem *item = bar->gameState->rootInventoryItem;
+    for (int i = 0; i < INVENTORY_BAR_SIZE; i++) {
+        if (item != bar->itemViews[i].item) {
+            if (item) {
+                //TODO: reset animation
+            }
+            bar->itemViews[i].item = item;
+        }
+        if (item) {
+            item = item->next;
+        }
+    }
+
+}
+
 bool HandleMouseInInventoryBar(InventoryBar *bar, int x, int y, int buttonIndex) {
     if (!bar) return false;
     if (bar->isVisible) {
@@ -59,32 +76,13 @@ bool HandleMouseInInventoryBar(InventoryBar *bar, int x, int y, int buttonIndex)
 
 void UpdateInventoryBar(InventoryBar *bar, int deltaTicks) {
     if (!bar) return;
-    InventoryItem *item = bar->gameState->rootInventoryItem;
-    for (int i = 0; i < INVENTORY_BAR_SIZE; i++) {
-        if (item != bar->itemViews[i].item) {
-            if (item) {
-                //TODO: reset animation
-            }
-            bar->itemViews[i].item = item;
-        }
-        if (item) {
-            item = item->next;
-        }
-    }
 }
 
 void DrawInventoryBar(InventoryBar *bar) {
     if (!bar || !bar->isVisible) return;
     DrawImage(bar->image, MakeVector(0, SCREEN_HEIGHT - bar->image->height));
     for (int i = 0; i < INVENTORY_BAR_SIZE; i++) {
-        InventoryItemView *itemView = &bar->itemViews[i];
-        if (itemView->item && itemView->item->image) {
-            if (itemView->item->image->animation) {
-                DrawAnimationFrame(itemView->item->image, itemView->position, 0);
-            } else {
-                DrawImage(itemView->item->image, itemView->position);
-            }
-        }
+        DrawInventoryItemView(&bar->itemViews[i]);
     }
 }
 
@@ -97,4 +95,13 @@ InventoryItem *GetItemInInventoryBarAt(InventoryBar *bar, int x, int y) {
         }
     }
     return NULL;
+}
+
+void DrawInventoryItemView(InventoryItemView *itemView) {
+    if (!itemView || !itemView->item || !itemView->item->image) return;
+    if (itemView->item->image->animation) {
+        DrawAnimationFrame(itemView->item->image, itemView->position, 0);
+    } else {
+        DrawImage(itemView->item->image, itemView->position);
+    }
 }

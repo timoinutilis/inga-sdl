@@ -47,7 +47,9 @@ typedef struct Game {
     Element *mainPerson;
     Location *location;
     Focus focus;
+    InventoryItemView draggingItemView;
     int selectedId;
+    int draggedId;
     Verb selectedVerb;
 } Game;
 

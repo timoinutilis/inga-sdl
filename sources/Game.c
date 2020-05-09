@@ -59,15 +59,24 @@ void HandleMouseInGame(Game *game, int x, int y, int buttonIndex) {
     if (!game) return;
     if (game->mainThread && game->mainThread->isActive) {
         SetFocus(game, x, y, NULL);
+        game->draggingItemView.item = NULL;
     } else {
+        game->draggingItemView.position = MakeVector(x, y);
         if (HandleMouseInInventoryBar(game->inventoryBar, x, y, buttonIndex)) {
             InventoryItem *focusedItem = GetItemInInventoryBarAt(game->inventoryBar, x, y);
             if (focusedItem) {
                 SetFocus(game, x, y, focusedItem->name);
                 if (buttonIndex == SDL_BUTTON_LEFT) {
-                    //TODO: drag
+                    if (game->draggingItemView.item) {
+                        StartInteraction(game->mainThread, focusedItem->id, game->draggingItemView.item->id, VerbUse);
+                        game->draggingItemView.item = NULL;
+                        game->inventoryBar->isVisible = false;
+                    } else {
+                        game->draggingItemView.item = focusedItem;
+                    }
                 } else if (buttonIndex == SDL_BUTTON_RIGHT) {
-                    StartInteraction(game->mainThread, focusedItem->id, VerbLook);
+                    game->draggingItemView.item = NULL;
+                    StartInteraction(game->mainThread, focusedItem->id, 0, VerbLook);
                 }
             } else {
                 SetFocus(game, x, y, NULL);
@@ -80,7 +89,13 @@ void HandleMouseInGame(Game *game, int x, int y, int buttonIndex) {
             SetFocus(game, x, y, focusedElement->name);
             if (buttonIndex > 0) {
                 game->selectedId = focusedElement->id;
-                game->selectedVerb = buttonIndex == SDL_BUTTON_RIGHT ? VerbLook : VerbUse;
+                if (game->draggingItemView.item) {
+                    game->draggedId = game->draggingItemView.item->id;
+                    game->selectedVerb = VerbUse;
+                    game->draggingItemView.item = NULL;
+                } else {
+                    game->selectedVerb = buttonIndex == SDL_BUTTON_RIGHT ? VerbLook : VerbUse;
+                }
                 Element *person = GetElement(game->location, MainPersonID);
                 if (!person->isVisible) {
                     MainPersonDidFinishWalking(game);
@@ -122,6 +137,7 @@ void DrawGame(Game *game) {
     DrawLocation(game->location);
     DrawInventoryBar(game->inventoryBar);
     DrawImage(game->focus.image, game->focus.position);
+    DrawInventoryItemView(&game->draggingItemView);
 }
 
 void SetFocus(Game *game, int x, int y, const char *name) {
@@ -153,7 +169,8 @@ void SetLocation(Game *game, int id, const char *background) {
 
 void MainPersonDidFinishWalking(Game *game) {
     if (game->selectedId) {
-        StartInteraction(game->mainThread, game->selectedId, game->selectedVerb);
+        StartInteraction(game->mainThread, game->selectedId, game->draggedId, game->selectedVerb);
         game->selectedId = 0;
+        game->draggedId = 0;
     }
 }
