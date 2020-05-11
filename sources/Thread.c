@@ -49,6 +49,8 @@ void UpdateThread(Thread *thread, Game *game) {
 }
 
 unsigned long LaufeINGA(Thread *thread, Game *game, unsigned long ptr, bool *wieder) {
+    if (!thread) return ptr;
+    
     Script *script = game->script;
     unsigned short opc;
     unsigned long use;
@@ -708,6 +710,16 @@ unsigned long LaufeINGA(Thread *thread, Game *game, unsigned long ptr, bool *wie
     thread->isActive = false;
 //    Fehler(6, "Unbekannter Skriptbefehl");
     return(ptr);
+}
+
+void EscapeThread(Thread *thread) {
+    if (!thread || !thread->escptr) return;
+    if (thread->talkingElement) {
+        ElementStop(thread->talkingElement);
+        thread->talkingElement = NULL;
+    }
+    thread->ptr = thread->escptr;
+    thread->escptr = 0;
 }
 
 void StartInteraction(Thread *thread, int id1, int id2, Verb verb) {

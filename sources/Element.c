@@ -145,6 +145,26 @@ void ResetDefaultAnimations(Element *element) {
     element->defaultWalkImageId = 2;
 }
 
+Vector GetElementTarget(Element *element, Vector fromPosition) {
+    if (element->target.y) {
+        return element->target;
+    } else {
+        float dx = fromPosition.x - element->position.x;
+        float dy = fromPosition.y - element->position.y;
+        if (dx * dx < 1 && dy * dy < 1) {
+            dx = 1;
+        }
+        float dist = sqrtf(dx * dx + dy * dy);
+        dx = dx / dist * 100;
+        dy = dy / dist * 40;
+        
+        Vector target = element->position;
+        target.x += dx;
+        target.y += dy;
+        return target;
+    }
+}
+
 void SetElementImageFromSet(Element *element, int imageId) {
     if (!element || !element->imageSet) return;
     element->imageId = imageId;

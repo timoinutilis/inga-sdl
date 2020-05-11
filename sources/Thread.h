@@ -49,6 +49,7 @@ typedef struct Thread {
 Thread *CreateThread(int id);
 void FreeThread(Thread *thread);
 void UpdateThread(Thread *thread, Game *game);
+void EscapeThread(Thread *thread);
 
 void StartInteraction(Thread *thread, int id1, int id2, Verb verb);
 

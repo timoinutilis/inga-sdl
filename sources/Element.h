@@ -76,6 +76,7 @@ void DrawElement(Element *element);
 void DrawElementOverlay(Element *element);
 bool IsPointInElement(Element *element, int x, int y);
 void ResetDefaultAnimations(Element *element);
+Vector GetElementTarget(Element *element, Vector fromPosition);
 
 void ElementStop(Element *element);
 void ElementSetSide(Element *element, ImageSide side, int imageId);

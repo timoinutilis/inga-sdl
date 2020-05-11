@@ -99,10 +99,9 @@ void HandleMouseInGame(Game *game, int x, int y, int buttonIndex) {
                 Element *person = GetElement(game->location, MainPersonID);
                 if (!person->isVisible) {
                     MainPersonDidFinishWalking(game);
-                } else if (focusedElement->target.y) {
-                    ElementMoveTo(person, focusedElement->target.x, focusedElement->target.y, 0, false);
                 } else {
-                    ElementMoveTo(person, focusedElement->position.x, focusedElement->position.y, 0, false);
+                    Vector target = GetElementTarget(focusedElement, person->position);
+                    ElementMoveTo(person, target.x, target.y, 0, false);
                 }
             }
         } else {
@@ -118,10 +117,7 @@ void HandleMouseInGame(Game *game, int x, int y, int buttonIndex) {
 
 void HandleKeyInGame(Game *game, SDL_Keysym keysym) {
     if (keysym.sym == SDLK_ESCAPE) {
-        if (game->mainThread && game->mainThread->escptr) {
-            game->mainThread->ptr = game->mainThread->escptr;
-            game->mainThread->escptr = 0;
-        }
+        EscapeThread(game->mainThread);
     }
 }
 
