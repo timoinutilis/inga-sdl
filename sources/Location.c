@@ -24,6 +24,7 @@ void FreeElements(Location *location);
 void UpdateElements(Location *location, int deltaTicks);
 void DrawElements(Location *location);
 void DrawElementOverlays(Location *location);
+void SortElements(Location *location);
 
 Location *CreateLocation(int id, const char *background) {
     Location *location = calloc(1, sizeof(Location));
@@ -111,6 +112,7 @@ void UpdateElements(Location *location, int deltaTicks) {
         UpdateElement(element, deltaTicks);
         element = element->next;
     }
+    SortElements(location);
 }
 
 void DrawElements(Location *location) {
@@ -139,5 +141,32 @@ void UpdateElementVisibilities(Location *location, GameState *gameState) {
             element->isVisible = GetVisibility(gameState, location->id, element->id);
         }
         element = element->next;
+    }
+}
+
+void SortElements(Location *location) {
+    if (!location) return;
+    Element *previous = NULL;
+    Element *current = location->rootElement;
+    Element *buf1 = NULL;
+    Element *buf2 = NULL;
+    while (current && current->next) {
+        if (current->position.y > current->next->position.y) {
+            buf1 = current->next;
+            current->next = current->next->next;
+            if (previous) {
+                buf2 = previous->next;
+                previous->next = buf1;
+            } else {
+                buf2 = location->rootElement;
+                location->rootElement = buf1;
+            }
+            buf1->next = buf2;
+            previous = NULL;
+            current = location->rootElement;
+        } else {
+            previous = current;
+            current = current->next;
+        }
     }
 }
