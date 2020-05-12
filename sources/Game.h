@@ -31,6 +31,7 @@
 #include "Thread.h"
 #include "GameState.h"
 #include "InventoryBar.h"
+#include "Dialog.h"
 
 typedef struct Focus {
     const char *name;
@@ -44,6 +45,7 @@ typedef struct Game {
     GameState *gameState;
     Thread *mainThread;
     InventoryBar *inventoryBar;
+    Dialog *dialog;
     Element *mainPerson;
     Location *location;
     Focus focus;

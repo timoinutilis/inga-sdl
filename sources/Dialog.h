@@ -17,41 +17,33 @@
 // along with Inga.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#ifndef Thread_h
-#define Thread_h
+#ifndef Dialog_h
+#define Dialog_h
 
 #include <stdio.h>
-#include <stdbool.h>
-#include "Element.h"
+#include "Image.h"
+#include "Font.h"
 
-typedef struct Game Game;
-
-typedef enum Verb {
-    VerbUse,
-    VerbLook,
-    VerbSay
-} Verb;
-
-typedef struct Thread {
+typedef struct DialogItem {
     int id;
-    bool isActive;
-    unsigned long ptr;
-    unsigned long subptr;
-    unsigned long listeptr;
-    unsigned long dialoglisteptr;
-    unsigned long escptr;
-    Element *talkingElement;
-    int benutzt;
-    int invbenutzt;
-    int gesagt;
-    int angesehen;
-} Thread;
+    const char *text;
+    Image *image;
+    Image *focusImage;
+    Vector position;
+    struct DialogItem *next;
+} DialogItem;
 
-Thread *CreateThread(int id);
-void FreeThread(Thread *thread);
-void UpdateThread(Thread *thread, Game *game);
-void EscapeThread(Thread *thread);
+typedef struct Dialog {
+    DialogItem *rootItem;
+    DialogItem *focusedItem;
+} Dialog;
 
-void StartInteraction(Thread *thread, int id1, int id2, Verb verb);
+Dialog *CreateDialog(void);
+void FreeDialog(Dialog *dialog);
+bool HandleMouseInDialog(Dialog *dialog, int x, int y, int buttonIndex);
+void DrawDialog(Dialog *dialog);
+void AddDialogItem(Dialog *dialog, int id, const char *text, Font *font);
+void RefreshDialog(Dialog *dialog);
+void ResetDialog(Dialog *dialog);
 
-#endif /* Thread_h */
+#endif /* Dialog_h */

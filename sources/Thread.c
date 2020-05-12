@@ -457,8 +457,8 @@ unsigned long LaufeINGA(Thread *thread, Game *game, unsigned long ptr, bool *wie
     if (opc == 39) { //Dialogliste.
 //        MausStatusSichtbar(true);
         thread->dialoglisteptr = ptr + 2;
-//        dialog.aktiv = true;
         thread->isActive = false;
+        RefreshDialog(game->dialog);
         return(ptr + 2);
     }
     if (opc == 26) { //WennBenutzt.
@@ -663,7 +663,9 @@ unsigned long LaufeINGA(Thread *thread, Game *game, unsigned long ptr, bool *wie
         return(ptr + 6);
     }
     if (opc == 38) { //Antwort.
-//        if (peekv(game, ptr + 8) == peekv(game, ptr + 10)) AddAntwort(peekv(game, ptr + 2), peeks(script, ptr + 4));
+        if (peekv(game, ptr + 8) == peekv(game, ptr + 10)) {
+            AddDialogItem(game->dialog, peekv(game, ptr + 2), peeks(script, ptr + 4), game->font);
+        }
         return(ptr + 12);
     }
     if (opc == 78) { //Leistensperre.
@@ -732,12 +734,17 @@ void StartInteraction(Thread *thread, int id1, int id2, Verb verb) {
         case VerbUse:
             thread->benutzt = id1;
             thread->invbenutzt = id2;
+            thread->ptr = thread->listeptr;
             break;
         case VerbLook:
             thread->angesehen = id1;
+            thread->ptr = thread->listeptr;
+            break;
+        case VerbSay:
+            thread->gesagt = id1;
+            thread->ptr = thread->dialoglisteptr;
             break;
     }
-    thread->ptr = thread->listeptr;
     thread->isActive = true;
 }
 

@@ -31,6 +31,7 @@ Game *CreateGame() {
         game->script = LoadScript("story");
         game->gameState = CreateGameState();
         game->inventoryBar = CreateInventoryBar(game->gameState);
+        game->dialog = CreateDialog();
         game->mainThread = CreateThread(0);
         
         // Main Person
@@ -48,6 +49,7 @@ void FreeGame(Game *game) {
     FreeLocation(game->location);
     FreeElement(game->mainPerson);
     FreeThread(game->mainThread);
+    FreeDialog(game->dialog);
     FreeInventoryBar(game->inventoryBar);
     FreeGameState(game->gameState);
     FreeScript(game->script);
@@ -57,61 +59,78 @@ void FreeGame(Game *game) {
 
 void HandleMouseInGame(Game *game, int x, int y, int buttonIndex) {
     if (!game) return;
+    
     if (game->mainThread && game->mainThread->isActive) {
         SetFocus(game, x, y, NULL);
         game->draggingItemView.item = NULL;
-    } else {
-        game->draggingItemView.position = MakeVector(x, y);
-        if (HandleMouseInInventoryBar(game->inventoryBar, x, y, buttonIndex)) {
-            InventoryItem *focusedItem = GetItemInInventoryBarAt(game->inventoryBar, x, y);
-            if (focusedItem) {
-                SetFocus(game, x, y, focusedItem->name);
-                if (buttonIndex == SDL_BUTTON_LEFT) {
-                    if (game->draggingItemView.item) {
-                        StartInteraction(game->mainThread, focusedItem->id, game->draggingItemView.item->id, VerbUse);
-                        game->draggingItemView.item = NULL;
-                        game->inventoryBar->isVisible = false;
-                    } else {
-                        game->draggingItemView.item = focusedItem;
-                    }
-                } else if (buttonIndex == SDL_BUTTON_RIGHT) {
-                    game->draggingItemView.item = NULL;
-                    StartInteraction(game->mainThread, focusedItem->id, 0, VerbLook);
-                }
-            } else {
-                SetFocus(game, x, y, NULL);
-            }
-            return;
+        return;
+    }
+    
+    if (HandleMouseInDialog(game->dialog, x, y, buttonIndex)) {
+        SetFocus(game, x, y, NULL);
+        game->draggingItemView.item = NULL;
+        if (buttonIndex == SDL_BUTTON_LEFT && game->dialog->focusedItem) {
+            StartInteraction(game->mainThread, game->dialog->focusedItem->id, 0, VerbSay);
+            ResetDialog(game->dialog);
         }
-        if (!game->location) return;
-        Element *focusedElement = GetElementAt(game->location, x, y);
-        if (focusedElement) {
-            SetFocus(game, x, y, focusedElement->name);
-            if (buttonIndex > 0) {
-                game->selectedId = focusedElement->id;
+        return;
+    }
+    
+    game->draggingItemView.position = MakeVector(x, y);
+    
+    if (HandleMouseInInventoryBar(game->inventoryBar, x, y, buttonIndex)) {
+        InventoryItem *focusedItem = GetItemInInventoryBarAt(game->inventoryBar, x, y);
+        if (focusedItem) {
+            SetFocus(game, x, y, focusedItem->name);
+            if (buttonIndex == SDL_BUTTON_LEFT) {
                 if (game->draggingItemView.item) {
-                    game->draggedId = game->draggingItemView.item->id;
-                    game->selectedVerb = VerbUse;
+                    StartInteraction(game->mainThread, focusedItem->id, game->draggingItemView.item->id, VerbUse);
                     game->draggingItemView.item = NULL;
+                    game->inventoryBar->isVisible = false;
                 } else {
-                    game->selectedVerb = buttonIndex == SDL_BUTTON_RIGHT ? VerbLook : VerbUse;
+                    game->draggingItemView.item = focusedItem;
                 }
-                Element *person = GetElement(game->location, MainPersonID);
-                if (!person->isVisible) {
-                    MainPersonDidFinishWalking(game);
-                } else {
-                    Vector target = GetElementTarget(focusedElement, person->position);
-                    ElementMoveTo(person, target.x, target.y, 0, false);
-                }
+            } else if (buttonIndex == SDL_BUTTON_RIGHT) {
+                game->draggingItemView.item = NULL;
+                StartInteraction(game->mainThread, focusedItem->id, 0, VerbLook);
             }
         } else {
             SetFocus(game, x, y, NULL);
-            if (buttonIndex == SDL_BUTTON_LEFT) {
-                game->selectedId = 0;
-                Element *person = GetElement(game->location, MainPersonID);
-                ElementMoveTo(person, x, y, 0, false);
+        }
+        return;
+    }
+    
+    if (!game->location) return;
+    
+    Element *focusedElement = GetElementAt(game->location, x, y);
+    if (focusedElement) {
+        SetFocus(game, x, y, focusedElement->name);
+        if (buttonIndex > 0) {
+            game->selectedId = focusedElement->id;
+            if (game->draggingItemView.item) {
+                game->draggedId = game->draggingItemView.item->id;
+                game->selectedVerb = VerbUse;
+                game->draggingItemView.item = NULL;
+            } else {
+                game->selectedVerb = buttonIndex == SDL_BUTTON_RIGHT ? VerbLook : VerbUse;
+            }
+            Element *person = GetElement(game->location, MainPersonID);
+            if (!person->isVisible) {
+                MainPersonDidFinishWalking(game);
+            } else {
+                Vector target = GetElementTarget(focusedElement, person->position);
+                ElementMoveTo(person, target.x, target.y, 0, false);
             }
         }
+        return;
+    }
+    
+    SetFocus(game, x, y, NULL);
+    
+    if (buttonIndex == SDL_BUTTON_LEFT) {
+        game->selectedId = 0;
+        Element *person = GetElement(game->location, MainPersonID);
+        ElementMoveTo(person, x, y, 0, false);
     }
 }
 
@@ -134,6 +153,7 @@ void DrawGame(Game *game) {
     DrawInventoryBar(game->inventoryBar);
     DrawImage(game->focus.image, game->focus.position);
     DrawInventoryItemView(&game->draggingItemView);
+    DrawDialog(game->dialog);
 }
 
 void SetFocus(Game *game, int x, int y, const char *name) {
