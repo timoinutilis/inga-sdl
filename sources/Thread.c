@@ -78,7 +78,7 @@ unsigned long LaufeINGA(Thread *thread, Game *game, unsigned long ptr, bool *wie
         return(ptr + 2);
     }
     if (opc == 83) { //LadeBild.
-//        LadeHintergrund(peeks(script, ptr + 2));
+        LoadLocationBackground(game->location, peeks(script, ptr + 2));
         return(ptr + 6);
     }
     if (opc == 3) { //Feld.

@@ -44,6 +44,8 @@ void FreeLocation(Location *location);
 void UpdateLocation(Location *location, int deltaTicks);
 void DrawLocation(Location *location);
 
+void LoadLocationBackground(Location *location, const char *background);
+
 void AddElement(Location *location, Element *element);
 Element *GetElement(Location *location, int id);
 Element *GetElementAt(Location *location, int x, int y);

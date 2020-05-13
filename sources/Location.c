@@ -32,8 +32,7 @@ Location *CreateLocation(int id, const char *background) {
         printf("CreateLocation: Out of memory\n");
     } else {
         location->id = id;
-        location->image = LoadImage(background, NULL, false, true);
-        location->foregroundImage = LoadMaskedImage(background, location->image);
+        LoadLocationBackground(location, background);
         location->navigationMap = LoadNavigationMap(background);
     }
     return location;
@@ -61,6 +60,15 @@ void DrawLocation(Location *location) {
     DrawElementOverlays(location);
 }
 
+void LoadLocationBackground(Location *location, const char *background) {
+    if (!location) return;
+    Image *prevImage = location->image;
+    FreeImage(location->foregroundImage);
+    location->image = LoadImage(background, prevImage ? prevImage->surface->format->palette : NULL, false, true);
+    location->foregroundImage = LoadMaskedImage(background, location->image);
+    FreeImage(prevImage);
+}
+
 void AddElement(Location *location, Element *element) {
     if (!location || !element) return;
     element->location = location;
@@ -83,13 +91,14 @@ Element *GetElement(Location *location, int id) {
 Element *GetElementAt(Location *location, int x, int y) {
     if (!location) return NULL;
     Element *element = location->rootElement;
+    Element *elementAtPoint = NULL;
     while (element) {
         if (IsPointInElement(element, x, y)) {
-            return element;
+            elementAtPoint = element;
         }
         element = element->next;
     }
-    return NULL;
+    return elementAtPoint;
 }
 
 void FreeElements(Location *location) {
