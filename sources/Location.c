@@ -25,6 +25,8 @@ void UpdateElements(Location *location, int deltaTicks);
 void DrawElements(Location *location);
 void DrawElementOverlays(Location *location);
 void SortElements(Location *location);
+void FreeThreads(Location *location);
+void UpdateThreads(Location *location);
 
 Location *CreateLocation(int id, const char *background) {
     Location *location = calloc(1, sizeof(Location));
@@ -44,11 +46,13 @@ void FreeLocation(Location *location) {
     FreeImage(location->foregroundImage);
     FreeNavigationMap(location->navigationMap);
     FreeElements(location);
+    FreeThreads(location);
     free(location);
 }
 
 void UpdateLocation(Location *location, int deltaTicks) {
     if (!location) return;
+    UpdateThreads(location);
     UpdateElements(location, deltaTicks);
 }
 
@@ -177,5 +181,43 @@ void SortElements(Location *location) {
             previous = current;
             current = current->next;
         }
+    }
+}
+
+void AddThread(Location *location, Thread *thread) {
+    if (!location || !thread) return;
+    thread->next = location->rootThread;
+    location->rootThread = thread;
+}
+
+Thread *GetThread(Location *location, int id) {
+    if (!location) return NULL;
+    Thread *thread = location->rootThread;
+    while (thread) {
+        if (thread->id == id) {
+            return thread;
+        }
+        thread = thread->next;
+    }
+    return NULL;
+}
+
+void FreeThreads(Location *location) {
+    if (!location) return;
+    Thread *thread = location->rootThread;
+    while (thread) {
+        Thread *next = thread->next;
+        FreeThread(thread);
+        thread = next;
+    }
+    location->rootThread = NULL;
+}
+
+void UpdateThreads(Location *location) {
+    if (!location) return;
+    Thread *thread = location->rootThread;
+    while (thread) {
+        UpdateThread(thread, location->game);
+        thread = thread->next;
     }
 }

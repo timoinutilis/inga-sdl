@@ -45,6 +45,7 @@ typedef struct Thread {
     int invbenutzt;
     int gesagt;
     int angesehen;
+    struct Thread *next;
 } Thread;
 
 Thread *CreateThread(int id);

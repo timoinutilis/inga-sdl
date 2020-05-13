@@ -27,6 +27,7 @@
 #include "NavigationMap.h"
 #include "Element.h"
 #include "GameState.h"
+#include "Thread.h"
 
 typedef struct Game Game;
 
@@ -37,6 +38,7 @@ typedef struct Location {
     Image *foregroundImage;
     NavigationMap *navigationMap;
     Element *rootElement;
+    Thread *rootThread;
 } Location;
 
 Location *CreateLocation(int id, const char *background);
@@ -51,5 +53,8 @@ Element *GetElement(Location *location, int id);
 Element *GetElementAt(Location *location, int x, int y);
 
 void UpdateElementVisibilities(Location *location, GameState *gameState);
+
+void AddThread(Location *location, Thread *thread);
+Thread *GetThread(Location *location, int id);
 
 #endif /* Location_h */

@@ -150,11 +150,10 @@ unsigned long LaufeINGA(Thread *thread, Game *game, unsigned long ptr, bool *wie
         return(ptr + 18);
     }
     if (opc == 82) { //PersonProg.
-//        person=SucheIDPerson(peekv(game, ptr + 2));
-//        if (person) {
-//            person->pc = ptr + 8;
-//            person->isfaktiv = true;
-//        }
+        Thread *thread = CreateThread(peekv(game, ptr + 2));
+        thread->ptr = ptr + 8;
+        thread->isActive = true;
+        AddThread(game->location, thread);
         return(peekl(script, ptr + 4));
     }
     if (opc == 10) { //PersonUnsichtbar.
@@ -368,14 +367,16 @@ unsigned long LaufeINGA(Thread *thread, Game *game, unsigned long ptr, bool *wie
 //        } else return(ptr + 6);
     }
     if (opc == 30) { //Aktiv.
-//        person = SucheIDPerson(peekv(game, ptr + 2));
-//        if (person->pc > 0) person->isfaktiv = true;
+        Thread *thread = GetThread(game->location, peekv(game, ptr + 2));
+        thread->isActive = true;
         return(ptr + 4);
     }
     if (opc == 31) { //Inaktiv.
-//        person = SucheIDPerson(peekv(game, ptr + 2));
-//        person->aktion = AKT_NICHTS;
-//        person->isfaktiv = FALSE;
+        int id = peekv(game, ptr + 2);
+        Element *element = GetElement(game->location, id);
+        ElementStop(element);
+        Thread *thread = GetThread(game->location, id);
+        thread->isActive = false;
         return(ptr + 4);
     }
     if (opc == 92) { //WechsleHauptIPE.
