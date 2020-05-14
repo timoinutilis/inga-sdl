@@ -82,85 +82,115 @@ unsigned long LaufeINGA(Thread *thread, Game *game, unsigned long ptr, bool *wie
         return(ptr + 6);
     }
     if (opc == 3) { //Feld.
-        Element *element = CreateElement(peekv(game, ptr + 2));
-        element->selectionRect = MakeRectFromTo(peekv(game, ptr + 8), peekv(game, ptr + 10), peekv(game, ptr + 12), peekv(game, ptr + 14));
-        strcpy(element->name, peeks(script, ptr + 4));
-        element->target = MakeVector(peekv(game, ptr + 16), peekv(game, ptr + 18));
-        element->isSelectable = true;
-        AddElement(game->location, element);
-        SetVisibility(game->gameState, game->location->id, element->id, (bool)peekv(game, ptr + 20), true);
+        int id = peekv(game, ptr + 2);
+        Element *element = CreateElement(id);
+        if (element) {
+            element->selectionRect = MakeRectFromTo(peekv(game, ptr + 8), peekv(game, ptr + 10), peekv(game, ptr + 12), peekv(game, ptr + 14));
+            strcpy(element->name, peeks(script, ptr + 4));
+            element->target = MakeVector(peekv(game, ptr + 16), peekv(game, ptr + 18));
+            element->isSelectable = true;
+            AddElement(game->location, element);
+        }
+        SetVisibility(game->gameState, game->location->id, id, (bool)peekv(game, ptr + 20), true);
         return(ptr + 22);
     }
     if (opc == 4) { //FeldUnsichtbar.
-        Element *element = GetElement(game->location, peekv(game, ptr + 2));
-        element->isVisible = false;
-        SetVisibility(game->gameState, game->location->id, element->id, false, false);
+        int id = peekv(game, ptr + 2);
+        Element *element = GetElement(game->location, id);
+        if (element) {
+            element->isVisible = false;
+        }
+        SetVisibility(game->gameState, game->location->id, id, false, false);
         return(ptr + 4);
     }
     if (opc == 5) { //Zierde.
-        Element *element = CreateElement(peekv(game, ptr + 2));
-        element->position = MakeVector(peekv(game, ptr + 8), peekv(game, ptr + 10));
-        element->image = LoadImage(peeks(script, ptr + 4), game->location->image->surface->format->palette, false, false);
-        AddElement(game->location, element);
-        SetVisibility(game->gameState, game->location->id, element->id, (bool)peekv(game, ptr + 12), true);
+        int id = peekv(game, ptr + 2);
+        Element *element = CreateElement(id);
+        if (element) {
+            element->position = MakeVector(peekv(game, ptr + 8), peekv(game, ptr + 10));
+            element->image = LoadImage(peeks(script, ptr + 4), game->location->image->surface->format->palette, false, false);
+            AddElement(game->location, element);
+        }
+        SetVisibility(game->gameState, game->location->id, id, (bool)peekv(game, ptr + 12), true);
         return(ptr + 14);
     }
     if (opc == 6) { //ZierdeUnsichtbar.
-        Element *element = GetElement(game->location, peekv(game, ptr + 2));
-        element->isVisible = false;
-        SetVisibility(game->gameState, game->location->id, element->id, false, false);
+        int id = peekv(game, ptr + 2);
+        Element *element = GetElement(game->location, id);
+        if (element) {
+            element->isVisible = false;
+        }
+        SetVisibility(game->gameState, game->location->id, id, false, false);
         return(ptr + 4);
     }
     if (opc == 7) { //Objekt.
-        Element *element = CreateElement(peekv(game, ptr + 2));
-        element->position = MakeVector(peekv(game, ptr + 12), peekv(game, ptr + 14));
-        element->image = LoadImage(peeks(script, ptr + 8), game->location->image->surface->format->palette, false, false);
-        strcpy(element->name, peeks(script, ptr + 4));
-        element->target = MakeVector(peekv(game, ptr + 16), peekv(game, ptr + 18));
-        element->isSelectable = true;
-        AddElement(game->location, element);
-        SetVisibility(game->gameState, game->location->id, element->id, (bool)peekv(game, ptr + 20), true);
+        int id = peekv(game, ptr + 2);
+        Element *element = CreateElement(id);
+        if (element) {
+            element->position = MakeVector(peekv(game, ptr + 12), peekv(game, ptr + 14));
+            element->image = LoadImage(peeks(script, ptr + 8), game->location->image->surface->format->palette, false, false);
+            strcpy(element->name, peeks(script, ptr + 4));
+            element->target = MakeVector(peekv(game, ptr + 16), peekv(game, ptr + 18));
+            element->isSelectable = true;
+            AddElement(game->location, element);
+        }
+        SetVisibility(game->gameState, game->location->id, id, (bool)peekv(game, ptr + 20), true);
         return(ptr + 22);
     }
     if (opc == 8) { //ObjektUnsichtbar.
-        Element *element = GetElement(game->location, peekv(game, ptr + 2));
-        element->isVisible = false;
+        int id = peekv(game, ptr + 2);
+        Element *element = GetElement(game->location, id);
+        if (element) {
+            element->isVisible = false;
+        }
         SetVisibility(game->gameState, game->location->id, element->id, false, false);
         return(ptr + 4);
     }
     if (opc == 62) { //ObjektStandbild.
         Element *element = GetElement(game->location, peekv(game, ptr + 2));
-        element->frameIndex = peekv(game, ptr + 4);
-        element->isPaused = true;
+        if (element) {
+            element->frameIndex = peekv(game, ptr + 4);
+            element->isPaused = true;
+        }
         return(ptr + 6);
     }
     if (opc == 63) { //ObjektStandbildAus.
         Element *element = GetElement(game->location, peekv(game, ptr + 2));
-        element->isPaused = false;
+        if (element) {
+            element->isPaused = false;
+        }
         return(ptr + 4);
     }
     if (opc == 9) { //Person.
-        Element *element = CreateElement(peekv(game, ptr + 2));
-        element->position = MakeVector(peekv(game, ptr + 12), peekv(game, ptr + 14));
-        element->imageSet = LoadImageSet(peeks(script, ptr + 8), game->location->image->surface->format->palette, true);
-        strcpy(element->name, peeks(script, ptr + 4));
-        element->isSelectable = true;
-        AddElement(game->location, element);
-        SetVisibility(game->gameState, game->location->id, element->id, (bool)peekv(game, ptr + 16), true);
+        int id = peekv(game, ptr + 2);
+        Element *element = CreateElement(id);
+        if (element) {
+            element->position = MakeVector(peekv(game, ptr + 12), peekv(game, ptr + 14));
+            element->imageSet = LoadImageSet(peeks(script, ptr + 8), game->location->image->surface->format->palette, true);
+            strcpy(element->name, peeks(script, ptr + 4));
+            element->isSelectable = true;
+            AddElement(game->location, element);
+        }
+        SetVisibility(game->gameState, game->location->id, id, (bool)peekv(game, ptr + 16), true);
         return(ptr + 18);
     }
     if (opc == 82) { //PersonProg.
         Thread *thread = CreateThread(peekv(game, ptr + 2));
-        thread->ptr = ptr + 8;
-        thread->isActive = true;
-        AddThread(game->location, thread);
+        if (thread) {
+            thread->ptr = ptr + 8;
+            thread->isActive = true;
+            AddThread(game->location, thread);
+        }
         return(peekl(script, ptr + 4));
     }
     if (opc == 10) { //PersonUnsichtbar.
-        Element *element = GetElement(game->location, peekv(game, ptr + 2));
-        element->isVisible = false;
-        if (element->id != MainPersonID) {
-            SetVisibility(game->gameState, game->location->id, element->id, false, false);
+        int id = peekv(game, ptr + 2);
+        Element *element = GetElement(game->location, id);
+        if (element) {
+            element->isVisible = false;
+        }
+        if (id != MainPersonID) {
+            SetVisibility(game->gameState, game->location->id, id, false, false);
         }
         return(ptr + 4);
     }
@@ -187,7 +217,9 @@ unsigned long LaufeINGA(Thread *thread, Game *game, unsigned long ptr, bool *wie
         int elementId = peekv(game, ptr + 4);
         if (game->location->id == locationId) {
             Element *element = GetElement(game->location, elementId);
-            element->isVisible = true;
+            if (element) {
+                element->isVisible = true;
+            }
         }
         if (elementId != MainPersonID) {
             SetVisibility(game->gameState, locationId, elementId, true, false);
@@ -199,7 +231,9 @@ unsigned long LaufeINGA(Thread *thread, Game *game, unsigned long ptr, bool *wie
         int elementId = peekv(game, ptr + 4);
         if (game->location->id == locationId) {
             Element *element = GetElement(game->location, elementId);
-            element->isVisible = false;
+            if (element) {
+                element->isVisible = false;
+            }
         }
         if (elementId != MainPersonID) {
             SetVisibility(game->gameState, locationId, elementId, false, false);
@@ -222,35 +256,41 @@ unsigned long LaufeINGA(Thread *thread, Game *game, unsigned long ptr, bool *wie
     /* == Personen == */
     if (opc == 70) { //Lauftempo.
         Element *element = GetElement(game->location, peekv(game, ptr + 2));
-        if (element->action == ElementActionIdle) {
+        if (element) {
+            if (element->action != ElementActionIdle) {
+                *wieder = false;
+                return(ptr);
+            }
             int factor = peekv(game, ptr + 4);
             if (factor < 1) {
                 factor = 1;
             }
             element->speed = factor * 20; // pxl/s
-            return(ptr + 6);
         }
-        *wieder = false;
-        return(ptr);
+        return(ptr + 6);
     }
     if (opc == 11) { //Laufe.
         Element *element = GetElement(game->location, peekv(game, ptr + 2));
-        if (element->action == ElementActionIdle) {
+        if (element) {
+            if (element->action != ElementActionIdle) {
+                *wieder = false;
+                return(ptr);
+            }
             ElementMoveTo(element, peekv(game, ptr + 4), peekv(game, ptr + 6), peekv(game, ptr + 8), false);
-            return(ptr + 10);
         }
-        *wieder = false;
-        return(ptr);
+        return(ptr + 10);
     }
     if (opc == 12) { //LaufeDirekt.
         Element *element = GetElement(game->location, peekv(game, ptr + 2));
-        if (element->action == ElementActionIdle) {
+        if (element) {
+            if (element->action != ElementActionIdle) {
+                *wieder = false;
+                return(ptr);
+            }
             //TODO: skip navigation
             ElementMoveTo(element, peekv(game, ptr + 4), peekv(game, ptr + 6), peekv(game, ptr + 8), true);
-            return(ptr + 10);
         }
-        *wieder = false;
-        return(ptr);
+        return(ptr + 10);
     }
     if (opc == 13) { //Rede.
         if (thread->talkingElement) {
@@ -262,38 +302,44 @@ unsigned long LaufeINGA(Thread *thread, Game *game, unsigned long ptr, bool *wie
             }
         }
         Element *element = GetElement(game->location, peekv(game, ptr + 2));
-        if (element->action == ElementActionIdle) {
+        if (element) {
+            if (element->action != ElementActionIdle) {
+                *wieder = false;
+                return(ptr);
+            }
             ElementTalk(element, peeks(script, ptr + 6), peekv(game, ptr + 4), game->font);
             thread->talkingElement = element;
             // sound: peeks(script, ptr + 10)
-            return(ptr + 14);
         }
-        *wieder = false;
-        return(ptr);
+        return(ptr + 14);
     }
     if (opc == 14) { //Anim.
         Element *element = GetElement(game->location, peekv(game, ptr + 2));
-        if (element->action == ElementActionIdle) {
+        if (element) {
+            if (element->action != ElementActionIdle) {
+                *wieder = false;
+                return(ptr);
+            }
             ElementAnimate(element, peekv(game, ptr + 4), peekv(game, ptr + 6));
-            return(ptr + 8);
         }
-        *wieder = false;
-        return(ptr);
+        return(ptr + 8);
     }
     if (opc == 41) { //AnimNehmen.
         Element *element = GetElement(game->location, peekv(game, ptr + 2));
-        if (element->action == ElementActionIdle) {
+        if (element) {
+            if (element->action != ElementActionIdle) {
+                *wieder = false;
+                return(ptr);
+            }
             ElementAnimate(element, peekv(game, ptr + 6), 1);
             int takeElementId = peekv(game, ptr + 4);
             Element *takeElement = GetElement(game->location, takeElementId);
             SetVisibility(game->gameState, game->location->id, takeElementId, false, false);
             takeElement->isVisible = false;
             //TODO: hide object on specific frame
-//            PersonenAktion(peekv(game, ptr + 2), AKT_NEHMEN, peekv(game, ptr + 4), peekv(game, ptr + 6), peekv(game, ptr + 8), 0);
-            return(ptr + 10);
+    //        PersonenAktion(peekv(game, ptr + 2), AKT_NEHMEN, peekv(game, ptr + 4), peekv(game, ptr + 6), peekv(game, ptr + 8), 0);
         }
-        *wieder = false;
-        return(ptr);
+        return(ptr + 10);
     }
     if (opc == 84) { //NichtsProg.
 //        nichtsprog.frame = 0;
@@ -309,54 +355,60 @@ unsigned long LaufeINGA(Thread *thread, Game *game, unsigned long ptr, bool *wie
     }
     if (opc == 15) { //Richtung.
         Element *element = GetElement(game->location, peekv(game, ptr + 2));
-        if (element->action == ElementActionIdle) {
+        if (element) {
+            if (element->action != ElementActionIdle) {
+                *wieder = false;
+                return(ptr);
+            }
             ElementSetSide(element, peekv(game, ptr + 4), 0);
-            return(ptr + 6);
         }
-        *wieder = false;
-        return(ptr);
+        return(ptr + 6);
     }
     if (opc == 32) { //RichteAuf.
         Element *element = GetElement(game->location, peekv(game, ptr + 2));
-        if (element->action == ElementActionIdle) {
+        if (element) {
+            if (element->action != ElementActionIdle) {
+                *wieder = false;
+                return(ptr);
+            }
             Element *targetElement = GetElement(game->location, peekv(game, ptr + 4));
             ElementLookTo(element, targetElement->position.x, targetElement->position.y, 0);
-            return(ptr + 6);
         }
-        *wieder = false;
-        return(ptr);
+        return(ptr + 6);
     }
     if (opc == 33) { //RichteAufeinander.
         Element *element1 = GetElement(game->location, peekv(game, ptr + 2));
-        if (element1->action == ElementActionIdle) {
-            Element *element2 = GetElement(game->location, peekv(game, ptr + 4));
-            if (element2->action == ElementActionIdle) {
-                ElementLookTo(element1, element2->position.x, element2->position.y, 0);
-                ElementLookTo(element2, element1->position.x, element1->position.y, 0);
-                return(ptr + 6);
+        Element *element2 = GetElement(game->location, peekv(game, ptr + 4));
+        if (element1 && element2) {
+            if (element1->action != ElementActionIdle || element2->action != ElementActionIdle) {
+                *wieder = false;
+                return(ptr);
             }
+            ElementLookTo(element1, element2->position.x, element2->position.y, 0);
+            ElementLookTo(element2, element1->position.x, element1->position.y, 0);
         }
-        *wieder = false;
-        return(ptr);
+        return(ptr + 6);
     }
     if (opc == 16) { //StelleAuf.
         Element *element = GetElement(game->location, peekv(game, ptr + 2));
-        if (element->action == ElementActionIdle) {
+        if (element) {
+            if (element->action != ElementActionIdle) {
+                *wieder = false;
+                return(ptr);
+            }
             element->position.x = peekv(game, ptr + 4);
             element->position.y = peekv(game, ptr + 6);
             ElementSetSide(element, peekv(game, ptr + 8), 0);
-            return(ptr + 10);
         }
-        *wieder = false;
-        return(ptr);
+        return(ptr + 10);
     }
     if (opc == 17) { //WarteAuf.
         Element *element = GetElement(game->location, peekv(game, ptr + 2));
-        if (element->action == ElementActionIdle) {
-            return(ptr + 4);
+        if (element && element->action != ElementActionIdle) {
+            *wieder = false;
+            return(ptr);
         }
-        *wieder = false;
-        return(ptr);
+        return(ptr + 4);
     }
     if (opc == 37) { //WarteAufAnim.
 //        person = SucheIDPerson(peekv(game, ptr + 2));
@@ -368,7 +420,9 @@ unsigned long LaufeINGA(Thread *thread, Game *game, unsigned long ptr, bool *wie
     }
     if (opc == 30) { //Aktiv.
         Thread *thread = GetThread(game->location, peekv(game, ptr + 2));
-        thread->isActive = true;
+        if (thread) {
+            thread->isActive = true;
+        }
         return(ptr + 4);
     }
     if (opc == 31) { //Inaktiv.
@@ -376,7 +430,9 @@ unsigned long LaufeINGA(Thread *thread, Game *game, unsigned long ptr, bool *wie
         Element *element = GetElement(game->location, id);
         ElementStop(element);
         Thread *thread = GetThread(game->location, id);
-        thread->isActive = false;
+        if (thread) {
+            thread->isActive = false;
+        }
         return(ptr + 4);
     }
     if (opc == 92) { //WechsleHauptIPE.
@@ -388,13 +444,17 @@ unsigned long LaufeINGA(Thread *thread, Game *game, unsigned long ptr, bool *wie
     }
     if (opc == 56) { //PersonenAnims.
         Element *element = GetElement(game->location, MainPersonID);
-        element->defaultIdleImageId = peekv(game, ptr + 2);
-        element->defaultWalkImageId = peekv(game, ptr + 4);
+        if (element) {
+            element->defaultIdleImageId = peekv(game, ptr + 2);
+            element->defaultWalkImageId = peekv(game, ptr + 4);
+        }
         return(ptr + 6);
     }
     if (opc == 87) { //StandAnim.
         Element *element = GetElement(game->location, peekv(game, ptr + 2));
-        element->defaultIdleImageId = peekv(game, ptr + 4);
+        if (element) {
+            element->defaultIdleImageId = peekv(game, ptr + 4);
+        }
         return(ptr + 6);
     }
 
