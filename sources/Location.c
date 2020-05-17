@@ -43,7 +43,6 @@ Location *CreateLocation(int id, const char *background) {
 void FreeLocation(Location *location) {
     if (!location) return;
     FreeImage(location->image);
-    FreeImage(location->foregroundImage);
     FreeNavigationMap(location->navigationMap);
     FreeElements(location);
     FreeThreads(location);
@@ -60,17 +59,25 @@ void DrawLocation(Location *location) {
     if (!location) return;
     DrawImage(location->image, MakeVector(0, 0));
     DrawElements(location);
-    DrawImage(location->foregroundImage, MakeVector(0, 0));
     DrawElementOverlays(location);
 }
 
 void LoadLocationBackground(Location *location, const char *background) {
     if (!location) return;
     Image *prevImage = location->image;
-    FreeImage(location->foregroundImage);
     location->image = LoadImage(background, prevImage ? prevImage->surface->format->palette : NULL, false, true);
-    location->foregroundImage = LoadMaskedImage(background, location->image);
     FreeImage(prevImage);
+    
+    Element *foreground = GetElement(location, ForegroundID);
+    if (foreground) {
+        FreeImage(foreground->image);
+    } else {
+        foreground = CreateElement(ForegroundID);
+        foreground->layer = LayerForeground;
+    }
+    foreground->image = LoadMaskedImage(background, location->image);
+    AddElement(location, foreground);
+
 }
 
 void AddElement(Location *location, Element *element) {
@@ -164,7 +171,7 @@ void SortElements(Location *location) {
     Element *buf1 = NULL;
     Element *buf2 = NULL;
     while (current && current->next) {
-        if (current->position.y > current->next->position.y) {
+        if (current->layer > current->next->layer || (current->layer == current->next->layer && current->position.y > current->next->position.y)) {
             buf1 = current->next;
             current->next = current->next->next;
             if (previous) {

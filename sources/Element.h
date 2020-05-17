@@ -43,6 +43,7 @@ typedef struct Element {
     int id;
     Location *location;
     Vector position;
+    int layer;
     bool isSelectable;
     SDL_Rect selectionRect;
     Vector target;

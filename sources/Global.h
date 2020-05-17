@@ -24,6 +24,12 @@
 #include <SDL2/SDL.h>
 
 extern int MainPersonID;
+extern int ForegroundID;
+
+extern int LayerBackground;
+extern int LayerMain;
+extern int LayerForeground;
+extern int LayerTop;
 
 void SetGlobalRenderer(SDL_Renderer *renderer);
 SDL_Renderer *GetGlobalRenderer(void);

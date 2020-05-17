@@ -36,6 +36,7 @@ typedef struct InventoryBar {
     Image *image;
     InventoryItemView itemViews[INVENTORY_BAR_SIZE];
     bool isVisible;
+    bool isEnabled;
 } InventoryBar;
 
 InventoryBar *CreateInventoryBar(GameState *gameState);

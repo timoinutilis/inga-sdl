@@ -36,6 +36,7 @@ Game *CreateGame() {
         
         // Main Person
         Element *element = CreateElement(MainPersonID);
+        element->layer = LayerMain;
         element->position = MakeVector(320, 360);
         element->imageSet = LoadImageSet("Hauptperson", GetGlobalPalette(), true);
         game->mainPerson = element;
@@ -114,6 +115,11 @@ void HandleMouseInGame(Game *game, int x, int y, int buttonIndex) {
             } else {
                 game->selectedVerb = buttonIndex == SDL_BUTTON_RIGHT ? VerbLook : VerbUse;
             }
+            Thread *thread = GetThread(game->location, focusedElement->id);
+            if (thread) {
+                thread->isActive = false;
+            }
+            ElementStop(focusedElement);
             Element *person = GetElement(game->location, MainPersonID);
             if (!person->isVisible) {
                 MainPersonDidFinishWalking(game);
@@ -181,6 +187,8 @@ void SetLocation(Game *game, int id, const char *background) {
     game->location = CreateLocation(id, background);
     game->location->game = game;
     AddElement(game->location, game->mainPerson);
+    game->inventoryBar->isEnabled = true;
+    game->inventoryBar->isVisible = false;
 }
 
 void MainPersonDidFinishWalking(Game *game) {

@@ -30,6 +30,7 @@ InventoryBar *CreateInventoryBar(GameState *gameState) {
         for (int i = 0; i < INVENTORY_BAR_SIZE; i++) {
             bar->itemViews[i].position = MakeVector(75 + (i * 71), SCREEN_HEIGHT - 68);
         }
+        bar->isEnabled = true;
     }
     return bar;
 }
@@ -76,6 +77,9 @@ bool HandleMouseInInventoryBar(InventoryBar *bar, int x, int y, int buttonIndex)
 
 void UpdateInventoryBar(InventoryBar *bar, int deltaTicks) {
     if (!bar) return;
+    if (bar->isVisible && !bar->isEnabled) {
+        bar->isVisible = false;
+    }
 }
 
 void DrawInventoryBar(InventoryBar *bar) {

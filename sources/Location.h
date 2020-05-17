@@ -35,7 +35,6 @@ typedef struct Location {
     int id;
     Game *game;
     Image *image;
-    Image *foregroundImage;
     NavigationMap *navigationMap;
     Element *rootElement;
     Thread *rootThread;
