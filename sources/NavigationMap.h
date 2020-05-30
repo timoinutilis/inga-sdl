@@ -43,4 +43,6 @@ NavigationPath *CreateNavigationPath(NavigationMap *navigationMap, Vector origin
 void FreeNavigationPath(NavigationPath *navigationPath);
 void AdjustPositionForNavigation(NavigationMap *navigationMap, Vector *position);
 
+void NavigationMapDrawLine(NavigationMap *navigationMap, int p, int x1, int y1, int x2, int y2);
+
 #endif /* NavigationMap_h */

@@ -52,7 +52,7 @@ Thread *CreateThread(int id);
 void FreeThread(Thread *thread);
 void UpdateThread(Thread *thread, Game *game);
 void EscapeThread(Thread *thread);
-
+void RunThread(Thread *thread, unsigned long ptr);
 void StartInteraction(Thread *thread, int id1, int id2, Verb verb);
 
 #endif /* Thread_h */

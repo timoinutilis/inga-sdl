@@ -248,15 +248,15 @@ unsigned long LaufeINGA(Thread *thread, Game *game, unsigned long ptr, bool *wie
         return(ptr + 6);
     }
     if (opc == 72) { //ilkOben.
-//        LaufkarteLinie(0, peekv(game, ptr + 2), peekv(game, ptr + 4), peekv(game, ptr + 6), peekv(game, ptr + 8));
+        NavigationMapDrawLine(game->location->navigationMap, 0, peekv(game, ptr + 2), peekv(game, ptr + 4), peekv(game, ptr + 6), peekv(game, ptr + 8));
         return(ptr + 10);
     }
     if (opc == 73) { //ilkUnten.
-//        LaufkarteLinie(1, peekv(game, ptr + 2), peekv(game, ptr + 4), peekv(game, ptr + 6), peekv(game, ptr + 8));
+        NavigationMapDrawLine(game->location->navigationMap, 1, peekv(game, ptr + 2), peekv(game, ptr + 4), peekv(game, ptr + 6), peekv(game, ptr + 8));
         return(ptr + 10);
     }
     if (opc == 74) { //LadeLaufkarte.
-//        LadeLaufkarte(peeks(script, ptr + 2));
+        LoadLocationNavigationMap(game->location, peeks(script, ptr + 2));
         return(ptr + 6);
     }
     
@@ -349,15 +349,13 @@ unsigned long LaufeINGA(Thread *thread, Game *game, unsigned long ptr, bool *wie
         return(ptr + 10);
     }
     if (opc == 84) { //NichtsProg.
-//        nichtsprog.frame = 0;
-//        nichtsprog.dauer = peekv(game, ptr + 2);
-//        nichtsprog.ptr = peekl(script, ptr + 4);
+        game->idleScript.delay = peekv(game, ptr + 2) * 50;
+        game->idleScript.scriptPtr = peekl(script, ptr + 4);
         return(ptr + 8);
     }
     if (opc == 86) { //LöscheNichtsProg.
-//        nichtsprog.frame = 0;
-//        nichtsprog.dauer = 0;
-//        nichtsprog.ptr = 0;
+        game->idleScript.delay = 0;
+        game->idleScript.scriptPtr = 0;
         return(ptr + 2);
     }
     if (opc == 15) { //Richtung.
@@ -792,7 +790,15 @@ void EscapeThread(Thread *thread) {
     thread->escptr = 0;
 }
 
+void RunThread(Thread *thread, unsigned long ptr) {
+    if (!thread) return;
+    thread->ptr = ptr;
+    thread->isActive = true;
+}
+
 void StartInteraction(Thread *thread, int id1, int id2, Verb verb) {
+    if (!thread) return;
+    
     thread->angesehen = 0;
     thread->gesagt = 0;
     thread->benutzt = 0;

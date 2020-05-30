@@ -215,8 +215,10 @@ void ElementSetSide(Element *element, ImageSide side, int imageId) {
 
 void ElementLookTo(Element *element, int x, int y, int imageId) {
     if (!element) return;
-    element->direction.x = (x - element->position.x);
-    element->direction.y = (y - element->position.y);
+    if (x != element->position.x || y != element->position.y) {
+        element->direction.x = (x - element->position.x);
+        element->direction.y = (y - element->position.y);
+    }
     SetElementImageFromSet(element, imageId ? imageId : element->imageId);
 }
 

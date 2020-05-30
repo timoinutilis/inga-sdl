@@ -35,7 +35,7 @@ Location *CreateLocation(int id, const char *background) {
     } else {
         location->id = id;
         LoadLocationBackground(location, background);
-        location->navigationMap = LoadNavigationMap(background);
+        LoadLocationNavigationMap(location, background);
     }
     return location;
 }
@@ -77,7 +77,14 @@ void LoadLocationBackground(Location *location, const char *background) {
     }
     foreground->image = LoadMaskedImage(background, location->image);
     AddElement(location, foreground);
+}
 
+void LoadLocationNavigationMap(Location *location, const char *background) {
+    if (!location) return;
+    if (location->navigationMap) {
+        FreeNavigationMap(location->navigationMap);
+    }
+    location->navigationMap = LoadNavigationMap(background);
 }
 
 void AddElement(Location *location, Element *element) {
@@ -171,7 +178,9 @@ void SortElements(Location *location) {
     Element *buf1 = NULL;
     Element *buf2 = NULL;
     while (current && current->next) {
-        if (current->layer > current->next->layer || (current->layer == current->next->layer && current->position.y > current->next->position.y)) {
+        if (   current->layer > current->next->layer
+            || (current->layer > LayerBackground && current->layer == current->next->layer && current->position.y > current->next->position.y)) {
+            
             buf1 = current->next;
             current->next = current->next->next;
             if (previous) {

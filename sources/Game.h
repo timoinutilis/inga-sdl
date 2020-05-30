@@ -39,6 +39,12 @@ typedef struct Focus {
     Vector position;
 } Focus;
 
+typedef struct IdleScript {
+    unsigned long idleTicks;
+    unsigned long delay;
+    unsigned long scriptPtr;
+} IdleScript;
+
 typedef struct Game {
     Font *font;
     Script *script;
@@ -53,6 +59,7 @@ typedef struct Game {
     int selectedId;
     int draggedId;
     Verb selectedVerb;
+    IdleScript idleScript;
 } Game;
 
 Game *CreateGame(void);

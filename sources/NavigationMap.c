@@ -114,3 +114,28 @@ void AdjustPositionForNavigation(NavigationMap *navigationMap, Vector *position)
         position->y = bottom;
     }
 }
+
+void NavigationMapDrawLine(NavigationMap *navigationMap, int p, int x1, int y1, int x2, int y2) {
+    if (!navigationMap) return;
+    
+    if (x1 > x2) {
+        int tw = x1;
+        x1 = x2;
+        x2 = tw;
+        tw = y1;
+        y1 = y2;
+        y2 = tw;
+    }
+    
+    int br = x2 - x1;
+    if (br != 0) {
+        float dif = (y2 - y1) / (float)br;
+        for (int z = 0; z <= br; z++) {
+            if (p == 0) {
+                navigationMap->topLimits[x1 + z] = (int)(y1 + (dif * z));
+            } else {
+                navigationMap->bottomLimits[x1 + z] = (int)(y1 + (dif * z));
+            }
+        }
+    }
+}

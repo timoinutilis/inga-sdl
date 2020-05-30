@@ -21,6 +21,7 @@
 #include "Global.h"
 
 void SetFocus(Game *game, int x, int y, const char *name);
+void UpdateIdleProg(Game *game, int deltaTicks);
 
 Game *CreateGame() {
     Game *game = calloc(1, sizeof(Game));
@@ -151,6 +152,7 @@ void UpdateGame(Game *game, int deltaTicks) {
     UpdateThread(game->mainThread, game);
     UpdateLocation(game->location, deltaTicks);
     UpdateInventoryBar(game->inventoryBar, deltaTicks);
+    UpdateIdleProg(game, deltaTicks);
 }
 
 void DrawGame(Game *game) {
@@ -175,6 +177,18 @@ void SetFocus(Game *game, int x, int y, const char *name) {
     if (game->focus.image) {
         int width = game->focus.image->width;
         game->focus.position = MakeVector(fmin(fmax(0, x - width * 0.5), SCREEN_WIDTH - width), y - game->focus.image->height - 4);
+    }
+}
+
+void UpdateIdleProg(Game *game, int deltaTicks) {
+    if (game->mainPerson && game->idleScript.delay && game->mainPerson->action == ElementActionIdle && !game->mainThread->isActive) {
+        game->idleScript.idleTicks += deltaTicks;
+        if (game->idleScript.idleTicks >= game->idleScript.delay) {
+            RunThread(game->mainThread, game->idleScript.scriptPtr);
+            game->idleScript.idleTicks = 0;
+        }
+    } else {
+        game->idleScript.idleTicks = 0;
     }
 }
 
