@@ -26,8 +26,10 @@
 extern int MainPersonID;
 extern int ForegroundID;
 
-extern int LayerBackground;
-extern int LayerMain;
+extern int LayerDeco;
+extern int LayerObjects;
+extern int LayerFields;
+extern int LayerPersons;
 extern int LayerForeground;
 extern int LayerTop;
 

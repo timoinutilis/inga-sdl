@@ -65,13 +65,10 @@ unsigned long LaufeINGA(Thread *thread, Game *game, unsigned long ptr, bool *wie
 //        FadeOut(8);
 //        MeldungAbbruch();
 //        if (peekv(game, ptr + 8) > 0) SpieleCDTrack(peekv(game, ptr + 8)); else StoppeCD();
-//        person=SucheIDPerson(0); person->standiannum = 1;
-//        iannumgehen = 2;
         return(ptr + 10);
     }
     if (opc == 2) { //EinrichtungEnde.
         UpdateElementVisibilities(game->location, game->gameState);
-//        Restauration(); BltZierden(); BltTesteObjekte(); SortierePersonen(); BltTestePersonen(); BildWechsel();
 //        MausStatusSichtbar(FALSE);
 //        FadeIn(8);
         return(ptr + 2);
@@ -84,7 +81,7 @@ unsigned long LaufeINGA(Thread *thread, Game *game, unsigned long ptr, bool *wie
         int id = peekv(game, ptr + 2);
         Element *element = CreateElement(id);
         if (element) {
-            element->layer = LayerBackground;
+            element->layer = LayerFields;
             element->selectionRect = MakeRectFromTo(peekv(game, ptr + 8), peekv(game, ptr + 10), peekv(game, ptr + 12), peekv(game, ptr + 14));
             strcpy(element->name, peeks(script, ptr + 4));
             element->target = MakeVector(peekv(game, ptr + 16), peekv(game, ptr + 18));
@@ -107,7 +104,7 @@ unsigned long LaufeINGA(Thread *thread, Game *game, unsigned long ptr, bool *wie
         int id = peekv(game, ptr + 2);
         Element *element = CreateElement(id);
         if (element) {
-            element->layer = LayerBackground;
+            element->layer = LayerDeco;
             element->position = MakeVector(peekv(game, ptr + 8), peekv(game, ptr + 10));
             element->image = LoadImage(peeks(script, ptr + 4), game->location->image->surface->format->palette, false, false);
             AddElement(game->location, element);
@@ -128,7 +125,7 @@ unsigned long LaufeINGA(Thread *thread, Game *game, unsigned long ptr, bool *wie
         int id = peekv(game, ptr + 2);
         Element *element = CreateElement(id);
         if (element) {
-            element->layer = LayerBackground;
+            element->layer = LayerObjects;
             element->position = MakeVector(peekv(game, ptr + 12), peekv(game, ptr + 14));
             element->image = LoadImage(peeks(script, ptr + 8), game->location->image->surface->format->palette, false, false);
             strcpy(element->name, peeks(script, ptr + 4));
@@ -167,7 +164,7 @@ unsigned long LaufeINGA(Thread *thread, Game *game, unsigned long ptr, bool *wie
         int id = peekv(game, ptr + 2);
         Element *element = CreateElement(id);
         if (element) {
-            element->layer = LayerMain;
+            element->layer = LayerPersons;
             element->position = MakeVector(peekv(game, ptr + 12), peekv(game, ptr + 14));
             element->imageSet = LoadImageSet(peeks(script, ptr + 8), game->location->image->surface->format->palette, true);
             strcpy(element->name, peeks(script, ptr + 4));
@@ -200,7 +197,7 @@ unsigned long LaufeINGA(Thread *thread, Game *game, unsigned long ptr, bool *wie
     if (opc == 93) { //PersonVgMaskeAktiv
         Element *element = GetElement(game->location, peekv(game, ptr + 2));
         if (element) {
-            element->layer = LayerMain;
+            element->layer = LayerPersons;
         }
         return(ptr + 4);
     }
@@ -338,13 +335,10 @@ unsigned long LaufeINGA(Thread *thread, Game *game, unsigned long ptr, bool *wie
                 *wieder = false;
                 return(ptr);
             }
-            ElementAnimate(element, peekv(game, ptr + 6), 1);
             int takeElementId = peekv(game, ptr + 4);
             Element *takeElement = GetElement(game->location, takeElementId);
+            ElementTake(element, peekv(game, ptr + 6), takeElement, peekv(game, ptr + 8));
             SetVisibility(game->gameState, game->location->id, takeElementId, false, false);
-            takeElement->isVisible = false;
-            //TODO: hide object on specific frame
-    //        PersonenAktion(peekv(game, ptr + 2), AKT_NEHMEN, peekv(game, ptr + 4), peekv(game, ptr + 6), peekv(game, ptr + 8), 0);
         }
         return(ptr + 10);
     }
@@ -416,12 +410,18 @@ unsigned long LaufeINGA(Thread *thread, Game *game, unsigned long ptr, bool *wie
         return(ptr + 4);
     }
     if (opc == 37) { //WarteAufAnim.
-//        person = SucheIDPerson(peekv(game, ptr + 2));
-//        if (person->ian->frames >= peekv(game, ptr + 4)) {
-//            if (person->animnum >= peekv(game, ptr + 4)) {
+        Element *element = GetElement(game->location, peekv(game, ptr + 2));
+        int frame = peekv(game, ptr + 4);
+        if (element && element->image && element->image->animation && element->image->animation->numFrames > frame) {
+            if (element->frameIndex >= frame) {
                 return(ptr + 6);
-//            } else return(ptr);
-//        } else return(ptr + 6);
+            } else {
+                *wieder = false;
+                return(ptr);
+            }
+        } else {
+            return(ptr + 6);
+        }
     }
     if (opc == 30) { //Aktiv.
         Thread *thread = GetThread(game->location, peekv(game, ptr + 2));
@@ -687,11 +687,11 @@ unsigned long LaufeINGA(Thread *thread, Game *game, unsigned long ptr, bool *wie
         return(ptr + 6);
     }
     if (opc == 60) { //HolePersVars.
-//        person = SucheIDPerson(peekv(game, ptr + 2));
-//        if (peekv(game, ptr + 4) > 0) SetzeVar(peekv(game, ptr + 4), (WORD)person->x);
-//        if (peekv(game, ptr + 6) > 0) SetzeVar(peekv(game, ptr + 6), (WORD)person->y);
-//        if (peekv(game, ptr + 8) > 0) SetzeVar(peekv(game, ptr + 8), person->richtung);
-//        if (peekv(game, ptr + 10) > 0) SetzeVar(peekv(game, ptr + 10), person->aktion);
+        Element *element = GetElement(game->location, peekv(game, ptr + 2));
+        if (peekv(game, ptr + 4) > 0) SetVariable(game->gameState, peekv(game, ptr + 4), element->position.x, false);
+        if (peekv(game, ptr + 6) > 0) SetVariable(game->gameState, peekv(game, ptr + 6), element->position.y, false);
+        if (peekv(game, ptr + 8) > 0) SetVariable(game->gameState, peekv(game, ptr + 8), ImageSideFront, false); //TODO: direction
+        if (peekv(game, ptr + 10) > 0) SetVariable(game->gameState, peekv(game, ptr + 10), 0, false); //TODO: action
         return(ptr + 12);
     }
     if (opc == 52) { //AddVariable.

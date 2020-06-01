@@ -179,7 +179,7 @@ void SortElements(Location *location) {
     Element *buf2 = NULL;
     while (current && current->next) {
         if (   current->layer > current->next->layer
-            || (current->layer > LayerBackground && current->layer == current->next->layer && current->position.y > current->next->position.y)) {
+            || (current->layer == LayerPersons && current->layer == current->next->layer && current->position.y > current->next->position.y)) {
             
             buf1 = current->next;
             current->next = current->next->next;

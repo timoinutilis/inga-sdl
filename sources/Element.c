@@ -92,6 +92,13 @@ void UpdateElement(Element *element, int deltaTicks) {
                 ElementStop(element);
             }
             break;
+        case ElementActionTake:
+            if (element->loopCount == 0) {
+                ElementStop(element);
+            } else if (element->frameIndex == element->takeFrame && element->takeElement) {
+                element->takeElement->isVisible = false;
+            }
+            break;
     }
 }
 
@@ -252,6 +259,16 @@ void ElementAnimate(Element *element, int imageId, int loopCount) {
     ElementFreeAction(element);
     element->action = ElementActionAnimate;
     element->loopCount = loopCount;
+    SetElementImageFromSet(element, imageId);
+}
+
+void ElementTake(Element *element, int imageId, Element *takeElement, int takeFrame) {
+    if (!element || !takeElement) return;
+    ElementFreeAction(element);
+    element->action = ElementActionTake;
+    element->loopCount = 1;
+    element->takeElement = takeElement;
+    element->takeFrame = takeFrame;
     SetElementImageFromSet(element, imageId);
 }
 

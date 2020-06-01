@@ -24,10 +24,12 @@ SDL_Palette *globalPalette = NULL;
 int MainPersonID = 0;
 int ForegroundID = 0xFFFF;
 
-int LayerBackground = 0;
-int LayerMain = 1;
-int LayerForeground = 2;
-int LayerTop = 3;
+int LayerDeco = 0;
+int LayerObjects = 1;
+int LayerFields = 2;
+int LayerPersons = 3;
+int LayerForeground = 4;
+int LayerTop = 5;
 
 void SetGlobalRenderer(SDL_Renderer *renderer) {
     globalRenderer = renderer;

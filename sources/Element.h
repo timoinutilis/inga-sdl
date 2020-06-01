@@ -36,7 +36,8 @@ enum ElementAction {
     ElementActionIdle,
     ElementActionMove,
     ElementActionTalk,
-    ElementActionAnimate
+    ElementActionAnimate,
+    ElementActionTake
 };
 
 typedef struct Element {
@@ -67,6 +68,8 @@ typedef struct Element {
     int talkTicks;
     int defaultIdleImageId;
     int defaultWalkImageId;
+    struct Element *takeElement;
+    int takeFrame;
     struct Element *next;
 } Element;
 
@@ -85,5 +88,6 @@ void ElementLookTo(Element *element, int x, int y, int imageId);
 void ElementMoveTo(Element *element, int x, int y, int imageId, bool ignoreNavMap);
 void ElementTalk(Element *element, const char *text, int imageId, Font *font);
 void ElementAnimate(Element *element, int imageId, int loopCount);
+void ElementTake(Element *element, int imageId, Element *takeElement, int takeFrame);
 
 #endif /* Element_h */

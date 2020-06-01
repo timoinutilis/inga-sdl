@@ -37,7 +37,7 @@ Game *CreateGame() {
         
         // Main Person
         Element *element = CreateElement(MainPersonID);
-        element->layer = LayerMain;
+        element->layer = LayerPersons;
         element->position = MakeVector(320, 360);
         element->imageSet = LoadImageSet("Hauptperson", GetGlobalPalette(), true);
         game->mainPerson = element;
