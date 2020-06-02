@@ -93,10 +93,11 @@ void UpdateElement(Element *element, int deltaTicks) {
             }
             break;
         case ElementActionTake:
+            if ((element->frameIndex == element->takeFrame || element->loopCount == 0) && element->takeElement) {
+                element->takeElement->isVisible = false;
+            }
             if (element->loopCount == 0) {
                 ElementStop(element);
-            } else if (element->frameIndex == element->takeFrame && element->takeElement) {
-                element->takeElement->isVisible = false;
             }
             break;
     }

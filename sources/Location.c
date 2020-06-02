@@ -74,9 +74,9 @@ void LoadLocationBackground(Location *location, const char *background) {
     } else {
         foreground = CreateElement(ForegroundID);
         foreground->layer = LayerForeground;
+        AddElement(location, foreground);
     }
     foreground->image = LoadMaskedImage(background, location->image);
-    AddElement(location, foreground);
 }
 
 void LoadLocationNavigationMap(Location *location, const char *background) {
