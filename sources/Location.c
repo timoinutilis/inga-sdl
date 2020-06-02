@@ -111,7 +111,7 @@ Element *GetElementAt(Location *location, int x, int y) {
     Element *element = location->rootElement;
     Element *elementAtPoint = NULL;
     while (element) {
-        if (IsPointInElement(element, x, y)) {
+        if (IsPointInElement(element, x, y) && (!elementAtPoint || element->id > elementAtPoint->id)) {
             elementAtPoint = element;
         }
         element = element->next;

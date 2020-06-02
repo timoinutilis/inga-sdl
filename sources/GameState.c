@@ -119,6 +119,7 @@ void AddInventoryItem(GameState *gameState, int id, const char *name, const char
         item->image = LoadImage(filename, GetGlobalPalette(), true, false);
         item->next = gameState->rootInventoryItem;
         gameState->rootInventoryItem = item;
+        gameState->numInventoryItems += 1;
     }
 }
 
@@ -128,6 +129,7 @@ void RemoveInventoryItem(GameState *gameState, int id) {
         InventoryItem *item = gameState->rootInventoryItem;
         gameState->rootInventoryItem = gameState->rootInventoryItem->next;
         FreeInventoryItem(item);
+        gameState->numInventoryItems -= 1;
     } else {
         InventoryItem *currItem = gameState->rootInventoryItem->next;
         InventoryItem *prevItem = gameState->rootInventoryItem;
@@ -135,6 +137,7 @@ void RemoveInventoryItem(GameState *gameState, int id) {
             if (currItem->id == id) {
                 prevItem->next = currItem->next;
                 FreeInventoryItem(currItem);
+                gameState->numInventoryItems -= 1;
                 break;
             }
             prevItem = currItem;

@@ -26,6 +26,13 @@
 #include "Utils.h"
 #include "Image.h"
 
+typedef enum InventoryBarButton {
+    InventoryBarButtonNone = -1,
+    InventoryBarButtonMenu,
+    InventoryBarButtonUp,
+    InventoryBarButtonDown
+} InventoryBarButton;
+
 typedef struct InventoryItemView {
     InventoryItem *item;
     Vector position;
@@ -34,14 +41,17 @@ typedef struct InventoryItemView {
 typedef struct InventoryBar {
     GameState *gameState;
     Image *image;
+    Image *buttonsImage;
     InventoryItemView itemViews[INVENTORY_BAR_SIZE];
     bool isVisible;
     bool isEnabled;
+    InventoryBarButton focusedButton;
+    int firstItemIndex;
 } InventoryBar;
 
 InventoryBar *CreateInventoryBar(GameState *gameState);
 void FreeInventoryBar(InventoryBar *bar);
-void RefreshInventoryBar(InventoryBar *bar);
+void RefreshInventoryBar(InventoryBar *bar, bool showNew);
 bool HandleMouseInInventoryBar(InventoryBar *bar, int x, int y, int buttonIndex);
 void UpdateInventoryBar(InventoryBar *bar, int deltaTicks);
 void DrawInventoryBar(InventoryBar *bar);

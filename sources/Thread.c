@@ -628,12 +628,12 @@ unsigned long LaufeINGA(Thread *thread, Game *game, unsigned long ptr, bool *wie
     }
     if (opc == 24) { //InventarNehmen.
         AddInventoryItem(game->gameState, peekv(game, ptr + 2), peeks(script, ptr + 4), peeks(script, ptr + 8));
-        RefreshInventoryBar(game->inventoryBar);
+        RefreshInventoryBar(game->inventoryBar, true);
         return(ptr + 12);
     }
     if (opc == 25) { //InventarWeg.
         RemoveInventoryItem(game->gameState, peekv(game, ptr + 2));
-        RefreshInventoryBar(game->inventoryBar);
+        RefreshInventoryBar(game->inventoryBar, true);
         return(ptr + 4);
     }
     if (opc == 20) { //WennGleich.

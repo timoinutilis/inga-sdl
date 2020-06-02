@@ -188,6 +188,8 @@ void ElementFreeAction(Element *element) {
     
     FreeNavigationPath(element->navigationPath);
     element->navigationPath = NULL;
+    
+    element->takeElement = NULL;
 }
 
 void ElementStop(Element *element) {

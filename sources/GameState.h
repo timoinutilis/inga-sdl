@@ -42,6 +42,7 @@ typedef struct InventoryItem {
 typedef struct GameState {
     Variable *rootVariable;
     InventoryItem *rootInventoryItem;
+    int numInventoryItems;
 } GameState;
 
 GameState *CreateGameState(void);

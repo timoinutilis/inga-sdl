@@ -81,6 +81,10 @@ void HandleMouseInGame(Game *game, int x, int y, int buttonIndex) {
     game->draggingItemView.position = MakeVector(x, y);
     
     if (HandleMouseInInventoryBar(game->inventoryBar, x, y, buttonIndex)) {
+        if (game->inventoryBar->focusedButton != InventoryBarButtonNone) {
+            SetFocus(game, x, y, NULL);
+            return;
+        }
         InventoryItem *focusedItem = GetItemInInventoryBarAt(game->inventoryBar, x, y);
         if (focusedItem) {
             SetFocus(game, x, y, focusedItem->name);
