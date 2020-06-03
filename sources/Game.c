@@ -28,7 +28,7 @@ Game *CreateGame() {
     if (!game) {
         printf("CreateGame: Out of memory\n");
     } else {
-        game->font = LoadFont("Orbitron-Medium", 16);
+        game->font = LoadFont("Font", 16);
         game->script = LoadScript("story");
         game->gameState = CreateGameState();
         game->inventoryBar = CreateInventoryBar(game->gameState);

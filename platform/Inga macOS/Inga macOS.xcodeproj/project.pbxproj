@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		922EADDB245C143400E4027E /* Orbitron-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 922EADDA245C143400E4027E /* Orbitron-Medium.ttf */; };
 		922EADDE245C222A00E4027E /* Font.c in Sources */ = {isa = PBXBuildFile; fileRef = 922EADDD245C222A00E4027E /* Font.c */; };
 		922EADE1245C2A5000E4027E /* Game.c in Sources */ = {isa = PBXBuildFile; fileRef = 922EADE0245C2A5000E4027E /* Game.c */; };
 		922EADE4245C932A00E4027E /* Global.c in Sources */ = {isa = PBXBuildFile; fileRef = 922EADE3245C932A00E4027E /* Global.c */; };
@@ -47,7 +46,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		922EADDA245C143400E4027E /* Orbitron-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Orbitron-Medium.ttf"; path = "../../Orbitron-Medium.ttf"; sourceTree = "<group>"; };
 		922EADDC245C222A00E4027E /* Font.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Font.h; sourceTree = "<group>"; };
 		922EADDD245C222A00E4027E /* Font.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = Font.c; sourceTree = "<group>"; };
 		922EADDF245C2A5000E4027E /* Game.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Game.h; sourceTree = "<group>"; };
@@ -103,7 +101,6 @@
 			isa = PBXGroup;
 			children = (
 				92ABBADA2454545A00218313 /* game */,
-				922EADDA245C143400E4027E /* Orbitron-Medium.ttf */,
 				929EDBDD244E457600DC64D9 /* sources */,
 				929EDBCB244E32BA00DC64D9 /* Inga macOS */,
 				929EDBCA244E32BA00DC64D9 /* Products */,
@@ -235,7 +232,6 @@
 			files = (
 				92ABBADB2454545A00218313 /* game in Resources */,
 				929EDBD0244E32BD00DC64D9 /* Assets.xcassets in Resources */,
-				922EADDB245C143400E4027E /* Orbitron-Medium.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -385,7 +381,7 @@
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = "";
-				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_HARDENED_RUNTIME = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(LOCAL_LIBRARY_DIR)/Frameworks",
@@ -410,7 +406,7 @@
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = "";
-				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_HARDENED_RUNTIME = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(LOCAL_LIBRARY_DIR)/Frameworks",

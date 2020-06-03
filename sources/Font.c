@@ -26,9 +26,9 @@ Font *LoadFont(const char *filename, int size) {
     char path[FILENAME_MAX];
     char *basePath = SDL_GetBasePath();
     if (basePath) {
-        sprintf(path, "%s%s.ttf", basePath, filename);
+        sprintf(path, "%sgame/%s.ttf", basePath, filename);
     } else {
-        sprintf(path, "%s.ttf", filename);
+        sprintf(path, "game/%s.ttf", filename);
     }
     
     TTF_Font *ttfFont = TTF_OpenFont(path, size);
