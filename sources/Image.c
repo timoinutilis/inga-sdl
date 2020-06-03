@@ -153,6 +153,11 @@ Image *LoadMaskedImage(const char *filename, Image *sourceImage) {
     char path[FILENAME_MAX];
     sprintf(path, "game/BitMaps/%s.imp", filename);
     
+    char *p = strrchr(path, '_');
+    if (p) {
+        strcpy(p, ".imp");
+    }
+    
     SDL_RWops *file = SDL_RWFromFile(path, "rb");
     if (!file) {
         printf("LoadImageIMP: %s\n", SDL_GetError());

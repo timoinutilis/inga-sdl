@@ -168,7 +168,7 @@ unsigned long LaufeINGA(Thread *thread, Game *game, unsigned long ptr, bool *wie
             element->position = MakeVector(peekv(game, ptr + 12), peekv(game, ptr + 14));
             element->imageSet = LoadImageSet(peeks(script, ptr + 8), game->location->image->surface->format->palette, true);
             strcpy(element->name, peeks(script, ptr + 4));
-            element->isSelectable = true;
+            element->isSelectable = element->name[0] != 0;
             AddElement(game->location, element);
         }
         SetVisibility(game->gameState, game->location->id, id, (bool)peekv(game, ptr + 16), true);
