@@ -449,17 +449,13 @@ unsigned long LaufeINGA(Thread *thread, Game *game, unsigned long ptr, bool *wie
     }
     if (opc == 56) { //PersonenAnims.
         Element *element = GetElement(game->location, MainPersonID);
-        if (element) {
-            element->defaultIdleImageId = peekv(game, ptr + 2);
-            element->defaultWalkImageId = peekv(game, ptr + 4);
-        }
+        SetDefaultIdleImageId(element, peekv(game, ptr + 2));
+        SetDefaultWalkImageId(element, peekv(game, ptr + 4));
         return(ptr + 6);
     }
     if (opc == 87) { //StandAnim.
         Element *element = GetElement(game->location, peekv(game, ptr + 2));
-        if (element) {
-            element->defaultIdleImageId = peekv(game, ptr + 4);
-        }
+        SetDefaultIdleImageId(element, peekv(game, ptr + 4));
         return(ptr + 6);
     }
 

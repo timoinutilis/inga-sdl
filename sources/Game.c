@@ -34,6 +34,7 @@ Game *CreateGame() {
         game->inventoryBar = CreateInventoryBar(game->gameState);
         game->dialog = CreateDialog();
         game->mainThread = CreateThread(0);
+        game->escImage = LoadImage("Esc", GetGlobalPalette(), true, false);
         
         // Main Person
         Element *element = CreateElement(MainPersonID);
@@ -47,6 +48,7 @@ Game *CreateGame() {
 
 void FreeGame(Game *game) {
     if (!game) return;
+    FreeImage(game->escImage);
     FreeImage(game->focus.image);
     FreeLocation(game->location);
     FreeElement(game->mainPerson);
@@ -166,6 +168,9 @@ void DrawGame(Game *game) {
     DrawImage(game->focus.image, game->focus.position);
     DrawInventoryItemView(&game->draggingItemView);
     DrawDialog(game->dialog);
+    if (game->mainThread->escptr) {
+        DrawImage(game->escImage, MakeVector(1, 1));
+    }
 }
 
 void SetFocus(Game *game, int x, int y, const char *name) {

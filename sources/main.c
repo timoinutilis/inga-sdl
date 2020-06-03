@@ -61,6 +61,10 @@ int main(int argc, const char * argv[]) {
                 case SDL_MOUSEMOTION:
                     mouseX = event.motion.x;
                     mouseY = event.motion.y;
+                    if (mouseX < 0) mouseX = 0;
+                    if (mouseY < 0) mouseY = 0;
+                    if (mouseX >= SCREEN_WIDTH) mouseX = SCREEN_WIDTH - 1;
+                    if (mouseY >= SCREEN_HEIGHT) mouseY = SCREEN_HEIGHT - 1;
                     break;
                 case SDL_MOUSEBUTTONDOWN:
                     mouseButtonIndex = event.button.button;

@@ -148,9 +148,24 @@ bool IsPointInElement(Element *element, int x, int y) {
 }
 
 void ResetDefaultAnimations(Element *element) {
+    SetDefaultIdleImageId(element, 1);
+    SetDefaultWalkImageId(element, 2);
+}
+
+void SetDefaultIdleImageId(Element *element, int imageId) {
     if (!element) return;
-    element->defaultIdleImageId = 1;
-    element->defaultWalkImageId = 2;
+    element->defaultIdleImageId = imageId;
+    if (element->action == ElementActionIdle) {
+        SetElementImageFromSet(element, imageId);
+    }
+}
+
+void SetDefaultWalkImageId(Element *element, int imageId) {
+    if (!element) return;
+    element->defaultWalkImageId = imageId;
+    if (element->action == ElementActionMove) {
+        SetElementImageFromSet(element, imageId);
+    }
 }
 
 Vector GetElementTarget(Element *element, Vector fromPosition) {

@@ -60,6 +60,7 @@ typedef struct Game {
     int draggedId;
     Verb selectedVerb;
     IdleScript idleScript;
+    Image *escImage;
 } Game;
 
 Game *CreateGame(void);

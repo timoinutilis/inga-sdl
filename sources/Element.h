@@ -80,6 +80,8 @@ void DrawElement(Element *element);
 void DrawElementOverlay(Element *element);
 bool IsPointInElement(Element *element, int x, int y);
 void ResetDefaultAnimations(Element *element);
+void SetDefaultIdleImageId(Element *element, int imageId);
+void SetDefaultWalkImageId(Element *element, int imageId);
 Vector GetElementTarget(Element *element, Vector fromPosition);
 
 void ElementStop(Element *element);
