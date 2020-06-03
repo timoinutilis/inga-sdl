@@ -38,7 +38,7 @@ int main(int argc, const char * argv[]) {
     
     SetGlobalRenderer(renderer);
     
-    Image *paletteImage = LoadImage("Thronsaal", NULL, false, true);
+    Image *paletteImage = LoadImage("GlobalPalette", NULL, false, true);
     SetGlobalPalette(paletteImage->surface->format->palette);
     
     Game *game = CreateGame();
