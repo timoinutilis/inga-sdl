@@ -23,6 +23,7 @@
 		925A82452458D41D00610C63 /* SDL2_ttf.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 925A82432458D41D00610C63 /* SDL2_ttf.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		925BA819248A514E008CBA9A /* Sequence.c in Sources */ = {isa = PBXBuildFile; fileRef = 925BA818248A514E008CBA9A /* Sequence.c */; };
 		927438CB246B1E81007C434D /* Dialog.c in Sources */ = {isa = PBXBuildFile; fileRef = 927438CA246B1E81007C434D /* Dialog.c */; };
+		9299FAA2248A78EC007CB594 /* Fader.c in Sources */ = {isa = PBXBuildFile; fileRef = 9299FAA1248A78EC007CB594 /* Fader.c */; };
 		929EDBD0244E32BD00DC64D9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 929EDBCF244E32BD00DC64D9 /* Assets.xcassets */; };
 		929EDBD6244E32BD00DC64D9 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = 929EDBD5244E32BD00DC64D9 /* main.c */; };
 		929EDBE0244E46E300DC64D9 /* SDL2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 929EDBDF244E46E300DC64D9 /* SDL2.framework */; };
@@ -77,6 +78,8 @@
 		925BA818248A514E008CBA9A /* Sequence.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Sequence.c; sourceTree = "<group>"; };
 		927438C9246B1E81007C434D /* Dialog.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Dialog.h; sourceTree = "<group>"; };
 		927438CA246B1E81007C434D /* Dialog.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = Dialog.c; sourceTree = "<group>"; };
+		9299FAA0248A78EC007CB594 /* Fader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Fader.h; sourceTree = "<group>"; };
+		9299FAA1248A78EC007CB594 /* Fader.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = Fader.c; sourceTree = "<group>"; };
 		929EDBC9244E32BA00DC64D9 /* Inga.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Inga.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		929EDBCF244E32BD00DC64D9 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		929EDBD4244E32BD00DC64D9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -136,6 +139,8 @@
 				927438C9246B1E81007C434D /* Dialog.h */,
 				924B17A724556BC8008A9B43 /* Element.c */,
 				924B17A624556BC8008A9B43 /* Element.h */,
+				9299FAA1248A78EC007CB594 /* Fader.c */,
+				9299FAA0248A78EC007CB594 /* Fader.h */,
 				922EADDD245C222A00E4027E /* Font.c */,
 				922EADDC245C222A00E4027E /* Font.h */,
 				922EADE0245C2A5000E4027E /* Game.c */,
@@ -253,6 +258,7 @@
 				922EADE4245C932A00E4027E /* Global.c in Sources */,
 				925BA819248A514E008CBA9A /* Sequence.c in Sources */,
 				924B17B22455EA08008A9B43 /* NavigationMap.c in Sources */,
+				9299FAA2248A78EC007CB594 /* Fader.c in Sources */,
 				923DAD3A2463221F0094F825 /* GameState.c in Sources */,
 				929EDBD6244E32BD00DC64D9 /* main.c in Sources */,
 				924B17AF2455D598008A9B43 /* Utils.c in Sources */,

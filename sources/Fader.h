@@ -18,26 +18,26 @@
 // 3. This notice may not be removed or altered from any source distribution.
 //
 
-#ifndef Sequence_h
-#define Sequence_h
+#ifndef Fader_h
+#define Fader_h
 
 #include <stdio.h>
-#include "Image.h"
-#include "Fader.h"
 
-typedef struct Sequence {
-    char *text;
-    Sint64 textSize;
-    Image *image;
-    char *currentLine;
-    int waitTicks;
-    bool isFinished;
-    Fader fader;
-} Sequence;
+typedef enum FaderState {
+    FaderStateClose,
+    FaderStateFadingIn,
+    FaderStateOpen,
+    FaderStateFadingOut
+} FaderState;
 
-Sequence *LoadSequence(const char *filename);
-void FreeSequence(Sequence *sequence);
-void UpdateSequence(Sequence *sequence, int deltaTicks);
-void DrawSequence(Sequence *sequence);
+typedef struct Fader {
+    FaderState state;
+    int ticks;
+} Fader;
 
-#endif /* Sequence_h */
+void UpdateFader(Fader *fader, int deltaTicks);
+void DrawFader(Fader *fader);
+void FadeIn(Fader *fader);
+void FadeOut(Fader *fader);
+
+#endif /* Fader_h */

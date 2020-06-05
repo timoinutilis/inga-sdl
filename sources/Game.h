@@ -34,6 +34,7 @@
 #include "InventoryBar.h"
 #include "Dialog.h"
 #include "Sequence.h"
+#include "Fader.h"
 
 typedef struct Focus {
     const char *name;
@@ -64,6 +65,7 @@ typedef struct Game {
     Verb selectedVerb;
     IdleScript idleScript;
     Image *escImage;
+    Fader fader;
 } Game;
 
 Game *CreateGame(void);

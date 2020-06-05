@@ -173,6 +173,7 @@ void UpdateGame(Game *game, int deltaTicks) {
         if (game->sequence->isFinished) {
             FreeSequence(game->sequence);
             game->sequence = NULL;
+            FadeIn(&game->fader);
         } else {
             return;
         }
@@ -182,6 +183,7 @@ void UpdateGame(Game *game, int deltaTicks) {
     UpdateLocation(game->location, deltaTicks);
     UpdateInventoryBar(game->inventoryBar, deltaTicks);
     UpdateIdleProg(game, deltaTicks);
+    UpdateFader(&game->fader, deltaTicks);
 }
 
 void DrawGame(Game *game) {
@@ -197,6 +199,7 @@ void DrawGame(Game *game) {
     DrawImage(game->focus.image, game->focus.position);
     DrawInventoryItemView(&game->draggingItemView);
     DrawDialog(game->dialog);
+    DrawFader(&game->fader);
     
     if (game->mainThread->escptr) {
         DrawImage(game->escImage, MakeVector(1, 1));
@@ -242,6 +245,7 @@ void SetLocation(Game *game, int id, const char *background) {
     AddElement(game->location, game->mainPerson);
     game->inventoryBar->isEnabled = true;
     game->inventoryBar->isVisible = false;
+    FadeIn(&game->fader);
 }
 
 void MainPersonDidFinishWalking(Game *game) {

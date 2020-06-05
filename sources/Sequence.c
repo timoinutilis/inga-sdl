@@ -63,6 +63,8 @@ void FreeSequence(Sequence *sequence) {
 void UpdateSequence(Sequence *sequence, int deltaTicks) {
     if (!sequence || sequence->isFinished) return;
     
+    UpdateFader(&sequence->fader, deltaTicks);
+    
     if (sequence->waitTicks > 0) {
         sequence->waitTicks -= deltaTicks;
         if (sequence->waitTicks < 0) sequence->waitTicks = 0;
@@ -81,6 +83,7 @@ void UpdateSequence(Sequence *sequence, int deltaTicks) {
             char *filename = &sequence->currentLine[2];
             FreeImage(sequence->image);
             sequence->image = LoadImage(filename, NULL, false, false);
+            FadeIn(&sequence->fader);
         } else if (command == 'W') {
             // wait
             char *number = &sequence->currentLine[2];
@@ -103,4 +106,5 @@ void DrawSequence(Sequence *sequence) {
         pos.y = floorf((SCREEN_HEIGHT - sequence->image->height) * 0.5f);
         DrawImage(sequence->image, pos);
     }
+    DrawFader(&sequence->fader);
 }
