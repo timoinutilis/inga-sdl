@@ -30,8 +30,8 @@ Script *LoadScript(const char *filename) {
     char itxtPath[FILENAME_MAX];
     sprintf(itxtPath, "game/Dats/%s.itxt", filename);
     
-    void *inga = LoadFile(ingaPath);
-    void *itxt = LoadFile(itxtPath);
+    void *inga = LoadFile(ingaPath, NULL);
+    void *itxt = LoadFile(itxtPath, NULL);
     
     if (inga && itxt) {
         script = calloc(1, sizeof(Script));

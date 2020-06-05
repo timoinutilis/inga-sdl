@@ -32,6 +32,7 @@
 #include "GameState.h"
 #include "InventoryBar.h"
 #include "Dialog.h"
+#include "Sequence.h"
 
 typedef struct Focus {
     const char *name;
@@ -54,6 +55,7 @@ typedef struct Game {
     Dialog *dialog;
     Element *mainPerson;
     Location *location;
+    Sequence *sequence;
     Focus focus;
     InventoryItemView draggingItemView;
     int selectedId;

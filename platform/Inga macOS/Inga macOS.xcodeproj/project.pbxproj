@@ -21,6 +21,7 @@
 		924B17B22455EA08008A9B43 /* NavigationMap.c in Sources */ = {isa = PBXBuildFile; fileRef = 924B17B12455EA08008A9B43 /* NavigationMap.c */; };
 		925A82442458D41D00610C63 /* SDL2_ttf.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 925A82432458D41D00610C63 /* SDL2_ttf.framework */; };
 		925A82452458D41D00610C63 /* SDL2_ttf.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 925A82432458D41D00610C63 /* SDL2_ttf.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		925BA819248A514E008CBA9A /* Sequence.c in Sources */ = {isa = PBXBuildFile; fileRef = 925BA818248A514E008CBA9A /* Sequence.c */; };
 		927438CB246B1E81007C434D /* Dialog.c in Sources */ = {isa = PBXBuildFile; fileRef = 927438CA246B1E81007C434D /* Dialog.c */; };
 		929EDBD0244E32BD00DC64D9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 929EDBCF244E32BD00DC64D9 /* Assets.xcassets */; };
 		929EDBD6244E32BD00DC64D9 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = 929EDBD5244E32BD00DC64D9 /* main.c */; };
@@ -72,6 +73,8 @@
 		924B17B02455EA08008A9B43 /* NavigationMap.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NavigationMap.h; sourceTree = "<group>"; };
 		924B17B12455EA08008A9B43 /* NavigationMap.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = NavigationMap.c; sourceTree = "<group>"; };
 		925A82432458D41D00610C63 /* SDL2_ttf.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL2_ttf.framework; path = ../../../../../../Library/Frameworks/SDL2_ttf.framework; sourceTree = "<group>"; };
+		925BA817248A514D008CBA9A /* Sequence.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Sequence.h; sourceTree = "<group>"; };
+		925BA818248A514E008CBA9A /* Sequence.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Sequence.c; sourceTree = "<group>"; };
 		927438C9246B1E81007C434D /* Dialog.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Dialog.h; sourceTree = "<group>"; };
 		927438CA246B1E81007C434D /* Dialog.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = Dialog.c; sourceTree = "<group>"; };
 		929EDBC9244E32BA00DC64D9 /* Inga.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Inga.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -128,36 +131,38 @@
 		929EDBDD244E457600DC64D9 /* sources */ = {
 			isa = PBXGroup;
 			children = (
-				929EDBD5244E32BD00DC64D9 /* main.c */,
 				924B17A924556D57008A9B43 /* Config.h */,
-				922EADE2245C932A00E4027E /* Global.h */,
-				922EADE3245C932A00E4027E /* Global.c */,
-				924B17AD2455D598008A9B43 /* Utils.h */,
-				924B17AE2455D598008A9B43 /* Utils.c */,
-				92ABBAD724543AB800218313 /* Image.h */,
-				92ABBAD824543AB800218313 /* Image.c */,
-				924B17AA245585D2008A9B43 /* ImageSet.h */,
-				924B17AB245585D2008A9B43 /* ImageSet.c */,
-				922EADDC245C222A00E4027E /* Font.h */,
-				922EADDD245C222A00E4027E /* Font.c */,
-				924B17B02455EA08008A9B43 /* NavigationMap.h */,
-				924B17B12455EA08008A9B43 /* NavigationMap.c */,
-				922EADE8245DD1E100E4027E /* Script.h */,
-				922EADE9245DD1E100E4027E /* Script.c */,
-				922EADDF245C2A5000E4027E /* Game.h */,
-				922EADE0245C2A5000E4027E /* Game.c */,
-				923DAD382463221F0094F825 /* GameState.h */,
-				923DAD392463221F0094F825 /* GameState.c */,
-				924B17A324556614008A9B43 /* Location.h */,
-				924B17A424556614008A9B43 /* Location.c */,
-				924B17A624556BC8008A9B43 /* Element.h */,
-				924B17A724556BC8008A9B43 /* Element.c */,
-				922EADEB245DE60E00E4027E /* Thread.h */,
-				922EADEC245DE60E00E4027E /* Thread.c */,
-				923DAD3B2465C4F10094F825 /* InventoryBar.h */,
-				923DAD3C2465C4F10094F825 /* InventoryBar.c */,
-				927438C9246B1E81007C434D /* Dialog.h */,
 				927438CA246B1E81007C434D /* Dialog.c */,
+				927438C9246B1E81007C434D /* Dialog.h */,
+				924B17A724556BC8008A9B43 /* Element.c */,
+				924B17A624556BC8008A9B43 /* Element.h */,
+				922EADDD245C222A00E4027E /* Font.c */,
+				922EADDC245C222A00E4027E /* Font.h */,
+				922EADE0245C2A5000E4027E /* Game.c */,
+				922EADDF245C2A5000E4027E /* Game.h */,
+				923DAD392463221F0094F825 /* GameState.c */,
+				923DAD382463221F0094F825 /* GameState.h */,
+				922EADE3245C932A00E4027E /* Global.c */,
+				922EADE2245C932A00E4027E /* Global.h */,
+				92ABBAD824543AB800218313 /* Image.c */,
+				92ABBAD724543AB800218313 /* Image.h */,
+				924B17AB245585D2008A9B43 /* ImageSet.c */,
+				924B17AA245585D2008A9B43 /* ImageSet.h */,
+				923DAD3C2465C4F10094F825 /* InventoryBar.c */,
+				923DAD3B2465C4F10094F825 /* InventoryBar.h */,
+				924B17A424556614008A9B43 /* Location.c */,
+				924B17A324556614008A9B43 /* Location.h */,
+				929EDBD5244E32BD00DC64D9 /* main.c */,
+				924B17B12455EA08008A9B43 /* NavigationMap.c */,
+				924B17B02455EA08008A9B43 /* NavigationMap.h */,
+				922EADE9245DD1E100E4027E /* Script.c */,
+				922EADE8245DD1E100E4027E /* Script.h */,
+				925BA818248A514E008CBA9A /* Sequence.c */,
+				925BA817248A514D008CBA9A /* Sequence.h */,
+				922EADEC245DE60E00E4027E /* Thread.c */,
+				922EADEB245DE60E00E4027E /* Thread.h */,
+				924B17AE2455D598008A9B43 /* Utils.c */,
+				924B17AD2455D598008A9B43 /* Utils.h */,
 			);
 			name = sources;
 			path = ../../sources;
@@ -246,6 +251,7 @@
 				924B17A824556BC8008A9B43 /* Element.c in Sources */,
 				922EADEA245DD1E100E4027E /* Script.c in Sources */,
 				922EADE4245C932A00E4027E /* Global.c in Sources */,
+				925BA819248A514E008CBA9A /* Sequence.c in Sources */,
 				924B17B22455EA08008A9B43 /* NavigationMap.c in Sources */,
 				923DAD3A2463221F0094F825 /* GameState.c in Sources */,
 				929EDBD6244E32BD00DC64D9 /* main.c in Sources */,

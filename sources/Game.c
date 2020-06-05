@@ -50,6 +50,7 @@ void FreeGame(Game *game) {
     if (!game) return;
     FreeImage(game->escImage);
     FreeImage(game->focus.image);
+    FreeSequence(game->sequence);
     FreeLocation(game->location);
     FreeElement(game->mainPerson);
     FreeThread(game->mainThread);
@@ -63,6 +64,12 @@ void FreeGame(Game *game) {
 
 void HandleMouseInGame(Game *game, int x, int y, int buttonIndex) {
     if (!game) return;
+    
+    if (game->sequence) {
+        SetFocus(game, x, y, NULL);
+        game->draggingItemView.item = NULL;
+        return;
+    }
     
     if (game->mainThread && game->mainThread->isActive) {
         SetFocus(game, x, y, NULL);
@@ -148,6 +155,10 @@ void HandleMouseInGame(Game *game, int x, int y, int buttonIndex) {
 }
 
 void HandleKeyInGame(Game *game, SDL_Keysym keysym) {
+    if (game->sequence) {
+        return;
+    }
+    
     if (keysym.sym == SDLK_ESCAPE) {
         EscapeThread(game->mainThread);
     }
@@ -155,6 +166,17 @@ void HandleKeyInGame(Game *game, SDL_Keysym keysym) {
 
 void UpdateGame(Game *game, int deltaTicks) {
     if (!game) return;
+    
+    if (game->sequence) {
+        UpdateSequence(game->sequence, deltaTicks);
+        if (game->sequence->isFinished) {
+            FreeSequence(game->sequence);
+            game->sequence = NULL;
+        } else {
+            return;
+        }
+    }
+    
     UpdateThread(game->mainThread, game);
     UpdateLocation(game->location, deltaTicks);
     UpdateInventoryBar(game->inventoryBar, deltaTicks);
@@ -163,11 +185,18 @@ void UpdateGame(Game *game, int deltaTicks) {
 
 void DrawGame(Game *game) {
     if (!game) return;
+    
+    if (game->sequence) {
+        DrawSequence(game->sequence);
+        return;
+    }
+    
     DrawLocation(game->location);
     DrawInventoryBar(game->inventoryBar);
     DrawImage(game->focus.image, game->focus.position);
     DrawInventoryItemView(&game->draggingItemView);
     DrawDialog(game->dialog);
+    
     if (game->mainThread->escptr) {
         DrawImage(game->escImage, MakeVector(1, 1));
     }

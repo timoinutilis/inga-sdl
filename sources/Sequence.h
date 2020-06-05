@@ -17,20 +17,24 @@
 // along with Inga.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#ifndef Utils_h
-#define Utils_h
+#ifndef Sequence_h
+#define Sequence_h
 
 #include <stdio.h>
-#include <SDL2/SDL.h>
+#include "Image.h"
 
-typedef struct Vector {
-    float x;
-    float y;
-} Vector;
+typedef struct Sequence {
+    char *text;
+    Sint64 textSize;
+    Image *image;
+    char *currentLine;
+    int waitTicks;
+    bool isFinished;
+} Sequence;
 
-Vector MakeVector(float x, float y);
-SDL_Rect MakeRect(int x, int y, int width, int height);
-SDL_Rect MakeRectFromTo(int x1, int y1, int x2, int y2);
-void *LoadFile(const char *path, Sint64 *outSize);
+Sequence *LoadSequence(const char *filename);
+void FreeSequence(Sequence *sequence);
+void UpdateSequence(Sequence *sequence, int deltaTicks);
+void DrawSequence(Sequence *sequence);
 
-#endif /* Utils_h */
+#endif /* Sequence_h */

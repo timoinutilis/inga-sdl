@@ -34,7 +34,7 @@ SDL_Rect MakeRectFromTo(int x1, int y1, int x2, int y2) {
     return rect;
 }
 
-void *LoadFile(const char *path) {
+void *LoadFile(const char *path, Sint64 *outSize) {
     void *content = NULL;
     SDL_RWops *file = SDL_RWFromFile(path, "rb");
     if (!file) {
@@ -49,6 +49,10 @@ void *LoadFile(const char *path) {
                 printf("LoadFile: %s\n", SDL_GetError());
                 free(content);
                 content = NULL;
+            } else {
+                if (outSize) {
+                    *outSize = size;
+                }
             }
         }
         SDL_RWclose(file);

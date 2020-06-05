@@ -563,7 +563,8 @@ unsigned long LaufeINGA(Thread *thread, Game *game, unsigned long ptr, bool *wie
     }
     if (opc == 34) { //Sequenz.
 //        SndSchleifeAbbruch();
-//        Sequenz(peeks(script, ptr + 2));
+        game->sequence = LoadSequence(peeks(script, ptr + 2));
+        *wieder = false;
         return(ptr + 6);
     }
     if (opc == 47) { //CDNummer.
