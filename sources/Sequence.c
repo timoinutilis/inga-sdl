@@ -96,5 +96,10 @@ void UpdateSequence(Sequence *sequence, int deltaTicks) {
 
 void DrawSequence(Sequence *sequence) {
     if (!sequence) return;
-    DrawImage(sequence->image, MakeVector(0, 0));
+    if (sequence->image) {
+        Vector pos;
+        pos.x = floorf((SCREEN_WIDTH - sequence->image->width) * 0.5f);
+        pos.y = floorf((SCREEN_HEIGHT - sequence->image->height) * 0.5f);
+        DrawImage(sequence->image, pos);
+    }
 }
