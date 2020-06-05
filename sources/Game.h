@@ -56,6 +56,8 @@ typedef struct Game {
     InventoryBar *inventoryBar;
     Dialog *dialog;
     Element *mainPerson;
+    Vector startPosition;
+    ImageSide startSide;
     Location *location;
     Sequence *sequence;
     Focus focus;

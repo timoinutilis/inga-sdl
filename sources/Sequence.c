@@ -72,7 +72,14 @@ void UpdateSequence(Sequence *sequence, int deltaTicks) {
     }
     
     if (sequence->currentLine >= sequence->text + sequence->textSize) {
-        sequence->isFinished = true;
+        // end of sequence
+        if (sequence->fader.state != FaderStateClosed) {
+            if (sequence->fader.state != FaderStateFadingOut) {
+                FadeOut(&sequence->fader);
+            }
+        } else {
+            sequence->isFinished = true;
+        }
         return;
     }
     
@@ -80,6 +87,12 @@ void UpdateSequence(Sequence *sequence, int deltaTicks) {
         char command = sequence->currentLine[1];
         if (command == ':') {
             // load image
+            if (sequence->fader.state != FaderStateClosed) {
+                if (sequence->fader.state != FaderStateFadingOut) {
+                    FadeOut(&sequence->fader);
+                }
+                return;
+            }
             char *filename = &sequence->currentLine[2];
             FreeImage(sequence->image);
             sequence->image = LoadImage(filename, NULL, false, false);

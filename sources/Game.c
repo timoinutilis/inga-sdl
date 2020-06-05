@@ -40,9 +40,10 @@ Game *CreateGame() {
         // Main Person
         Element *element = CreateElement(MainPersonID);
         element->layer = LayerPersons;
-        element->position = MakeVector(320, 360);
         element->imageSet = LoadImageSet("Hauptperson", GetGlobalPalette(), true);
         game->mainPerson = element;
+        game->startPosition = MakeVector(320, 360);
+        game->startSide = ImageSideFront;
     }
     return game;
 }
@@ -173,7 +174,6 @@ void UpdateGame(Game *game, int deltaTicks) {
         if (game->sequence->isFinished) {
             FreeSequence(game->sequence);
             game->sequence = NULL;
-            FadeIn(&game->fader);
         } else {
             return;
         }
@@ -240,12 +240,19 @@ void SetLocation(Game *game, int id, const char *background) {
     game->mainPerson->isVisible = true;
     ResetDefaultAnimations(game->mainPerson);
     FreeLocation(game->location);
+    
     game->location = CreateLocation(id, background);
     game->location->game = game;
+    
     AddElement(game->location, game->mainPerson);
+    if (game->startPosition.x > 0 || game->startPosition.y > 0) {
+        game->mainPerson->position = game->startPosition;
+        ElementSetSide(game->mainPerson, game->startSide, 0);
+        game->startPosition = MakeVector(0, 0);
+    }
+    
     game->inventoryBar->isEnabled = true;
     game->inventoryBar->isVisible = false;
-    FadeIn(&game->fader);
 }
 
 void MainPersonDidFinishWalking(Game *game) {

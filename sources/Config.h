@@ -31,6 +31,6 @@
 
 #define INVENTORY_BAR_SIZE 8
 
-#define FADE_DURATION 500
+#define FADE_DURATION 300
 
 #endif /* Config_h */

@@ -24,7 +24,7 @@
 #include <stdio.h>
 
 typedef enum FaderState {
-    FaderStateClose,
+    FaderStateClosed,
     FaderStateFadingIn,
     FaderStateOpen,
     FaderStateFadingOut

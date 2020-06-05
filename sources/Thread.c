@@ -61,17 +61,23 @@ unsigned long LaufeINGA(Thread *thread, Game *game, unsigned long ptr, bool *wie
 
     /*==Einrichtung==*/
     if (opc == 1) { //Einrichtung.
+        if (game->fader.state != FaderStateClosed) {
+            if (game->fader.state != FaderStateFadingOut) {
+                FadeOut(&game->fader);
+            }
+            *wieder = false;
+            return(ptr);
+        }
         SetLocation(game, peekv(game, ptr + 2), peeks(script, ptr + 4));
 //        SndSchleifeAbbruch();
-//        FadeOut(8);
 //        MeldungAbbruch();
 //        if (peekv(game, ptr + 8) > 0) SpieleCDTrack(peekv(game, ptr + 8)); else StoppeCD();
         return(ptr + 10);
     }
     if (opc == 2) { //EinrichtungEnde.
         UpdateElementVisibilities(game->location, game->gameState);
+        FadeIn(&game->fader);
 //        MausStatusSichtbar(FALSE);
-//        FadeIn(8);
         return(ptr + 2);
     }
     if (opc == 83) { //LadeBild.
@@ -474,8 +480,8 @@ unsigned long LaufeINGA(Thread *thread, Game *game, unsigned long ptr, bool *wie
         return(peekl(script, ptr + 2));
     }
     if (opc == 29) { //SpringeOrt.
-        game->mainPerson->position = MakeVector(peekv(game, ptr + 6), peekv(game, ptr + 8));
-        ElementSetSide(game->mainPerson, peekv(game, ptr + 10), 0);
+        game->startPosition = MakeVector(peekv(game, ptr + 6), peekv(game, ptr + 8));
+        game->startSide = peekv(game, ptr + 10);
 //        ort.ptr = peekl(script, ptr + 2);
         return(peekl(script, ptr + 2));
     }
@@ -563,6 +569,13 @@ unsigned long LaufeINGA(Thread *thread, Game *game, unsigned long ptr, bool *wie
         }
     }
     if (opc == 34) { //Sequenz.
+        if (game->fader.state != FaderStateClosed) {
+            if (game->fader.state != FaderStateFadingOut) {
+                FadeOut(&game->fader);
+            }
+            *wieder = false;
+            return(ptr);
+        }
 //        SndSchleifeAbbruch();
         game->sequence = LoadSequence(peeks(script, ptr + 2));
         *wieder = false;

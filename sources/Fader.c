@@ -26,7 +26,7 @@
 void UpdateFader(Fader *fader, int deltaTicks) {
     if (!fader) return;
     switch (fader->state) {
-        case FaderStateClose:
+        case FaderStateClosed:
             break;
         case FaderStateFadingIn:
             fader->ticks += deltaTicks;
@@ -39,7 +39,7 @@ void UpdateFader(Fader *fader, int deltaTicks) {
         case FaderStateFadingOut:
             fader->ticks += deltaTicks;
             if (fader->ticks >= FADE_DURATION) {
-                fader->state = FaderStateClose;
+                fader->state = FaderStateClosed;
             }
             break;
     }
@@ -50,8 +50,8 @@ void DrawFader(Fader *fader) {
     SDL_Rect rect = {0, 0, SCREEN_WIDTH, SCREEN_HEIGHT};
     SDL_SetRenderDrawBlendMode(GetGlobalRenderer(), SDL_BLENDMODE_BLEND);
     switch (fader->state) {
-        case FaderStateClose:
-            SDL_SetRenderDrawColor(GetGlobalRenderer(), 0, 0, 0, 0);
+        case FaderStateClosed:
+            SDL_SetRenderDrawColor(GetGlobalRenderer(), 0, 0, 0, 255);
             break;
         case FaderStateFadingIn:
             SDL_SetRenderDrawColor(GetGlobalRenderer(), 0, 0, 0, 255 - (fader->ticks * 255 / FADE_DURATION));
