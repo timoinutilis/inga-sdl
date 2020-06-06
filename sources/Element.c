@@ -77,6 +77,9 @@ void UpdateElement(Element *element, int deltaTicks) {
     // Action
     switch (element->action) {
         case ElementActionIdle:
+            if (element->imageId && element->imageId != element->defaultIdleImageId) {
+                SetElementImageFromSet(element, element->defaultIdleImageId);
+            }
             break;
         case ElementActionMove:
             UpdateMove(element, deltaTicks);
@@ -213,7 +216,7 @@ void ElementStop(Element *element) {
     if (!element) return;
     ElementFreeAction(element);
     element->action = ElementActionIdle;
-    SetElementImageFromSet(element, element->defaultIdleImageId);
+    // resets animation in update
 }
 
 void ElementSetSide(Element *element, ImageSide side, int imageId) {
