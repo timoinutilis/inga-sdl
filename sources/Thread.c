@@ -21,6 +21,7 @@
 #include "Thread.h"
 #include "Game.h"
 #include "Global.h"
+#include "Cursor.h"
 
 unsigned long LaufeINGA(Thread *thread, Game *game, unsigned long ptr, bool *wieder);
 unsigned short peekv(Game *game, unsigned long pointer);
@@ -77,7 +78,6 @@ unsigned long LaufeINGA(Thread *thread, Game *game, unsigned long ptr, bool *wie
     if (opc == 2) { //EinrichtungEnde.
         UpdateElementVisibilities(game->location, game->gameState);
         FadeIn(&game->fader);
-//        MausStatusSichtbar(FALSE);
         return(ptr + 2);
     }
     if (opc == 83) { //LadeBild.
@@ -506,7 +506,7 @@ unsigned long LaufeINGA(Thread *thread, Game *game, unsigned long ptr, bool *wie
         return(ptr + 2);
     }
     if (opc == 22) { //Stopp.
-//        MausStatusSichtbar(true);
+        SetCursor(game->cursorNormal);
         thread->isActive = false;
         return(ptr + 2);
     }
@@ -518,13 +518,13 @@ unsigned long LaufeINGA(Thread *thread, Game *game, unsigned long ptr, bool *wie
         return(ptr + 2);
     }
     if (opc == 23) { //Liste.
-//        MausStatusSichtbar(true);
+        SetCursor(game->cursorNormal);
         thread->listeptr = ptr + 2;
         thread->isActive = false;
         return(ptr + 2);
     }
     if (opc == 39) { //Dialogliste.
-//        MausStatusSichtbar(true);
+        SetCursor(game->cursorNormal);
         thread->dialoglisteptr = ptr + 2;
         thread->isActive = false;
         RefreshDialog(game->dialog);
@@ -831,6 +831,7 @@ void StartInteraction(Thread *thread, int id1, int id2, Verb verb) {
             break;
     }
     thread->isActive = true;
+    HideCursor();
 }
 
 unsigned short peekv(Game *game, unsigned long pointer) {

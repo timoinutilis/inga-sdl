@@ -20,6 +20,7 @@
 
 #include "Game.h"
 #include "Global.h"
+#include "Cursor.h"
 
 void SetFocus(Game *game, int x, int y, const char *name);
 void UpdateIdleProg(Game *game, int deltaTicks);
@@ -30,6 +31,8 @@ Game *CreateGame() {
         printf("CreateGame: Out of memory\n");
     } else {
         game->font = LoadFont("Font", 16);
+        game->cursorNormal = LoadCursor("CursorNormal");
+        game->cursorDrag = LoadCursor("CursorDrag");
         game->script = LoadScript("story");
         game->gameState = CreateGameState();
         game->inventoryBar = CreateInventoryBar(game->gameState);
@@ -44,12 +47,16 @@ Game *CreateGame() {
         game->mainPerson = element;
         game->startPosition = MakeVector(320, 360);
         game->startSide = ImageSideFront;
+        
+        HideCursor();
     }
     return game;
 }
 
 void FreeGame(Game *game) {
     if (!game) return;
+    FreeCursor(game->cursorNormal);
+    FreeCursor(game->cursorDrag);
     FreeImage(game->escImage);
     FreeImage(game->focus.image);
     FreeSequence(game->sequence);
@@ -105,6 +112,7 @@ void HandleMouseInGame(Game *game, int x, int y, int buttonIndex) {
                     game->draggingItemView.item = NULL;
                     game->inventoryBar->isVisible = false;
                 } else {
+                    SetCursor(game->cursorDrag);
                     game->draggingItemView.item = focusedItem;
                 }
             } else if (buttonIndex == SDL_BUTTON_RIGHT) {
@@ -128,6 +136,7 @@ void HandleMouseInGame(Game *game, int x, int y, int buttonIndex) {
                 game->draggedId = game->draggingItemView.item->id;
                 game->selectedVerb = VerbUse;
                 game->draggingItemView.item = NULL;
+                SetCursor(game->cursorNormal);
             } else {
                 game->selectedVerb = buttonIndex == SDL_BUTTON_RIGHT ? VerbLook : VerbUse;
             }

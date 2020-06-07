@@ -30,6 +30,7 @@
 		929EDBE1244E46E300DC64D9 /* SDL2.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 929EDBDF244E46E300DC64D9 /* SDL2.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		92ABBAD924543AB800218313 /* Image.c in Sources */ = {isa = PBXBuildFile; fileRef = 92ABBAD824543AB800218313 /* Image.c */; };
 		92ABBADB2454545A00218313 /* game in Resources */ = {isa = PBXBuildFile; fileRef = 92ABBADA2454545A00218313 /* game */; };
+		92B9145F248D5298009FE277 /* Cursor.c in Sources */ = {isa = PBXBuildFile; fileRef = 92B9145D248D5298009FE277 /* Cursor.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -88,6 +89,8 @@
 		92ABBAD724543AB800218313 /* Image.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Image.h; sourceTree = "<group>"; };
 		92ABBAD824543AB800218313 /* Image.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = Image.c; sourceTree = "<group>"; };
 		92ABBADA2454545A00218313 /* game */ = {isa = PBXFileReference; lastKnownFileType = folder; name = game; path = ../../game; sourceTree = "<group>"; };
+		92B9145D248D5298009FE277 /* Cursor.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Cursor.c; sourceTree = "<group>"; };
+		92B9145E248D5298009FE277 /* Cursor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Cursor.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -135,6 +138,8 @@
 			isa = PBXGroup;
 			children = (
 				924B17A924556D57008A9B43 /* Config.h */,
+				92B9145D248D5298009FE277 /* Cursor.c */,
+				92B9145E248D5298009FE277 /* Cursor.h */,
 				927438CA246B1E81007C434D /* Dialog.c */,
 				927438C9246B1E81007C434D /* Dialog.h */,
 				924B17A724556BC8008A9B43 /* Element.c */,
@@ -267,6 +272,7 @@
 				923DAD3D2465C4F10094F825 /* InventoryBar.c in Sources */,
 				927438CB246B1E81007C434D /* Dialog.c in Sources */,
 				922EADED245DE60E00E4027E /* Thread.c in Sources */,
+				92B9145F248D5298009FE277 /* Cursor.c in Sources */,
 				922EADE1245C2A5000E4027E /* Game.c in Sources */,
 				922EADDE245C222A00E4027E /* Font.c in Sources */,
 			);

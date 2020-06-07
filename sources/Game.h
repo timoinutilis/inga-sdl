@@ -50,6 +50,8 @@ typedef struct IdleScript {
 
 typedef struct Game {
     Font *font;
+    SDL_Cursor *cursorNormal;
+    SDL_Cursor *cursorDrag;
     Script *script;
     GameState *gameState;
     Thread *mainThread;

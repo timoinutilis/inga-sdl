@@ -39,11 +39,11 @@ Image *LoadImage(const char *filename, SDL_Palette *defaultPalette, bool createM
     
     SDL_RWops *file = SDL_RWFromFile(path, "rb");
     if (!file) {
-        printf("LoadImageIBM: %s\n", SDL_GetError());
+        printf("LoadImage: %s\n", SDL_GetError());
     } else {
         Uint32 head = SDL_ReadBE32(file);
         if (head != 0x49424D38) {
-            printf("LoadImageIBM: Invalid file format\n");
+            printf("LoadImage: Invalid file format\n");
         } else {
             Uint16 width = SDL_ReadBE16(file);
             Uint16 height = SDL_ReadBE16(file);
@@ -84,12 +84,12 @@ Image *LoadImage(const char *filename, SDL_Palette *defaultPalette, bool createM
             size_t size = bytesPerRow * height;
             Uint8 *pixels = calloc(sizeof(Uint8), size);
             if (!pixels) {
-                printf("LoadImageIBM: Out of memory\n");
+                printf("LoadImage: Out of memory\n");
             } else {
                 SDL_RWread(file, pixels, sizeof(Uint8), size);
                 SDL_Surface *surface = SDL_CreateRGBSurfaceWithFormatFrom(pixels, width, height, depth, bytesPerRow, SDL_PIXELFORMAT_INDEX8);
                 if (!surface) {
-                    printf("LoadImageIBM: Create surface failed\n");
+                    printf("LoadImage: Create surface failed\n");
                 } else {
                     SDL_Palette *surfacePalette = surface->format->palette;
                     if (ibmColors) {
@@ -113,11 +113,11 @@ Image *LoadImage(const char *filename, SDL_Palette *defaultPalette, bool createM
                     }
                     SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, surface);
                     if (!texture) {
-                        printf("LoadImageIBM: Create texture failed\n");
+                        printf("LoadImage: Create texture failed\n");
                     } else {
                         image = calloc(1, sizeof(Image));
                         if (!image) {
-                            printf("LoadImageIBM: Out of memory\n");
+                            printf("LoadImage: Out of memory\n");
                         } else {
                             image->texture = texture;
                             if (keepSurface) {
@@ -161,11 +161,11 @@ Image *LoadMaskedImage(const char *filename, Image *sourceImage) {
     
     SDL_RWops *file = SDL_RWFromFile(path, "rb");
     if (!file) {
-        printf("LoadImageIMP: %s\n", SDL_GetError());
+        printf("LoadMaskedImage: %s\n", SDL_GetError());
     } else {
         Uint32 head = SDL_ReadBE32(file);
         if (head != 0x494D5031) {
-            printf("LoadImageIMP: Invalid file format\n");
+            printf("LoadMaskedImage: Invalid file format\n");
         } else {
             Uint16 width = SDL_ReadBE16(file);
             Uint16 height = SDL_ReadBE16(file);
@@ -173,12 +173,12 @@ Image *LoadMaskedImage(const char *filename, Image *sourceImage) {
             
             Uint8 *pixels = calloc(sizeof(Uint8), size);
             if (!pixels) {
-                printf("LoadImageIMP: Out of memory\n");
+                printf("LoadMaskedImage: Out of memory\n");
             } else {
                 SDL_RWread(file, pixels, sizeof(Uint8), size);
                 SDL_Surface *surface = SDL_CreateRGBSurfaceWithFormatFrom(pixels, width, height, 1, size / height, SDL_PIXELFORMAT_INDEX1MSB);
                 if (!surface) {
-                    printf("LoadImageIMP: Create surface failed\n");
+                    printf("LoadMaskedImage: Create surface failed\n");
                 } else {
                     SDL_Palette *surfacePalette = surface->format->palette;
                     SDL_Color colors[] = {{255, 0, 255, 255}, {255, 255, 255, 255}};
@@ -188,7 +188,7 @@ Image *LoadMaskedImage(const char *filename, Image *sourceImage) {
                     
                     SDL_Surface *targetSurface = SDL_CreateRGBSurfaceWithFormat(0, width, height, 32, SDL_PIXELFORMAT_RGBA32);
                     if (!targetSurface) {
-                        printf("LoadImageIMP: Create surface failed\n");
+                        printf("LoadMaskedImage: Create surface failed\n");
                     } else {
                         SDL_BlitSurface(sourceImage->surface, NULL, targetSurface, NULL);
                         SDL_BlitSurface(surface, NULL, targetSurface, NULL);
@@ -197,7 +197,7 @@ Image *LoadMaskedImage(const char *filename, Image *sourceImage) {
                         
                         SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, targetSurface);
                         if (!texture) {
-                            printf("LoadImageIMP: Create texture failed\n");
+                            printf("LoadMaskedImage: Create texture failed\n");
                         } else {
                             image = calloc(1, sizeof(Image));
                             image->texture = texture;
