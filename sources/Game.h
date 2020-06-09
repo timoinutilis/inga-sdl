@@ -35,6 +35,7 @@
 #include "Dialog.h"
 #include "Sequence.h"
 #include "Fader.h"
+#include "Menu.h"
 
 typedef struct Focus {
     const char *name;
@@ -70,6 +71,7 @@ typedef struct Game {
     IdleScript idleScript;
     Image *escImage;
     Fader fader;
+    Menu *menu;
 } Game;
 
 Game *CreateGame(void);

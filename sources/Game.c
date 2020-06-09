@@ -39,6 +39,7 @@ Game *CreateGame() {
         game->dialog = CreateDialog();
         game->mainThread = CreateThread(0);
         game->escImage = LoadImage("Esc", GetGlobalPalette(), true, false);
+        game->menu = CreateMenu(game);
         
         // Main Person
         Element *element = CreateElement(MainPersonID);
@@ -55,6 +56,7 @@ Game *CreateGame() {
 
 void FreeGame(Game *game) {
     if (!game) return;
+    FreeMenu(game->menu);
     FreeCursor(game->cursorNormal);
     FreeCursor(game->cursorDrag);
     FreeImage(game->escImage);
@@ -73,6 +75,12 @@ void FreeGame(Game *game) {
 
 void HandleMouseInGame(Game *game, int x, int y, int buttonIndex) {
     if (!game) return;
+    
+    if (HandleMouseInMenu(game->menu, x, y, buttonIndex)) {
+        SetFocus(game, x, y, NULL);
+        game->draggingItemView.item = NULL;
+        return;
+    }
     
     if (game->sequence) {
         SetFocus(game, x, y, NULL);
@@ -101,6 +109,11 @@ void HandleMouseInGame(Game *game, int x, int y, int buttonIndex) {
     if (HandleMouseInInventoryBar(game->inventoryBar, x, y, buttonIndex)) {
         if (game->inventoryBar->focusedButton != InventoryBarButtonNone) {
             SetFocus(game, x, y, NULL);
+            if (buttonIndex == SDL_BUTTON_LEFT) {
+                if (game->inventoryBar->focusedButton == InventoryBarButtonMenu) {
+                    OpenMenu(game->menu);
+                }
+            }
             return;
         }
         InventoryItem *focusedItem = GetItemInInventoryBarAt(game->inventoryBar, x, y);
@@ -166,6 +179,12 @@ void HandleMouseInGame(Game *game, int x, int y, int buttonIndex) {
 }
 
 void HandleKeyInGame(Game *game, SDL_Keysym keysym) {
+    if (!game) return;
+    
+    if (game->menu->isOpen) {
+        return;
+    }
+    
     if (game->sequence) {
         return;
     }
@@ -177,6 +196,11 @@ void HandleKeyInGame(Game *game, SDL_Keysym keysym) {
 
 void UpdateGame(Game *game, int deltaTicks) {
     if (!game) return;
+    
+    if (UpdateMenu(game->menu, deltaTicks)) {
+        game->inventoryBar->isVisible = false;
+        return;
+    }
     
     if (game->sequence) {
         UpdateSequence(game->sequence, deltaTicks);
@@ -197,6 +221,10 @@ void UpdateGame(Game *game, int deltaTicks) {
 
 void DrawGame(Game *game) {
     if (!game) return;
+    
+    if (DrawMenu(game->menu)) {
+        return;
+    }
     
     if (game->sequence) {
         DrawSequence(game->sequence);
