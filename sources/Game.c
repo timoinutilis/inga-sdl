@@ -181,7 +181,7 @@ void HandleMouseInGame(Game *game, int x, int y, int buttonIndex) {
 void HandleKeyInGame(Game *game, SDL_Keysym keysym) {
     if (!game) return;
     
-    if (game->menu->isOpen) {
+    if (game->menu->fader.state != FaderStateClosed) {
         return;
     }
     

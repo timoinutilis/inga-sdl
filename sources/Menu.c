@@ -52,20 +52,19 @@ void FreeMenu(Menu *menu) {
 
 void OpenMenu(Menu *menu) {
     if (!menu) return;
-    menu->isOpen = true;
     HandleMenuItem(menu, 0);
     SDL_SetCursor(menu->game->cursorNormal);
+    FadeIn(&menu->fader);
 }
 
 void CloseMenu(Menu *menu) {
     if (!menu) return;
-    menu->isOpen = false;
     ResetMenu(menu);
+    FadeOut(&menu->fader);
 }
 
 bool HandleMouseInMenu(Menu *menu, int x, int y, int buttonIndex) {
-    if (!menu || !menu->isOpen) return false;
-        
+    if (!menu || menu->fader.state == FaderStateClosed) return false;
     menu->focusedItem = NULL;
     MenuItem *item = menu->rootItem;
     while (item) {
@@ -75,16 +74,16 @@ bool HandleMouseInMenu(Menu *menu, int x, int y, int buttonIndex) {
         }
         item = item->next;
     }
-    
     if (buttonIndex == SDL_BUTTON_LEFT && menu->focusedItem) {
         HandleMenuItem(menu, menu->focusedItem->id);
     }
-    
     return true;
 }
 
 bool UpdateMenu(Menu *menu, int deltaTicks) {
-    if (!menu || !menu->isOpen) return false;
+    if (!menu || menu->fader.state == FaderStateClosed) return false;
+    
+    UpdateFader(&menu->fader, deltaTicks);
     
     // Animation
     if (menu->itemImage && menu->itemImage->animation) {
@@ -103,7 +102,7 @@ bool UpdateMenu(Menu *menu, int deltaTicks) {
 }
 
 bool DrawMenu(Menu *menu) {
-    if (!menu || !menu->isOpen) return false;
+    if (!menu || menu->fader.state == FaderStateClosed) return false;
     DrawImage(menu->image, MakeVector(0, 0));
     
     DrawImage(menu->titleImage, menu->titlePosition);
@@ -120,6 +119,8 @@ bool DrawMenu(Menu *menu) {
         }
         item = item->next;
     }
+    
+    DrawFader(&menu->fader);
     
     return true;
 }

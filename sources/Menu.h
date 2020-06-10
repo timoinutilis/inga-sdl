@@ -26,6 +26,7 @@
 #include "Utils.h"
 #include "Image.h"
 #include "Config.h"
+#include "Fader.h"
 
 typedef struct Game Game;
 
@@ -49,7 +50,7 @@ typedef struct Menu {
     MenuItem *focusedItem;
     int frameIndex;
     int frameTicks;
-    bool isOpen;
+    Fader fader;
 } Menu;
 
 Menu *CreateMenu(Game *game);
