@@ -28,6 +28,7 @@
 		929EDBD6244E32BD00DC64D9 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = 929EDBD5244E32BD00DC64D9 /* main.c */; };
 		929EDBE0244E46E300DC64D9 /* SDL2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 929EDBDF244E46E300DC64D9 /* SDL2.framework */; };
 		929EDBE1244E46E300DC64D9 /* SDL2.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 929EDBDF244E46E300DC64D9 /* SDL2.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		92A2E2F3249150C0009A6A7E /* Menu.c in Sources */ = {isa = PBXBuildFile; fileRef = 92A2E2F1249150C0009A6A7E /* Menu.c */; };
 		92ABBAD924543AB800218313 /* Image.c in Sources */ = {isa = PBXBuildFile; fileRef = 92ABBAD824543AB800218313 /* Image.c */; };
 		92ABBADB2454545A00218313 /* game in Resources */ = {isa = PBXBuildFile; fileRef = 92ABBADA2454545A00218313 /* game */; };
 		92B9145F248D5298009FE277 /* Cursor.c in Sources */ = {isa = PBXBuildFile; fileRef = 92B9145D248D5298009FE277 /* Cursor.c */; };
@@ -86,6 +87,8 @@
 		929EDBD4244E32BD00DC64D9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		929EDBD5244E32BD00DC64D9 /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
 		929EDBDF244E46E300DC64D9 /* SDL2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL2.framework; path = ../../../../../../Library/Frameworks/SDL2.framework; sourceTree = "<group>"; };
+		92A2E2F1249150C0009A6A7E /* Menu.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Menu.c; sourceTree = "<group>"; };
+		92A2E2F2249150C0009A6A7E /* Menu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Menu.h; sourceTree = "<group>"; };
 		92ABBAD724543AB800218313 /* Image.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Image.h; sourceTree = "<group>"; };
 		92ABBAD824543AB800218313 /* Image.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = Image.c; sourceTree = "<group>"; };
 		92ABBADA2454545A00218313 /* game */ = {isa = PBXFileReference; lastKnownFileType = folder; name = game; path = ../../game; sourceTree = "<group>"; };
@@ -163,6 +166,8 @@
 				924B17A424556614008A9B43 /* Location.c */,
 				924B17A324556614008A9B43 /* Location.h */,
 				929EDBD5244E32BD00DC64D9 /* main.c */,
+				92A2E2F1249150C0009A6A7E /* Menu.c */,
+				92A2E2F2249150C0009A6A7E /* Menu.h */,
 				924B17B12455EA08008A9B43 /* NavigationMap.c */,
 				924B17B02455EA08008A9B43 /* NavigationMap.h */,
 				922EADE9245DD1E100E4027E /* Script.c */,
@@ -274,6 +279,7 @@
 				922EADED245DE60E00E4027E /* Thread.c in Sources */,
 				92B9145F248D5298009FE277 /* Cursor.c in Sources */,
 				922EADE1245C2A5000E4027E /* Game.c in Sources */,
+				92A2E2F3249150C0009A6A7E /* Menu.c in Sources */,
 				922EADDE245C222A00E4027E /* Font.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

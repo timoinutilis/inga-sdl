@@ -21,10 +21,12 @@
 #include "Menu.h"
 #include "Game.h"
 #include "Font.h"
+#include "Global.h"
 
 void AddMenuItem(Menu *menu, int id, const char *text);
 void RefreshMenu(Menu *menu);
 void ResetMenu(Menu *menu);
+void HandleMenuItem(Menu *menu, int id);
 
 
 Menu *CreateMenu(Game *game) {
@@ -35,6 +37,7 @@ Menu *CreateMenu(Game *game) {
         menu->game = game;
         menu->image = LoadImage("Menue", NULL, false, true);
         menu->itemImage = LoadImage("Menuepunkt", menu->image->surface->format->palette, true, false);
+        menu->frameIndex = 1;
     }
     return menu;
 }
@@ -50,13 +53,8 @@ void FreeMenu(Menu *menu) {
 void OpenMenu(Menu *menu) {
     if (!menu) return;
     menu->isOpen = true;
-    
-    AddMenuItem(menu, 1, "Spiel neu beginnen");
-    AddMenuItem(menu, 2, "Spielstand laden");
-    AddMenuItem(menu, 3, "Spielstand speichern");
-    AddMenuItem(menu, 4, "Weiterspielen");
-    AddMenuItem(menu, 5, "Spiel beenden");
-    RefreshMenu(menu);
+    HandleMenuItem(menu, 0);
+    SDL_SetCursor(menu->game->cursorNormal);
 }
 
 void CloseMenu(Menu *menu) {
@@ -79,11 +77,7 @@ bool HandleMouseInMenu(Menu *menu, int x, int y, int buttonIndex) {
     }
     
     if (buttonIndex == SDL_BUTTON_LEFT && menu->focusedItem) {
-        switch (menu->focusedItem->id) {
-            case 4:
-                CloseMenu(menu);
-                break;
-        }
+        HandleMenuItem(menu, menu->focusedItem->id);
     }
     
     return true;
@@ -91,6 +85,20 @@ bool HandleMouseInMenu(Menu *menu, int x, int y, int buttonIndex) {
 
 bool UpdateMenu(Menu *menu, int deltaTicks) {
     if (!menu || !menu->isOpen) return false;
+    
+    // Animation
+    if (menu->itemImage && menu->itemImage->animation) {
+        menu->frameTicks += deltaTicks;
+        if (menu->frameTicks >= menu->itemImage->animation->frames[menu->frameIndex].ticks) {
+            menu->frameTicks = 0;
+            menu->frameIndex += 1;
+            int numFrames = menu->itemImage->animation->numFrames;
+            if (menu->frameIndex >= numFrames) {
+                menu->frameIndex = 1; // frame 0 is for not highlighted items
+            }
+        }
+    }
+    
     return true;
 }
 
@@ -98,17 +106,28 @@ bool DrawMenu(Menu *menu) {
     if (!menu || !menu->isOpen) return false;
     DrawImage(menu->image, MakeVector(0, 0));
     
+    DrawImage(menu->titleImage, menu->titlePosition);
+    
     MenuItem *item = menu->rootItem;
     while (item) {
+        Vector iconPosition = MakeVector(210, item->position.y - 4);
         if (item == menu->focusedItem) {
+            DrawAnimationFrame(menu->itemImage, iconPosition, menu->frameIndex);
             DrawImage(item->focusImage, item->position);
         } else {
+            DrawAnimationFrame(menu->itemImage, iconPosition, 0);
             DrawImage(item->image, item->position);
         }
         item = item->next;
     }
     
     return true;
+}
+
+void SetMenuTitle(Menu *menu, const char *text) {
+    if (!menu) return;
+    SDL_Color color = {255, 255, 255, 255};
+    menu->titleImage = CreateImageFromText(text, menu->game->font, color);
 }
 
 void AddMenuItem(Menu *menu, int id, const char *text) {
@@ -123,8 +142,12 @@ void AddMenuItem(Menu *menu, int id, const char *text) {
         item->text = text;
         item->image = CreateImageFromText(text, menu->game->font, color);
         item->focusImage = CreateImageFromText(text, menu->game->font, focusColor);
-        item->next = menu->rootItem;
-        menu->rootItem = item;
+        if (menu->lastItem) {
+            menu->lastItem->next = item;
+        } else {
+            menu->rootItem = item;
+        }
+        menu->lastItem = item;
     }
 }
 
@@ -135,7 +158,7 @@ void RefreshMenu(Menu *menu) {
     while (item) {
         position.x = 260;
         item->position = position;
-        position.y += item->image->height + 4;
+        position.y += item->image->height + 16;
         item = item->next;
     }
     float offsetY = (SCREEN_HEIGHT - position.y) * 0.5f;
@@ -143,6 +166,9 @@ void RefreshMenu(Menu *menu) {
     while (item) {
         item->position.y += offsetY;
         item = item->next;
+    }
+    if (menu->titleImage) {
+        menu->titlePosition = MakeVector(220, offsetY - menu->titleImage->height - 16);
     }
 }
 
@@ -157,5 +183,73 @@ void ResetMenu(Menu *menu) {
         item = next;
     }
     menu->rootItem = NULL;
+    menu->lastItem = NULL;
     menu->focusedItem = NULL;
+    FreeImage(menu->titleImage);
+    menu->titleImage = NULL;
+}
+
+void HandleMenuItem(Menu *menu, int id) {
+    ResetMenu(menu);
+    switch (id) {
+        case 0:
+            SetMenuTitle(menu, "Hauptmen\xFC");
+            AddMenuItem(menu, 4, "Weiterspielen");
+            AddMenuItem(menu, 2, "Spielstand laden");
+            AddMenuItem(menu, 3, "Spielstand speichern");
+            AddMenuItem(menu, 1, "Spiel neu beginnen");
+            AddMenuItem(menu, 5, "Spiel beenden");
+            RefreshMenu(menu);
+            break;
+        case 1:
+            SetMenuTitle(menu, "Willst du das Spiel wirklich neu beginnen?");
+            AddMenuItem(menu, 10, "Neu beginnen");
+            AddMenuItem(menu, 0, "Abbruch");
+            RefreshMenu(menu);
+            break;
+        case 10:
+            //TODO: restart
+            CloseMenu(menu);
+            break;
+        case 2:
+            SetMenuTitle(menu, "W\xE4hle Spielstand zum Laden:");
+            for (int i = 0; i < NUM_SAVE_SLOTS; ++i) {
+                AddMenuItem(menu, 20 + i, "---");
+            }
+            AddMenuItem(menu, 0, "Abbruch");
+            RefreshMenu(menu);
+            break;
+        case 3:
+            SetMenuTitle(menu, "W\xE4hle Spielstand zum Speichern:");
+            for (int i = 0; i < NUM_SAVE_SLOTS; ++i) {
+                AddMenuItem(menu, 30 + i, "---");
+            }
+            AddMenuItem(menu, 0, "Abbruch");
+            RefreshMenu(menu);
+            break;
+        case 4:
+            CloseMenu(menu);
+            break;
+        case 5:
+            SetMenuTitle(menu, "Willst du das Spiel wirklich beenden?");
+            AddMenuItem(menu, 50, "Beenden");
+            AddMenuItem(menu, 0, "Abbruch");
+            RefreshMenu(menu);
+            break;
+        case 50:
+            SetShouldQuit();
+            break;
+        default:
+            if (id >= 20 && id < 30) {
+                int slot = id - 20;
+                //TODO: load
+                CloseMenu(menu);
+            } else if (id >= 30 && id < 40) {
+                int slot = id - 30;
+                //TODO: save
+                HandleMenuItem(menu, 0);
+            }
+            break;
+    }
+
 }

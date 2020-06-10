@@ -22,6 +22,7 @@
 #define Global_h
 
 #include <stdio.h>
+#include <stdbool.h>
 #include <SDL2/SDL.h>
 
 extern int MainPersonID;
@@ -39,5 +40,8 @@ SDL_Renderer *GetGlobalRenderer(void);
 
 void SetGlobalPalette(SDL_Palette *palette);
 SDL_Palette *GetGlobalPalette(void);
+
+void SetShouldQuit(void);
+bool ShouldQuit(void);
 
 #endif /* Global_h */

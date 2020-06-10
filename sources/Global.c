@@ -22,6 +22,8 @@
 
 SDL_Renderer *globalRenderer = NULL;
 SDL_Palette *globalPalette = NULL;
+bool shouldQuit = false;
+
 int MainPersonID = 0;
 int ForegroundID = 0xFFFF;
 
@@ -46,4 +48,12 @@ void SetGlobalPalette(SDL_Palette *palette) {
 
 SDL_Palette *GetGlobalPalette(void) {
     return globalPalette;
+}
+
+void SetShouldQuit(void) {
+    shouldQuit = true;
+}
+
+bool ShouldQuit(void) {
+    return shouldQuit;
 }

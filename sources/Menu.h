@@ -23,6 +23,7 @@
 
 #include <stdio.h>
 #include <stdbool.h>
+#include "Utils.h"
 #include "Image.h"
 #include "Config.h"
 
@@ -41,8 +42,13 @@ typedef struct Menu {
     Game *game;
     Image *image;
     Image *itemImage;
+    Image *titleImage;
+    Vector titlePosition;
     MenuItem *rootItem;
+    MenuItem *lastItem;
     MenuItem *focusedItem;
+    int frameIndex;
+    int frameTicks;
     bool isOpen;
 } Menu;
 
