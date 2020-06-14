@@ -59,8 +59,6 @@ typedef struct Game {
     InventoryBar *inventoryBar;
     Dialog *dialog;
     Element *mainPerson;
-    Vector startPosition;
-    ImageSide startSide;
     Location *location;
     Sequence *sequence;
     Focus focus;
@@ -82,6 +80,8 @@ void UpdateGame(Game *game, int deltaTicks);
 void DrawGame(Game *game);
 
 void SetLocation(Game *game, int id, const char *background);
+void SetGameState(Game *game, GameState *gameState);
+
 void MainPersonDidFinishWalking(Game *game);
 
 #endif /* Game_h */

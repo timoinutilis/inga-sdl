@@ -46,8 +46,6 @@ Game *CreateGame() {
         element->layer = LayerPersons;
         element->imageSet = LoadImageSet("Hauptperson", GetGlobalPalette(), true);
         game->mainPerson = element;
-        game->startPosition = MakeVector(320, 360);
-        game->startSide = ImageSideFront;
         
         HideCursor();
     }
@@ -282,14 +280,21 @@ void SetLocation(Game *game, int id, const char *background) {
     game->location->game = game;
     
     AddElement(game->location, game->mainPerson);
-    if (game->startPosition.x > 0 || game->startPosition.y > 0) {
-        game->mainPerson->position = game->startPosition;
-        ElementSetSide(game->mainPerson, game->startSide, 0);
-        game->startPosition = MakeVector(0, 0);
-    }
+    game->mainPerson->position = game->gameState->startPosition;
+    ElementSetSide(game->mainPerson, game->gameState->startSide, 0);
     
     game->inventoryBar->isEnabled = true;
     game->inventoryBar->isVisible = false;
+}
+
+void SetGameState(Game *game, GameState *gameState) {
+    if (!game || !gameState) return;
+    FreeGameState(game->gameState);
+    game->gameState = gameState;
+    game->inventoryBar->gameState = gameState;
+    RefreshInventoryBar(game->inventoryBar, true);
+    RunThread(game->mainThread, gameState->locationPtr);
+    game->fader.state = FaderStateClosed;
 }
 
 void MainPersonDidFinishWalking(Game *game) {

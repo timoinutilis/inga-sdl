@@ -32,6 +32,8 @@ GameState *CreateGameState(void) {
     if (!gameState) {
         printf("CreateGameState: Out of memory\n");
     } else {
+        gameState->startPosition = MakeVector(320, 360);
+        gameState->startSide = ImageSideFront;
     }
     return gameState;
 }
@@ -41,6 +43,50 @@ void FreeGameState(GameState *gameState) {
     FreeVariables(gameState);
     FreeInventoryItems(gameState);
     free(gameState);
+}
+
+void GameStatePath(const char *filename, char *path) {
+    char *prefPath = SDL_GetPrefPath("Inutilis Software", "Inga");
+    sprintf(path, "%s%s.sav", prefPath, filename);
+    SDL_free(prefPath);
+}
+
+GameState *LoadGameState(const char *filename) {
+    GameState *gameState = NULL;
+    char path[FILENAME_MAX];
+    GameStatePath(filename, path);
+    SDL_RWops *file = SDL_RWFromFile(path, "rb");
+    if (!file) {
+        printf("LoadGameState: %s\n", SDL_GetError());
+    } else {
+        gameState = calloc(1, sizeof(GameState));
+        if (!gameState) {
+            printf("LoadGameState: Out of memory\n");
+        } else {
+            gameState->locationPtr = SDL_ReadBE32(file);
+            float x = SDL_ReadBE16(file);
+            float y = SDL_ReadBE16(file);
+            gameState->startPosition = MakeVector(x, y);
+            gameState->startSide = SDL_ReadU8(file);
+        }
+        SDL_RWclose(file);
+    }
+    return gameState;
+}
+
+void SaveGameState(GameState *gameState, const char *filename) {
+    char path[FILENAME_MAX];
+    GameStatePath(filename, path);
+    SDL_RWops *file = SDL_RWFromFile(path, "wb");
+    if (!file) {
+        printf("SaveGameState: %s\n", SDL_GetError());
+    } else {
+        SDL_WriteBE32(file, (Uint32)gameState->locationPtr);
+        SDL_WriteBE16(file, (Uint16)gameState->startPosition.x);
+        SDL_WriteBE16(file, (Uint16)gameState->startPosition.y);
+        SDL_WriteU8(file, (Uint8)gameState->startSide);
+        SDL_RWclose(file);
+    }
 }
 
 Variable *GetVariableObject(GameState *gameState, int id) {

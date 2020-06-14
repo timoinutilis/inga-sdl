@@ -209,7 +209,7 @@ void HandleMenuItem(Menu *menu, int id) {
             RefreshMenu(menu);
             break;
         case 10:
-            //TODO: restart
+            SetGameState(menu->game, CreateGameState());
             CloseMenu(menu);
             break;
         case 2:
@@ -242,12 +242,19 @@ void HandleMenuItem(Menu *menu, int id) {
             break;
         default:
             if (id >= 20 && id < 30) {
+                // load
                 int slot = id - 20;
-                //TODO: load
+                char filename[FILE_NAME_SIZE];
+                sprintf(filename, "slot_%d", slot);
+                GameState *gameState = LoadGameState(filename);
+                SetGameState(menu->game, gameState);
                 CloseMenu(menu);
             } else if (id >= 30 && id < 40) {
+                // save
                 int slot = id - 30;
-                //TODO: save
+                char filename[FILE_NAME_SIZE];
+                sprintf(filename, "slot_%d", slot);
+                SaveGameState(menu->game->gameState, filename);
                 HandleMenuItem(menu, 0);
             }
             break;

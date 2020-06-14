@@ -480,10 +480,11 @@ unsigned long LaufeINGA(Thread *thread, Game *game, unsigned long ptr, bool *wie
         return(peekl(script, ptr + 2));
     }
     if (opc == 29) { //SpringeOrt.
-        game->startPosition = MakeVector(peekv(game, ptr + 6), peekv(game, ptr + 8));
-        game->startSide = peekv(game, ptr + 10);
-//        ort.ptr = peekl(script, ptr + 2);
-        return(peekl(script, ptr + 2));
+        unsigned long locationPtr = peekl(script, ptr + 2);
+        game->gameState->locationPtr = locationPtr;
+        game->gameState->startPosition = MakeVector(peekv(game, ptr + 6), peekv(game, ptr + 8));
+        game->gameState->startSide = peekv(game, ptr + 10);
+        return(locationPtr);
     }
     if (opc == 43) { //SpringeSub.
         if (thread->subptr == 0) {
