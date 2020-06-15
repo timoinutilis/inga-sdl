@@ -32,6 +32,8 @@
 		92ABBAD924543AB800218313 /* Image.c in Sources */ = {isa = PBXBuildFile; fileRef = 92ABBAD824543AB800218313 /* Image.c */; };
 		92ABBADB2454545A00218313 /* game in Resources */ = {isa = PBXBuildFile; fileRef = 92ABBADA2454545A00218313 /* game */; };
 		92B9145F248D5298009FE277 /* Cursor.c in Sources */ = {isa = PBXBuildFile; fileRef = 92B9145D248D5298009FE277 /* Cursor.c */; };
+		92BD6FEC24980B9D00478C4F /* GameConfig.h in Resources */ = {isa = PBXBuildFile; fileRef = 92BD6FEB24980B9D00478C4F /* GameConfig.h */; };
+		92BD6FEF24980C0C00478C4F /* SlotList.c in Sources */ = {isa = PBXBuildFile; fileRef = 92BD6FEE24980C0C00478C4F /* SlotList.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -94,6 +96,9 @@
 		92ABBADA2454545A00218313 /* game */ = {isa = PBXFileReference; lastKnownFileType = folder; name = game; path = ../../game; sourceTree = "<group>"; };
 		92B9145D248D5298009FE277 /* Cursor.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Cursor.c; sourceTree = "<group>"; };
 		92B9145E248D5298009FE277 /* Cursor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Cursor.h; sourceTree = "<group>"; };
+		92BD6FEB24980B9D00478C4F /* GameConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameConfig.h; sourceTree = "<group>"; };
+		92BD6FED24980C0C00478C4F /* SlotList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SlotList.h; sourceTree = "<group>"; };
+		92BD6FEE24980C0C00478C4F /* SlotList.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = SlotList.c; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -153,6 +158,7 @@
 				922EADDC245C222A00E4027E /* Font.h */,
 				922EADE0245C2A5000E4027E /* Game.c */,
 				922EADDF245C2A5000E4027E /* Game.h */,
+				92BD6FEB24980B9D00478C4F /* GameConfig.h */,
 				923DAD392463221F0094F825 /* GameState.c */,
 				923DAD382463221F0094F825 /* GameState.h */,
 				922EADE3245C932A00E4027E /* Global.c */,
@@ -174,6 +180,8 @@
 				922EADE8245DD1E100E4027E /* Script.h */,
 				925BA818248A514E008CBA9A /* Sequence.c */,
 				925BA817248A514D008CBA9A /* Sequence.h */,
+				92BD6FEE24980C0C00478C4F /* SlotList.c */,
+				92BD6FED24980C0C00478C4F /* SlotList.h */,
 				922EADEC245DE60E00E4027E /* Thread.c */,
 				922EADEB245DE60E00E4027E /* Thread.h */,
 				924B17AE2455D598008A9B43 /* Utils.c */,
@@ -252,6 +260,7 @@
 			files = (
 				92ABBADB2454545A00218313 /* game in Resources */,
 				929EDBD0244E32BD00DC64D9 /* Assets.xcassets in Resources */,
+				92BD6FEC24980B9D00478C4F /* GameConfig.h in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -275,6 +284,7 @@
 				92ABBAD924543AB800218313 /* Image.c in Sources */,
 				924B17A524556614008A9B43 /* Location.c in Sources */,
 				923DAD3D2465C4F10094F825 /* InventoryBar.c in Sources */,
+				92BD6FEF24980C0C00478C4F /* SlotList.c in Sources */,
 				927438CB246B1E81007C434D /* Dialog.c in Sources */,
 				922EADED245DE60E00E4027E /* Thread.c in Sources */,
 				92B9145F248D5298009FE277 /* Cursor.c in Sources */,

@@ -40,6 +40,7 @@ Game *CreateGame() {
         game->mainThread = CreateThread(0);
         game->escImage = LoadImage("Esc", GetGlobalPalette(), true, false);
         game->menu = CreateMenu(game);
+        game->slotList = CreateSlotList();
         
         // Main Person
         Element *element = CreateElement(MainPersonID);
@@ -54,6 +55,7 @@ Game *CreateGame() {
 
 void FreeGame(Game *game) {
     if (!game) return;
+    FreeSlotList(game->slotList);
     FreeMenu(game->menu);
     FreeCursor(game->cursorNormal);
     FreeCursor(game->cursorDrag);
@@ -200,6 +202,8 @@ void UpdateGame(Game *game, int deltaTicks) {
         game->inventoryBar->isVisible = false;
         return;
     }
+    
+    UpdatePlaytime(game->gameState, deltaTicks);
     
     if (game->sequence) {
         UpdateSequence(game->sequence, deltaTicks);

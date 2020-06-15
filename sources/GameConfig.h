@@ -18,22 +18,10 @@
 // 3. This notice may not be removed or altered from any source distribution.
 //
 
-#ifndef Config_h
-#define Config_h
+#ifndef GameConfig_h
+#define GameConfig_h
 
-#define SCREEN_WIDTH 640
-#define SCREEN_HEIGHT 480
+#define ORGANIZATION_NAME "Inutilis Software"
+#define GAME_NAME "Inga Example Game"
 
-#define ELEMENT_NAME_SIZE 61
-#define FILE_NAME_SIZE 31
-
-#define MAX_PATH_SIZE 10
-
-#define INVENTORY_BAR_SIZE 8
-
-#define NUM_SAVE_SLOTS 6
-#define SLOT_NAME_SIZE 31
-
-#define FADE_DURATION 300
-
-#endif /* Config_h */
+#endif /* GameConfig_h */

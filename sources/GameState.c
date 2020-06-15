@@ -22,6 +22,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "Global.h"
+#include "GameConfig.h"
 
 void FreeVariables(GameState *gameState);
 void FreeInventoryItems(GameState *gameState);
@@ -46,8 +47,8 @@ void FreeGameState(GameState *gameState) {
 }
 
 void GameStatePath(const char *filename, char *path) {
-    char *prefPath = SDL_GetPrefPath("Inutilis Software", "Inga");
-    sprintf(path, "%s%s.sav", prefPath, filename);
+    char *prefPath = SDL_GetPrefPath(ORGANIZATION_NAME, GAME_NAME);
+    sprintf(path, "%s%s", prefPath, filename);
     SDL_free(prefPath);
 }
 
@@ -66,6 +67,7 @@ GameState *LoadGameState(const char *filename) {
             gameState->locationPtr = SDL_ReadBE32(file);
             SDL_RWread(file, &gameState->startPosition, sizeof(Vector), 1);
             SDL_RWread(file, &gameState->startDirection, sizeof(Vector), 1);
+            gameState->playtimeTicks = SDL_ReadBE32(file);
             
             int numVariables = SDL_ReadBE16(file);
             for (int i = 0; i < numVariables; ++i) {
@@ -99,6 +101,7 @@ void SaveGameState(GameState *gameState, const char *filename) {
         SDL_WriteBE32(file, (Uint32)gameState->locationPtr);
         SDL_RWwrite(file, &gameState->startPosition, sizeof(Vector), 1);
         SDL_RWwrite(file, &gameState->startDirection, sizeof(Vector), 1);
+        SDL_WriteBE32(file, (Uint32)gameState->playtimeTicks);
         
         SDL_WriteBE16(file, gameState->numVariables);
         Variable *variable = gameState->rootVariable;
@@ -249,4 +252,20 @@ void FreeInventoryItem(InventoryItem *item) {
     if (!item) return;
     FreeImage(item->image);
     free(item);
+}
+
+void UpdatePlaytime(GameState *gameState, int deltaTicks) {
+    if (!gameState) return;
+    gameState->playtimeTicks += deltaTicks;
+}
+
+void GameStateName(GameState *gameState, char *name) {
+    unsigned long seconds = gameState->playtimeTicks / 1000;
+    unsigned long minutes = seconds / 60;
+    unsigned long hours = minutes / 60;
+    if (hours > 0) {
+        sprintf(name, "Spielzeit %luh %lum %lus", hours, minutes % 60, seconds % 60);
+    } else {
+        sprintf(name, "Spielzeit %lum %lus", minutes % 60, seconds % 60);
+    }
 }

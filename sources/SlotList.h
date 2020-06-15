@@ -18,22 +18,18 @@
 // 3. This notice may not be removed or altered from any source distribution.
 //
 
-#ifndef Config_h
-#define Config_h
+#ifndef SlotList_h
+#define SlotList_h
 
-#define SCREEN_WIDTH 640
-#define SCREEN_HEIGHT 480
+#include <stdio.h>
+#include "Config.h"
 
-#define ELEMENT_NAME_SIZE 61
-#define FILE_NAME_SIZE 31
+typedef struct SlotList {
+    char slotNames[NUM_SAVE_SLOTS][SLOT_NAME_SIZE];
+} SlotList;
 
-#define MAX_PATH_SIZE 10
+SlotList *CreateSlotList(void);
+void FreeSlotList(SlotList *list);
+void SetSlotName(SlotList *list, int slot, const char *name);
 
-#define INVENTORY_BAR_SIZE 8
-
-#define NUM_SAVE_SLOTS 6
-#define SLOT_NAME_SIZE 31
-
-#define FADE_DURATION 300
-
-#endif /* Config_h */
+#endif /* SlotList_h */

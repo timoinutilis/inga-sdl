@@ -36,6 +36,7 @@
 #include "Sequence.h"
 #include "Fader.h"
 #include "Menu.h"
+#include "SlotList.h"
 
 typedef struct Focus {
     const char *name;
@@ -70,6 +71,7 @@ typedef struct Game {
     Image *escImage;
     Fader fader;
     Menu *menu;
+    SlotList *slotList;
 } Game;
 
 Game *CreateGame(void);

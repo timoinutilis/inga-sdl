@@ -215,7 +215,7 @@ void HandleMenuItem(Menu *menu, int id) {
         case 2:
             SetMenuTitle(menu, "W\xE4hle Spielstand zum Laden:");
             for (int i = 0; i < NUM_SAVE_SLOTS; ++i) {
-                AddMenuItem(menu, 20 + i, "---");
+                AddMenuItem(menu, 20 + i, menu->game->slotList->slotNames[i]);
             }
             AddMenuItem(menu, 0, "Abbruch");
             RefreshMenu(menu);
@@ -223,7 +223,7 @@ void HandleMenuItem(Menu *menu, int id) {
         case 3:
             SetMenuTitle(menu, "W\xE4hle Spielstand zum Speichern:");
             for (int i = 0; i < NUM_SAVE_SLOTS; ++i) {
-                AddMenuItem(menu, 30 + i, "---");
+                AddMenuItem(menu, 30 + i, menu->game->slotList->slotNames[i]);
             }
             AddMenuItem(menu, 0, "Abbruch");
             RefreshMenu(menu);
@@ -253,8 +253,11 @@ void HandleMenuItem(Menu *menu, int id) {
                 // save
                 int slot = id - 30;
                 char filename[FILE_NAME_SIZE];
+                char slotname[SLOT_NAME_SIZE];
                 sprintf(filename, "slot_%d", slot);
                 SaveGameState(menu->game->gameState, filename);
+                GameStateName(menu->game->gameState, slotname);
+                SetSlotName(menu->game->slotList, slot, slotname);
                 HandleMenuItem(menu, 0);
             }
             break;

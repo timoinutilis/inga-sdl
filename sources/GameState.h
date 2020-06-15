@@ -48,6 +48,7 @@ typedef struct GameState {
     unsigned long locationPtr;
     Vector startPosition;
     Vector startDirection;
+    unsigned long playtimeTicks;
 } GameState;
 
 GameState *CreateGameState(void);
@@ -64,5 +65,8 @@ void SetVisibility(GameState *gameState, int locationId, int elementId, bool val
 
 void AddInventoryItem(GameState *gameState, int id, const char *name, const char *filename, bool atEnd);
 void RemoveInventoryItem(GameState *gameState, int id);
+
+void UpdatePlaytime(GameState *gameState, int deltaTicks);
+void GameStateName(GameState *gameState, char *name);
 
 #endif /* GameState_h */
