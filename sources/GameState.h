@@ -25,7 +25,6 @@
 #include <stdbool.h>
 #include "Config.h"
 #include "Image.h"
-#include "ImageSet.h"
 
 typedef struct Variable {
     int id;
@@ -43,11 +42,12 @@ typedef struct InventoryItem {
 
 typedef struct GameState {
     Variable *rootVariable;
+    int numVariables;
     InventoryItem *rootInventoryItem;
     int numInventoryItems;
     unsigned long locationPtr;
     Vector startPosition;
-    ImageSide startSide;
+    Vector startDirection;
 } GameState;
 
 GameState *CreateGameState(void);
@@ -62,7 +62,7 @@ void SetVariable(GameState *gameState, int id, unsigned short value, bool skipIf
 bool GetVisibility(GameState *gameState, int locationId, int elementId);
 void SetVisibility(GameState *gameState, int locationId, int elementId, bool value, bool skipIfExists);
 
-void AddInventoryItem(GameState *gameState, int id, const char *name, const char *filename);
+void AddInventoryItem(GameState *gameState, int id, const char *name, const char *filename, bool atEnd);
 void RemoveInventoryItem(GameState *gameState, int id);
 
 #endif /* GameState_h */

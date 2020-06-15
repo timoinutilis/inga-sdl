@@ -219,27 +219,10 @@ void ElementStop(Element *element) {
     // resets animation in update
 }
 
-void ElementSetSide(Element *element, ImageSide side, int imageId) {
+void ElementSetDirection(Element *element, Vector direction) {
     if (!element) return;
-    switch (side) {
-        case ImageSideFront:
-            element->direction.x = 0;
-            element->direction.y = 1;
-            break;
-        case ImageSideBack:
-            element->direction.x = 0;
-            element->direction.y = -1;
-            break;
-        case ImageSideLeft:
-            element->direction.x = -1;
-            element->direction.y = 0;
-            break;
-        case ImageSideRight:
-            element->direction.x = 1;
-            element->direction.y = 0;
-            break;
-    }
-    SetElementImageFromSet(element, imageId ? imageId : element->imageId);
+    element->direction = direction;
+    SetElementImageFromSet(element, element->imageId);
 }
 
 void ElementLookTo(Element *element, int x, int y, int imageId) {

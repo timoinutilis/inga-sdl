@@ -81,6 +81,7 @@ void DrawGame(Game *game);
 
 void SetLocation(Game *game, int id, const char *background);
 void SetGameState(Game *game, GameState *gameState);
+void RefreshGameState(Game *game);
 
 void MainPersonDidFinishWalking(Game *game);
 

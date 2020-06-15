@@ -52,5 +52,6 @@ typedef struct ImageSet {
 ImageSet *LoadImageSet(const char *filename, SDL_Palette *defaultPalette, bool createMasks);
 void FreeImageSet(ImageSet *imageSet);
 Image *GetImageFromSet(ImageSet *imageSet, int id, Vector direction);
+Vector DirectionForSide(ImageSide side);
 
 #endif /* ImageSet_h */

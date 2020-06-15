@@ -124,3 +124,16 @@ Image *GetImageFromSet(ImageSet *imageSet, int id, Vector direction) {
     }
     return NULL;
 }
+
+Vector DirectionForSide(ImageSide side) {
+    switch (side) {
+        case ImageSideLeft:
+            return MakeVector(-1, 0);
+        case ImageSideRight:
+            return MakeVector(1, 0);
+        case ImageSideFront:
+            return MakeVector(0, 1);
+        case ImageSideBack:
+            return MakeVector(0, -1);
+    }
+}

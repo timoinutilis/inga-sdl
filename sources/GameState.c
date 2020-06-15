@@ -33,7 +33,7 @@ GameState *CreateGameState(void) {
         printf("CreateGameState: Out of memory\n");
     } else {
         gameState->startPosition = MakeVector(320, 360);
-        gameState->startSide = ImageSideFront;
+        gameState->startDirection = MakeVector(0, 1);
     }
     return gameState;
 }
@@ -64,10 +64,25 @@ GameState *LoadGameState(const char *filename) {
             printf("LoadGameState: Out of memory\n");
         } else {
             gameState->locationPtr = SDL_ReadBE32(file);
-            float x = SDL_ReadBE16(file);
-            float y = SDL_ReadBE16(file);
-            gameState->startPosition = MakeVector(x, y);
-            gameState->startSide = SDL_ReadU8(file);
+            SDL_RWread(file, &gameState->startPosition, sizeof(Vector), 1);
+            SDL_RWread(file, &gameState->startDirection, sizeof(Vector), 1);
+            
+            int numVariables = SDL_ReadBE16(file);
+            for (int i = 0; i < numVariables; ++i) {
+                Uint32 id = SDL_ReadBE32(file);
+                Uint16 value = SDL_ReadBE16(file);
+                SetVariable(gameState, id, value, false);
+            }
+            
+            int numInventoryItems = SDL_ReadBE16(file);
+            for (int i = 0; i < numInventoryItems; ++i) {
+                Uint32 id = SDL_ReadBE32(file);
+                char itemName[ELEMENT_NAME_SIZE];
+                char itemFilename[FILE_NAME_SIZE];
+                SDL_RWread(file, itemName, sizeof(char), ELEMENT_NAME_SIZE);
+                SDL_RWread(file, itemFilename, sizeof(char), FILE_NAME_SIZE);
+                AddInventoryItem(gameState, id, itemName, itemFilename, true);
+            }
         }
         SDL_RWclose(file);
     }
@@ -82,9 +97,26 @@ void SaveGameState(GameState *gameState, const char *filename) {
         printf("SaveGameState: %s\n", SDL_GetError());
     } else {
         SDL_WriteBE32(file, (Uint32)gameState->locationPtr);
-        SDL_WriteBE16(file, (Uint16)gameState->startPosition.x);
-        SDL_WriteBE16(file, (Uint16)gameState->startPosition.y);
-        SDL_WriteU8(file, (Uint8)gameState->startSide);
+        SDL_RWwrite(file, &gameState->startPosition, sizeof(Vector), 1);
+        SDL_RWwrite(file, &gameState->startDirection, sizeof(Vector), 1);
+        
+        SDL_WriteBE16(file, gameState->numVariables);
+        Variable *variable = gameState->rootVariable;
+        while (variable) {
+            SDL_WriteBE32(file, variable->id);
+            SDL_WriteBE16(file, variable->value);
+            variable = variable->next;
+        }
+        
+        SDL_WriteBE16(file, gameState->numInventoryItems);
+        InventoryItem *item = gameState->rootInventoryItem;
+        while (item) {
+            SDL_WriteBE32(file, item->id);
+            SDL_RWwrite(file, item->name, sizeof(char), ELEMENT_NAME_SIZE);
+            SDL_RWwrite(file, item->filename, sizeof(char), FILE_NAME_SIZE);
+            item = item->next;
+        }
+        
         SDL_RWclose(file);
     }
 }
@@ -125,6 +157,7 @@ void SetVariable(GameState *gameState, int id, unsigned short value, bool skipIf
             variable->value = value;
             variable->next = gameState->rootVariable;
             gameState->rootVariable = variable;
+            gameState->numVariables += 1;
         }
     }
 }
@@ -154,7 +187,7 @@ void SetVisibility(GameState *gameState, int locationId, int elementId, bool val
     SetVariable(gameState, id, value ? 1 : 0, skipIfExists);
 }
 
-void AddInventoryItem(GameState *gameState, int id, const char *name, const char *filename) {
+void AddInventoryItem(GameState *gameState, int id, const char *name, const char *filename, bool atEnd) {
     if (!gameState) return;
     InventoryItem *item = calloc(1, sizeof(InventoryItem));
     if (!item) {
@@ -164,8 +197,16 @@ void AddInventoryItem(GameState *gameState, int id, const char *name, const char
         strcpy(item->name, name);
         strcpy(item->filename, filename);
         item->image = LoadImage(filename, GetGlobalPalette(), true, false);
-        item->next = gameState->rootInventoryItem;
-        gameState->rootInventoryItem = item;
+        if (atEnd && gameState->rootInventoryItem) {
+            InventoryItem *lastItem = gameState->rootInventoryItem;
+            while (lastItem->next) {
+                lastItem = lastItem->next;
+            }
+            lastItem->next = item;
+        } else {
+            item->next = gameState->rootInventoryItem;
+            gameState->rootInventoryItem = item;
+        }
         gameState->numInventoryItems += 1;
     }
 }

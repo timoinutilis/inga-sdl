@@ -109,6 +109,7 @@ void HandleMouseInGame(Game *game, int x, int y, int buttonIndex) {
             SetFocus(game, x, y, NULL);
             if (buttonIndex == SDL_BUTTON_LEFT) {
                 if (game->inventoryBar->focusedButton == InventoryBarButtonMenu) {
+                    RefreshGameState(game);
                     OpenMenu(game->menu);
                 }
             }
@@ -281,7 +282,7 @@ void SetLocation(Game *game, int id, const char *background) {
     
     AddElement(game->location, game->mainPerson);
     game->mainPerson->position = game->gameState->startPosition;
-    ElementSetSide(game->mainPerson, game->gameState->startSide, 0);
+    ElementSetDirection(game->mainPerson, game->gameState->startDirection);
     
     game->inventoryBar->isEnabled = true;
     game->inventoryBar->isVisible = false;
@@ -295,6 +296,12 @@ void SetGameState(Game *game, GameState *gameState) {
     RefreshInventoryBar(game->inventoryBar, true);
     RunThread(game->mainThread, gameState->locationPtr);
     game->fader.state = FaderStateClosed;
+}
+
+void RefreshGameState(Game *game) {
+    if (!game || !game->gameState) return;
+    game->gameState->startPosition = game->mainPerson->position;
+    game->gameState->startDirection = game->mainPerson->direction;
 }
 
 void MainPersonDidFinishWalking(Game *game) {

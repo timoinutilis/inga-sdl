@@ -366,7 +366,7 @@ unsigned long LaufeINGA(Thread *thread, Game *game, unsigned long ptr, bool *wie
                 *wieder = false;
                 return(ptr);
             }
-            ElementSetSide(element, peekv(game, ptr + 4), 0);
+            ElementSetDirection(element, DirectionForSide(peekv(game, ptr + 4)));
         }
         return(ptr + 6);
     }
@@ -404,7 +404,7 @@ unsigned long LaufeINGA(Thread *thread, Game *game, unsigned long ptr, bool *wie
             }
             element->position.x = peekv(game, ptr + 4);
             element->position.y = peekv(game, ptr + 6);
-            ElementSetSide(element, peekv(game, ptr + 8), 0);
+            ElementSetDirection(element, DirectionForSide(peekv(game, ptr + 8)));
         }
         return(ptr + 10);
     }
@@ -483,7 +483,7 @@ unsigned long LaufeINGA(Thread *thread, Game *game, unsigned long ptr, bool *wie
         unsigned long locationPtr = peekl(script, ptr + 2);
         game->gameState->locationPtr = locationPtr;
         game->gameState->startPosition = MakeVector(peekv(game, ptr + 6), peekv(game, ptr + 8));
-        game->gameState->startSide = peekv(game, ptr + 10);
+        game->gameState->startDirection = DirectionForSide(peekv(game, ptr + 10));
         return(locationPtr);
     }
     if (opc == 43) { //SpringeSub.
@@ -578,6 +578,7 @@ unsigned long LaufeINGA(Thread *thread, Game *game, unsigned long ptr, bool *wie
             return(ptr);
         }
 //        SndSchleifeAbbruch();
+        RefreshGameState(game);
         game->sequence = LoadSequence(peeks(script, ptr + 2));
         *wieder = false;
         return(ptr + 6);
@@ -639,7 +640,7 @@ unsigned long LaufeINGA(Thread *thread, Game *game, unsigned long ptr, bool *wie
         return(ptr + 6);
     }
     if (opc == 24) { //InventarNehmen.
-        AddInventoryItem(game->gameState, peekv(game, ptr + 2), peeks(script, ptr + 4), peeks(script, ptr + 8));
+        AddInventoryItem(game->gameState, peekv(game, ptr + 2), peeks(script, ptr + 4), peeks(script, ptr + 8), false);
         RefreshInventoryBar(game->inventoryBar, true);
         return(ptr + 12);
     }

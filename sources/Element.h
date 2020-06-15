@@ -86,7 +86,7 @@ void SetDefaultWalkImageId(Element *element, int imageId);
 Vector GetElementTarget(Element *element, Vector fromPosition);
 
 void ElementStop(Element *element);
-void ElementSetSide(Element *element, ImageSide side, int imageId);
+void ElementSetDirection(Element *element, Vector direction);
 void ElementLookTo(Element *element, int x, int y, int imageId);
 void ElementMoveTo(Element *element, int x, int y, int imageId, bool ignoreNavMap);
 void ElementTalk(Element *element, const char *text, int imageId, Font *font);
