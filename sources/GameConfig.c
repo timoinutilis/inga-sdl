@@ -18,13 +18,16 @@
 // 3. This notice may not be removed or altered from any source distribution.
 //
 
-#ifndef GameConfig_h
-#define GameConfig_h
+#include "GameConfig.h"
 
-#include <stdio.h>
+const char *GetOrganizationName() {
+    return "Inutilis Software";
+}
 
-const char *GetOrganizationName(void);
-const char *GetGameName(void);
-const char *GetPaletteFilename(void);
+const char *GetGameName() {
+    return "Inga Example";
+}
 
-#endif /* GameConfig_h */
+const char *GetPaletteFilename() {
+    return "Garten";
+}

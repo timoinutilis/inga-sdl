@@ -47,7 +47,7 @@ void FreeGameState(GameState *gameState) {
 }
 
 void GameStatePath(const char *filename, char *path) {
-    char *prefPath = SDL_GetPrefPath(ORGANIZATION_NAME, GAME_NAME);
+    char *prefPath = SDL_GetPrefPath(GetOrganizationName(), GetGameName());
     sprintf(path, "%s%s", prefPath, filename);
     SDL_free(prefPath);
 }

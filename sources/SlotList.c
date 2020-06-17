@@ -72,7 +72,7 @@ void SaveSlotList(SlotList *list) {
 }
 
 void SlotPath(char *path) {
-    char *prefPath = SDL_GetPrefPath(ORGANIZATION_NAME, GAME_NAME);
+    char *prefPath = SDL_GetPrefPath(GetOrganizationName(), GetGameName());
     sprintf(path, "%sslotlist", prefPath);
     SDL_free(prefPath);
 }

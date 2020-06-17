@@ -109,7 +109,7 @@ bool DrawMenu(Menu *menu) {
     
     MenuItem *item = menu->rootItem;
     while (item) {
-        Vector iconPosition = MakeVector(210, item->position.y - 4);
+        Vector iconPosition = MakeVector(210, item->position.y);
         if (item == menu->focusedItem) {
             DrawAnimationFrame(menu->itemImage, iconPosition, menu->frameIndex);
             DrawImage(item->focusImage, item->position);

@@ -34,6 +34,7 @@
 		92B9145F248D5298009FE277 /* Cursor.c in Sources */ = {isa = PBXBuildFile; fileRef = 92B9145D248D5298009FE277 /* Cursor.c */; };
 		92BD6FEC24980B9D00478C4F /* GameConfig.h in Resources */ = {isa = PBXBuildFile; fileRef = 92BD6FEB24980B9D00478C4F /* GameConfig.h */; };
 		92BD6FEF24980C0C00478C4F /* SlotList.c in Sources */ = {isa = PBXBuildFile; fileRef = 92BD6FEE24980C0C00478C4F /* SlotList.c */; };
+		92CEB3B0249AB4B000CF969A /* GameConfig.c in Sources */ = {isa = PBXBuildFile; fileRef = 92CEB3AF249AB4B000CF969A /* GameConfig.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -99,6 +100,7 @@
 		92BD6FEB24980B9D00478C4F /* GameConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameConfig.h; sourceTree = "<group>"; };
 		92BD6FED24980C0C00478C4F /* SlotList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SlotList.h; sourceTree = "<group>"; };
 		92BD6FEE24980C0C00478C4F /* SlotList.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = SlotList.c; sourceTree = "<group>"; };
+		92CEB3AF249AB4B000CF969A /* GameConfig.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = GameConfig.c; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -158,6 +160,7 @@
 				922EADDC245C222A00E4027E /* Font.h */,
 				922EADE0245C2A5000E4027E /* Game.c */,
 				922EADDF245C2A5000E4027E /* Game.h */,
+				92CEB3AF249AB4B000CF969A /* GameConfig.c */,
 				92BD6FEB24980B9D00478C4F /* GameConfig.h */,
 				923DAD392463221F0094F825 /* GameState.c */,
 				923DAD382463221F0094F825 /* GameState.h */,
@@ -271,6 +274,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				92CEB3B0249AB4B000CF969A /* GameConfig.c in Sources */,
 				924B17AC245585D2008A9B43 /* ImageSet.c in Sources */,
 				924B17A824556BC8008A9B43 /* Element.c in Sources */,
 				922EADEA245DD1E100E4027E /* Script.c in Sources */,
