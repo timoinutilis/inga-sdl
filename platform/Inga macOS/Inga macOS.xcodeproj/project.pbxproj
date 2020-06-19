@@ -35,6 +35,7 @@
 		92BD6FEC24980B9D00478C4F /* GameConfig.h in Resources */ = {isa = PBXBuildFile; fileRef = 92BD6FEB24980B9D00478C4F /* GameConfig.h */; };
 		92BD6FEF24980C0C00478C4F /* SlotList.c in Sources */ = {isa = PBXBuildFile; fileRef = 92BD6FEE24980C0C00478C4F /* SlotList.c */; };
 		92CEB3B0249AB4B000CF969A /* GameConfig.c in Sources */ = {isa = PBXBuildFile; fileRef = 92CEB3AF249AB4B000CF969A /* GameConfig.c */; };
+		92F6EF78249CAFDD00B147C3 /* cJSON.c in Sources */ = {isa = PBXBuildFile; fileRef = 92F6EF77249CAFDC00B147C3 /* cJSON.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -101,6 +102,8 @@
 		92BD6FED24980C0C00478C4F /* SlotList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SlotList.h; sourceTree = "<group>"; };
 		92BD6FEE24980C0C00478C4F /* SlotList.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = SlotList.c; sourceTree = "<group>"; };
 		92CEB3AF249AB4B000CF969A /* GameConfig.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = GameConfig.c; sourceTree = "<group>"; };
+		92F6EF76249CAFDC00B147C3 /* cJSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cJSON.h; sourceTree = "<group>"; };
+		92F6EF77249CAFDC00B147C3 /* cJSON.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = cJSON.c; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -147,6 +150,8 @@
 		929EDBDD244E457600DC64D9 /* sources */ = {
 			isa = PBXGroup;
 			children = (
+				92F6EF77249CAFDC00B147C3 /* cJSON.c */,
+				92F6EF76249CAFDC00B147C3 /* cJSON.h */,
 				924B17A924556D57008A9B43 /* Config.h */,
 				92B9145D248D5298009FE277 /* Cursor.c */,
 				92B9145E248D5298009FE277 /* Cursor.h */,
@@ -281,6 +286,7 @@
 				922EADE4245C932A00E4027E /* Global.c in Sources */,
 				925BA819248A514E008CBA9A /* Sequence.c in Sources */,
 				924B17B22455EA08008A9B43 /* NavigationMap.c in Sources */,
+				92F6EF78249CAFDD00B147C3 /* cJSON.c in Sources */,
 				9299FAA2248A78EC007CB594 /* Fader.c in Sources */,
 				923DAD3A2463221F0094F825 /* GameState.c in Sources */,
 				929EDBD6244E32BD00DC64D9 /* main.c in Sources */,

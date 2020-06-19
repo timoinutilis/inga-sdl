@@ -19,15 +19,52 @@
 //
 
 #include "GameConfig.h"
+#include <stdlib.h>
+#include "Utils.h"
 
-const char *GetOrganizationName() {
-    return "Inutilis Software";
+GameConfig *LoadGameConfig(void) {
+    GameConfig *config = NULL;
+    
+    const char *jsonString = LoadFile("game/config.json", NULL);
+    if (jsonString) {
+        cJSON *json = cJSON_Parse(jsonString);
+        if (!json) {
+            printf("LoadGameConfig: json parse error\n");
+        } else {
+            config = calloc(1, sizeof(GameConfig));
+            if (!config) {
+                printf("LoadGameConfig: Out of memory\n");
+            } else {
+                config->json = json;
+                
+                const cJSON *organizationName = cJSON_GetObjectItemCaseSensitive(json, "organizationName");
+                if (cJSON_IsString(organizationName)) {
+                    config->organizationName = organizationName->valuestring;
+                }
+                
+                const cJSON *gameName = cJSON_GetObjectItemCaseSensitive(json, "gameName");
+                if (cJSON_IsString(gameName)) {
+                    config->gameName = gameName->valuestring;
+                }
+                
+                const cJSON *paletteFilename = cJSON_GetObjectItemCaseSensitive(json, "paletteFilename");
+                if (cJSON_IsString(paletteFilename)) {
+                    config->paletteFilename = paletteFilename->valuestring;
+                }
+                
+                if (!organizationName || !gameName || !paletteFilename) {
+                    printf("LoadGameConfig: missing values\n");
+                    FreeGameConfig(config);
+                    config = NULL;
+                }
+            }
+        }
+    }
+    return config;
 }
 
-const char *GetGameName() {
-    return "Inga Example";
-}
-
-const char *GetPaletteFilename() {
-    return "Garten";
+void FreeGameConfig(GameConfig *config) {
+    if (!config) return;
+    cJSON_Delete(config->json);
+    free(config);
 }

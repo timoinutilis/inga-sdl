@@ -25,6 +25,8 @@
 #include <stdbool.h>
 #include "Config.h"
 #include "Image.h"
+#include "GameConfig.h"
+
 
 typedef struct Variable {
     int id;
@@ -54,8 +56,8 @@ typedef struct GameState {
 GameState *CreateGameState(void);
 void FreeGameState(GameState *gameState);
 
-GameState *LoadGameState(const char *filename);
-void SaveGameState(GameState *gameState, const char *filename);
+GameState *LoadGameState(const char *filename, GameConfig *config);
+void SaveGameState(GameState *gameState, const char *filename, GameConfig *config);
 
 unsigned short GetVariable(GameState *gameState, int id);
 void SetVariable(GameState *gameState, int id, unsigned short value, bool skipIfExists);

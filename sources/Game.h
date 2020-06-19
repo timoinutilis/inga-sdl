@@ -37,6 +37,7 @@
 #include "Fader.h"
 #include "Menu.h"
 #include "SlotList.h"
+#include "GameConfig.h"
 
 typedef struct Focus {
     const char *name;
@@ -51,6 +52,7 @@ typedef struct IdleScript {
 } IdleScript;
 
 typedef struct Game {
+    GameConfig *config;
     Font *font;
     SDL_Cursor *cursorNormal;
     SDL_Cursor *cursorDrag;
@@ -74,7 +76,7 @@ typedef struct Game {
     SlotList *slotList;
 } Game;
 
-Game *CreateGame(void);
+Game *CreateGame(GameConfig *config);
 void FreeGame(Game *game);
 void HandleMouseInGame(Game *game, int x, int y, int buttonIndex);
 void HandleKeyInGame(Game *game, SDL_Keysym keysym);

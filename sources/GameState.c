@@ -28,7 +28,7 @@ void FreeVariables(GameState *gameState);
 void FreeInventoryItems(GameState *gameState);
 void FreeInventoryItem(InventoryItem *item);
 
-GameState *CreateGameState(void) {
+GameState *CreateGameState() {
     GameState *gameState = calloc(1, sizeof(GameState));
     if (!gameState) {
         printf("CreateGameState: Out of memory\n");
@@ -46,16 +46,16 @@ void FreeGameState(GameState *gameState) {
     free(gameState);
 }
 
-void GameStatePath(const char *filename, char *path) {
-    char *prefPath = SDL_GetPrefPath(GetOrganizationName(), GetGameName());
+void GameStatePath(GameConfig *config, const char *filename, char *path) {
+    char *prefPath = SDL_GetPrefPath(config->organizationName, config->gameName);
     sprintf(path, "%s%s", prefPath, filename);
     SDL_free(prefPath);
 }
 
-GameState *LoadGameState(const char *filename) {
+GameState *LoadGameState(const char *filename, GameConfig *config) {
     GameState *gameState = NULL;
     char path[FILENAME_MAX];
-    GameStatePath(filename, path);
+    GameStatePath(config, filename, path);
     SDL_RWops *file = SDL_RWFromFile(path, "rb");
     if (!file) {
         printf("LoadGameState: %s\n", SDL_GetError());
@@ -91,9 +91,9 @@ GameState *LoadGameState(const char *filename) {
     return gameState;
 }
 
-void SaveGameState(GameState *gameState, const char *filename) {
+void SaveGameState(GameState *gameState, const char *filename, GameConfig *config) {
     char path[FILENAME_MAX];
-    GameStatePath(filename, path);
+    GameStatePath(config, filename, path);
     SDL_RWops *file = SDL_RWFromFile(path, "wb");
     if (!file) {
         printf("SaveGameState: %s\n", SDL_GetError());

@@ -22,9 +22,16 @@
 #define GameConfig_h
 
 #include <stdio.h>
+#include "cJSON.h"
 
-const char *GetOrganizationName(void);
-const char *GetGameName(void);
-const char *GetPaletteFilename(void);
+typedef struct GameConfig {
+    cJSON *json;
+    const char *organizationName;
+    const char *gameName;
+    const char *paletteFilename;
+} GameConfig;
+
+GameConfig *LoadGameConfig(void);
+void FreeGameConfig(GameConfig *config);
 
 #endif /* GameConfig_h */

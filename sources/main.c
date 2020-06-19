@@ -30,7 +30,12 @@ int main(int argc, const char * argv[]) {
     SDL_Init(SDL_INIT_VIDEO);
     TTF_Init();
     
-    SDL_Window *window = SDL_CreateWindow(GetGameName(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN | SDL_WINDOW_FULLSCREEN);
+    GameConfig *config = LoadGameConfig();
+    if (!config) {
+        exit(EXIT_FAILURE);
+    }
+    
+    SDL_Window *window = SDL_CreateWindow(config->gameName, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN /*| SDL_WINDOW_FULLSCREEN*/);
     SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
     SDL_RenderSetLogicalSize(renderer, SCREEN_WIDTH, SCREEN_HEIGHT);
     
@@ -38,12 +43,12 @@ int main(int argc, const char * argv[]) {
     
     SetGlobalRenderer(renderer);
     
-    Image *paletteImage = LoadImage(GetPaletteFilename(), NULL, false, true);
+    Image *paletteImage = LoadImage(config->paletteFilename, NULL, false, true);
     if (paletteImage) {
         SetGlobalPalette(paletteImage->surface->format->palette);
     }
     
-    Game *game = CreateGame();
+    Game *game = CreateGame(config);
         
     int mouseX = 0;
     int mouseY = 0;
@@ -99,6 +104,7 @@ int main(int argc, const char * argv[]) {
     
     FreeGame(game);
     FreeImage(paletteImage);
+    FreeGameConfig(config);
     
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);

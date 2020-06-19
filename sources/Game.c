@@ -25,11 +25,12 @@
 void SetFocus(Game *game, int x, int y, const char *name);
 void UpdateIdleProg(Game *game, int deltaTicks);
 
-Game *CreateGame() {
+Game *CreateGame(GameConfig *config) {
     Game *game = calloc(1, sizeof(Game));
     if (!game) {
         printf("CreateGame: Out of memory\n");
     } else {
+        game->config = config;
         game->font = LoadFont("Font", 16);
         game->cursorNormal = LoadCursor("CursorNormal");
         game->cursorDrag = LoadCursor("CursorDrag");
@@ -40,7 +41,7 @@ Game *CreateGame() {
         game->mainThread = CreateThread(0);
         game->escImage = LoadImage("Esc", GetGlobalPalette(), true, false);
         game->menu = CreateMenu(game);
-        game->slotList = CreateSlotList();
+        game->slotList = CreateSlotList(config);
         
         // Main Person
         Element *element = CreateElement(MainPersonID);

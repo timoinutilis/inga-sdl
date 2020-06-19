@@ -23,13 +23,14 @@
 
 #include <stdio.h>
 #include "Config.h"
+#include "GameConfig.h"
 
 typedef struct SlotList {
     char slotNames[NUM_SAVE_SLOTS][SLOT_NAME_SIZE];
 } SlotList;
 
-SlotList *CreateSlotList(void);
+SlotList *CreateSlotList(GameConfig *config);
 void FreeSlotList(SlotList *list);
-void SetSlotName(SlotList *list, int slot, const char *name);
+void SetSlotName(SlotList *list, int slot, const char *name, GameConfig *config);
 
 #endif /* SlotList_h */

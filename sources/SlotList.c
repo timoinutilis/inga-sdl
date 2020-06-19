@@ -22,11 +22,11 @@
 #include <SDL2/SDL.h>
 #include "GameConfig.h"
 
-void SaveSlotList(SlotList *list);
-void SlotPath(char *path);
+void SaveSlotList(SlotList *list, GameConfig *config);
+void SlotPath(GameConfig *config, char *path);
 
 
-SlotList *CreateSlotList() {
+SlotList *CreateSlotList(GameConfig *config) {
     SlotList *list = calloc(1, sizeof(SlotList));
     if (!list) {
         printf("CreateSlotList: Out of memory\n");
@@ -35,7 +35,7 @@ SlotList *CreateSlotList() {
             sprintf(list->slotNames[i], "%d - Leer", i + 1);
         }
         char path[FILENAME_MAX];
-        SlotPath(path);
+        SlotPath(config, path);
         SDL_RWops *file = SDL_RWFromFile(path, "rb");
         if (!file) {
             printf("CreateSlotList: %s\n", SDL_GetError());
@@ -52,16 +52,16 @@ void FreeSlotList(SlotList *list) {
     free(list);
 }
 
-void SetSlotName(SlotList *list, int slot, const char *name) {
+void SetSlotName(SlotList *list, int slot, const char *name, GameConfig *config) {
     if (!list) return;
     sprintf(list->slotNames[slot], "%d - %s", slot + 1, name);
-    SaveSlotList(list);
+    SaveSlotList(list, config);
 }
 
-void SaveSlotList(SlotList *list) {
+void SaveSlotList(SlotList *list, GameConfig *config) {
     if (!list) return;
     char path[FILENAME_MAX];
-    SlotPath(path);
+    SlotPath(config, path);
     SDL_RWops *file = SDL_RWFromFile(path, "wb");
     if (!file) {
         printf("SaveSlotList: %s\n", SDL_GetError());
@@ -71,8 +71,8 @@ void SaveSlotList(SlotList *list) {
     }
 }
 
-void SlotPath(char *path) {
-    char *prefPath = SDL_GetPrefPath(GetOrganizationName(), GetGameName());
+void SlotPath(GameConfig *config, char *path) {
+    char *prefPath = SDL_GetPrefPath(config->organizationName, config->gameName);
     sprintf(path, "%sslotlist", prefPath);
     SDL_free(prefPath);
 }

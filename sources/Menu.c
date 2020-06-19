@@ -246,7 +246,7 @@ void HandleMenuItem(Menu *menu, int id) {
                 int slot = id - 20;
                 char filename[FILE_NAME_SIZE];
                 sprintf(filename, "slot_%d", slot);
-                GameState *gameState = LoadGameState(filename);
+                GameState *gameState = LoadGameState(filename, menu->game->config);
                 SetGameState(menu->game, gameState);
                 CloseMenu(menu);
             } else if (id >= 30 && id < 40) {
@@ -255,9 +255,9 @@ void HandleMenuItem(Menu *menu, int id) {
                 char filename[FILE_NAME_SIZE];
                 char slotname[SLOT_NAME_SIZE];
                 sprintf(filename, "slot_%d", slot);
-                SaveGameState(menu->game->gameState, filename);
+                SaveGameState(menu->game->gameState, filename, menu->game->config);
                 GameStateName(menu->game->gameState, slotname);
-                SetSlotName(menu->game->slotList, slot, slotname);
+                SetSlotName(menu->game->slotList, slot, slotname, menu->game->config);
                 HandleMenuItem(menu, 0);
             }
             break;
