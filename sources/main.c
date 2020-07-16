@@ -35,9 +35,12 @@ int main(int argc, const char * argv[]) {
         exit(EXIT_FAILURE);
     }
     
-    SDL_Window *window = SDL_CreateWindow(config->gameName, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN | SDL_WINDOW_FULLSCREEN);
+    SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
+    
+    SDL_Window *window = SDL_CreateWindow(config->gameName, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN | SDL_WINDOW_FULLSCREEN_DESKTOP);
     SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
     SDL_RenderSetLogicalSize(renderer, SCREEN_WIDTH, SCREEN_HEIGHT);
+    SDL_Texture *prerenderTexture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, SCREEN_WIDTH, SCREEN_HEIGHT);
     
     SDL_Event event;
     
@@ -56,8 +59,10 @@ int main(int argc, const char * argv[]) {
     
     unsigned long lastTicks = SDL_GetTicks();
     
+    SDL_Rect screenRect = {0, 0, SCREEN_WIDTH, SCREEN_HEIGHT};
+    
     while (!ShouldQuit()) {
-        unsigned long ticks = SDL_GetTicks();
+        Uint32 ticks = SDL_GetTicks();
         int deltaTicks = (int)(ticks - lastTicks);
         
         while (SDL_PollEvent(&event)) {
@@ -94,18 +99,30 @@ int main(int argc, const char * argv[]) {
         HandleMouseInGame(game, mouseX, mouseY, mouseButtonIndex);
         UpdateGame(game, deltaTicks);
         
-        SDL_RenderClear(renderer);
+        SDL_SetRenderTarget(renderer, prerenderTexture);
         DrawGame(game);
+        
+        SDL_SetRenderTarget(renderer, NULL);
+        SDL_RenderClear(renderer);
+        SDL_RenderCopy(renderer, prerenderTexture, &screenRect, &screenRect);
         SDL_RenderPresent(renderer);
-                
+        
         mouseButtonIndex = 0;
         lastTicks = ticks;
+        
+        // limit to 60 FPS
+        Uint32 ticksDelta = SDL_GetTicks() - ticks;
+        if (ticksDelta < 16)
+        {
+            SDL_Delay(16 - ticksDelta);
+        }
     }
     
     FreeGame(game);
     FreeImage(paletteImage);
     FreeGameConfig(config);
     
+    SDL_DestroyTexture(prerenderTexture);
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     
