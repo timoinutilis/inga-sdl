@@ -80,6 +80,7 @@ Game *CreateGame(GameConfig *config);
 void FreeGame(Game *game);
 void HandleMouseInGame(Game *game, int x, int y, int buttonIndex);
 void HandleKeyInGame(Game *game, SDL_Keysym keysym);
+void HandleGameCheat(Game *game, const char *cheat);
 void UpdateGame(Game *game, int deltaTicks);
 void DrawGame(Game *game);
 

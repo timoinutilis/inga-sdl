@@ -196,6 +196,30 @@ void HandleKeyInGame(Game *game, SDL_Keysym keysym) {
     }
 }
 
+void HandleGameCheat(Game *game, const char *cheat) {
+    if (!game || !cheat || strlen(cheat) < 3) return;
+    
+    if (cheat[0] == 'j' && cheat[1] == 'j' && cheat[2] == 'j') {
+        long ptr = atol(cheat + 3);
+        if (ptr >= 0) {
+            printf("jump %ld\n", ptr);
+            RunThread(game->mainThread, ptr);
+        }
+    } else if (cheat[0] == 'v' && cheat[1] == 'v' && cheat[2] == 'v') {
+        int id = atoi(cheat + 3);
+        if (id > 0) {
+            char *s = strchr(cheat, ' ');
+            if (s) {
+                int value = atoi(s);
+                if (value > 0) {
+                    printf("variable %d = %d\n", id, value);
+                    SetVariable(game->gameState, id, value, false);
+                }
+            }
+        }
+    }
+}
+
 void UpdateGame(Game *game, int deltaTicks) {
     if (!game) return;
     

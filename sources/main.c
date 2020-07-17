@@ -26,6 +26,8 @@
 #include "Font.h"
 #include "GameConfig.h"
 
+#define MAX_CHEAT_SIZE 30
+
 int main(int argc, const char * argv[]) {
     SDL_Init(SDL_INIT_VIDEO);
     TTF_Init();
@@ -56,6 +58,8 @@ int main(int argc, const char * argv[]) {
     int mouseX = 0;
     int mouseY = 0;
     int mouseButtonIndex = 0;
+    bool cheatInputActive = false;
+    char cheatInput[MAX_CHEAT_SIZE] = {0};
     
     unsigned long lastTicks = SDL_GetTicks();
     
@@ -84,13 +88,24 @@ int main(int argc, const char * argv[]) {
                 case SDL_KEYDOWN:
                     if (event.key.keysym.sym == SDLK_f) {
                         // toggle fullscreen
-                        if (SDL_GetWindowFlags(window) & SDL_WINDOW_FULLSCREEN) {
+                        if (SDL_GetWindowFlags(window) & SDL_WINDOW_FULLSCREEN_DESKTOP) {
                             SDL_SetWindowFullscreen(window, 0);
                         } else {
-                            SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN);
+                            SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN_DESKTOP);
                         }
+                    } else if (event.key.keysym.sym == SDLK_TAB) {
+                        cheatInputActive = true;
+                        cheatInput[0] = 0;
+                    } else if (event.key.keysym.sym == SDLK_RETURN) {
+                        HandleGameCheat(game, cheatInput);
+                        cheatInputActive = false;
                     } else {
                         HandleKeyInGame(game, event.key.keysym);
+                    }
+                    break;
+                case SDL_TEXTINPUT:
+                    if (cheatInputActive) {
+                        strncat(cheatInput, event.text.text, MAX_CHEAT_SIZE - 1);
                     }
                     break;
             }
