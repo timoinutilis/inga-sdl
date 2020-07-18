@@ -86,14 +86,7 @@ int main(int argc, const char * argv[]) {
                     mouseButtonIndex = event.button.button;
                     break;
                 case SDL_KEYDOWN:
-                    if (event.key.keysym.sym == SDLK_f) {
-                        // toggle fullscreen
-                        if (SDL_GetWindowFlags(window) & SDL_WINDOW_FULLSCREEN_DESKTOP) {
-                            SDL_SetWindowFullscreen(window, 0);
-                        } else {
-                            SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN_DESKTOP);
-                        }
-                    } else if (event.key.keysym.sym == SDLK_TAB) {
+                    if (event.key.keysym.sym == SDLK_TAB) {
                         cheatInputActive = true;
                         cheatInput[0] = 0;
                     } else if (event.key.keysym.sym == SDLK_RETURN) {
