@@ -38,6 +38,7 @@ Menu *CreateMenu(Game *game) {
         menu->image = LoadImage("Menue", NULL, false, true);
         menu->itemImage = LoadImage("Menuepunkt", menu->image->surface->format->palette, true, false);
         menu->frameIndex = 1;
+        InitFader(&menu->fader, FADE_DURATION);
     }
     return menu;
 }

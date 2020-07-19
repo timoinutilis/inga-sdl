@@ -42,6 +42,7 @@ Game *CreateGame(GameConfig *config) {
         game->escImage = LoadImage("Esc", GetGlobalPalette(), true, false);
         game->menu = CreateMenu(game);
         game->slotList = CreateSlotList(config);
+        InitFader(&game->fader, FADE_DURATION);
         
         // Main Person
         Element *element = CreateElement(MainPersonID);
@@ -83,7 +84,7 @@ void HandleMouseInGame(Game *game, int x, int y, int buttonIndex) {
         return;
     }
     
-    if (game->sequence) {
+    if (HandleMouseInSequence(game->sequence, x, y, buttonIndex)) {
         SetFocus(game, x, y, NULL);
         game->draggingItemView.item = NULL;
         return;

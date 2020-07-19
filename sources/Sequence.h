@@ -22,6 +22,7 @@
 #define Sequence_h
 
 #include <stdio.h>
+#include <stdbool.h>
 #include "Image.h"
 #include "Fader.h"
 
@@ -31,12 +32,14 @@ typedef struct Sequence {
     Image *image;
     char *currentLine;
     int waitTicks;
+    bool isWaitingForClick;
     bool isFinished;
     Fader fader;
 } Sequence;
 
 Sequence *LoadSequence(const char *filename);
 void FreeSequence(Sequence *sequence);
+bool HandleMouseInSequence(Sequence *sequence, int x, int y, int buttonIndex);
 void UpdateSequence(Sequence *sequence, int deltaTicks);
 void DrawSequence(Sequence *sequence);
 

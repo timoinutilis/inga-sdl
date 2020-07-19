@@ -33,8 +33,10 @@ typedef enum FaderState {
 typedef struct Fader {
     FaderState state;
     int ticks;
+    int fadeDuration;
 } Fader;
 
+void InitFader(Fader *fader, int fadeDuration);
 void UpdateFader(Fader *fader, int deltaTicks);
 void DrawFader(Fader *fader);
 void FadeIn(Fader *fader);

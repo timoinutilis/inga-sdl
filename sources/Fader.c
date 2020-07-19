@@ -23,6 +23,11 @@
 #include <SDL2/SDL.h>
 #include "Global.h"
 
+void InitFader(Fader *fader, int fadeDuration) {
+    if (!fader) return;
+    fader->fadeDuration = fadeDuration;
+}
+
 void UpdateFader(Fader *fader, int deltaTicks) {
     if (!fader) return;
     switch (fader->state) {
@@ -30,7 +35,7 @@ void UpdateFader(Fader *fader, int deltaTicks) {
             break;
         case FaderStateFadingIn:
             fader->ticks += deltaTicks;
-            if (fader->ticks >= FADE_DURATION) {
+            if (fader->ticks >= fader->fadeDuration) {
                 fader->state = FaderStateOpen;
             }
             break;
@@ -38,7 +43,7 @@ void UpdateFader(Fader *fader, int deltaTicks) {
             break;
         case FaderStateFadingOut:
             fader->ticks += deltaTicks;
-            if (fader->ticks >= FADE_DURATION) {
+            if (fader->ticks >= fader->fadeDuration) {
                 fader->state = FaderStateClosed;
             }
             break;
@@ -54,13 +59,13 @@ void DrawFader(Fader *fader) {
             SDL_SetRenderDrawColor(GetGlobalRenderer(), 0, 0, 0, 255);
             break;
         case FaderStateFadingIn:
-            SDL_SetRenderDrawColor(GetGlobalRenderer(), 0, 0, 0, 255 - (fader->ticks * 255 / FADE_DURATION));
+            SDL_SetRenderDrawColor(GetGlobalRenderer(), 0, 0, 0, 255 - (fader->ticks * 255 / fader->fadeDuration));
             break;
         case FaderStateOpen:
             // not entering
             break;
         case FaderStateFadingOut:
-            SDL_SetRenderDrawColor(GetGlobalRenderer(), 0, 0, 0, fader->ticks * 255 / FADE_DURATION);
+            SDL_SetRenderDrawColor(GetGlobalRenderer(), 0, 0, 0, fader->ticks * 255 / fader->fadeDuration);
             break;
     }
     SDL_RenderFillRect(GetGlobalRenderer(), &rect);

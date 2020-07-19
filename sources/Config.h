@@ -35,5 +35,6 @@
 #define SLOT_NAME_SIZE 31
 
 #define FADE_DURATION 300
+#define SEQUENCE_FADE_DURATION 1000
 
 #endif /* Config_h */

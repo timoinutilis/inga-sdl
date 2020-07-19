@@ -47,6 +47,7 @@ Sequence *LoadSequence(const char *filename) {
             sequence->text = text;
             sequence->textSize = size;
             sequence->currentLine = text;
+            InitFader(&sequence->fader, SEQUENCE_FADE_DURATION);
         }
     }
         
@@ -60,6 +61,14 @@ void FreeSequence(Sequence *sequence) {
     free(sequence);
 }
 
+bool HandleMouseInSequence(Sequence *sequence, int x, int y, int buttonIndex) {
+    if (!sequence || sequence->isFinished) return false;
+    if (buttonIndex != 0) {
+        sequence->isWaitingForClick = false;
+    }
+    return true;
+}
+
 void UpdateSequence(Sequence *sequence, int deltaTicks) {
     if (!sequence || sequence->isFinished) return;
     
@@ -68,6 +77,10 @@ void UpdateSequence(Sequence *sequence, int deltaTicks) {
     if (sequence->waitTicks > 0) {
         sequence->waitTicks -= deltaTicks;
         if (sequence->waitTicks < 0) sequence->waitTicks = 0;
+        return;
+    }
+    
+    if (sequence->isWaitingForClick) {
         return;
     }
     
@@ -102,6 +115,9 @@ void UpdateSequence(Sequence *sequence, int deltaTicks) {
             char *number = &sequence->currentLine[2];
             int seconds = atoi(number);
             sequence->waitTicks = seconds * 1000;
+        } else if (command == 'M') {
+            // wait for click
+            sequence->isWaitingForClick = true;
         }
     } else {
         // text to show (not implemented)
