@@ -37,4 +37,6 @@
 #define FADE_DURATION 300
 #define SEQUENCE_FADE_DURATION 1000
 
+#define MAX_TEXT_SPEED 2
+
 #endif /* Config_h */

@@ -195,6 +195,7 @@ unsigned long LaufeINGA(Thread *thread, Game *game, unsigned long ptr, bool *wie
         Element *element = GetElement(game->location, id);
         if (element) {
             element->isVisible = false;
+            element->action = ElementActionIdle;
         }
         if (id != MainPersonID) {
             SetVisibility(game->gameState, game->location->id, id, false, false);
@@ -318,7 +319,7 @@ unsigned long LaufeINGA(Thread *thread, Game *game, unsigned long ptr, bool *wie
                 *wieder = false;
                 return(ptr);
             }
-            ElementTalk(element, peeks(script, ptr + 6), peekv(game, ptr + 4), game->font);
+            ElementTalk(element, peeks(script, ptr + 6), peekv(game, ptr + 4), game->font, game->gameState->textSpeed);
             thread->talkingElement = element;
             // sound: peeks(script, ptr + 10)
         }

@@ -51,6 +51,7 @@ typedef struct GameState {
     Vector startPosition;
     Vector startDirection;
     unsigned long playtimeTicks;
+    int textSpeed;
 } GameState;
 
 GameState *CreateGameState(void);

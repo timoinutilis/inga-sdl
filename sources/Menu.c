@@ -28,6 +28,12 @@ void RefreshMenu(Menu *menu);
 void ResetMenu(Menu *menu);
 void HandleMenuItem(Menu *menu, int id);
 
+const char *MenuTextSpeed[] = {
+    "Text: schnell",
+    "Text: mittelschnell",
+    "Text: langsam"
+};
+
 
 Menu *CreateMenu(Game *game) {
     Menu *menu = calloc(1, sizeof(Menu));
@@ -199,6 +205,7 @@ void HandleMenuItem(Menu *menu, int id) {
             AddMenuItem(menu, 4, "Weiterspielen");
             AddMenuItem(menu, 2, "Spielstand laden");
             AddMenuItem(menu, 3, "Spielstand speichern");
+            AddMenuItem(menu, 6, MenuTextSpeed[menu->game->gameState->textSpeed]);
             AddMenuItem(menu, 1, "Spiel neu beginnen");
             AddMenuItem(menu, 5, "Spiel beenden");
             RefreshMenu(menu);
@@ -241,6 +248,13 @@ void HandleMenuItem(Menu *menu, int id) {
         case 50:
             SetShouldQuit();
             break;
+        case 6:
+            ++menu->game->gameState->textSpeed;
+            if (menu->game->gameState->textSpeed > MAX_TEXT_SPEED) {
+                menu->game->gameState->textSpeed = 0;
+            }
+            HandleMenuItem(menu, 0);
+            break;
         default:
             if (id >= 20 && id < 30) {
                 // load
@@ -259,7 +273,10 @@ void HandleMenuItem(Menu *menu, int id) {
                 SaveGameState(menu->game->gameState, filename, menu->game->config);
                 GameStateName(menu->game->gameState, slotname);
                 SetSlotName(menu->game->slotList, slot, slotname, menu->game->config);
-                HandleMenuItem(menu, 0);
+                
+                SetMenuTitle(menu, "Der Spielstand wurde gespeichert.");
+                AddMenuItem(menu, 0, "OK");
+                RefreshMenu(menu);
             }
             break;
     }

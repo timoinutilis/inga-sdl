@@ -247,7 +247,7 @@ void ElementMoveTo(Element *element, int x, int y, int imageId, bool ignoreNavMa
     }
 }
 
-void ElementTalk(Element *element, const char *text, int imageId, Font *font) {
+void ElementTalk(Element *element, const char *text, int imageId, Font *font, int textSpeed) {
     if (!element) return;
     ElementFreeAction(element);
     element->action = ElementActionTalk;
@@ -256,7 +256,7 @@ void ElementTalk(Element *element, const char *text, int imageId, Font *font) {
     SDL_Color color = {255, 255, 255, 255};
     element->talkImage = CreateImageFromText(text, font, color);
     element->talkOffset = element->talkImage ? MakeVector(element->talkImage->width * -0.5, -frame->pivot.y - 24) : MakeVector(0, 0);
-    element->talkTicks = (int)strlen(text) * 25 + 1000;
+    element->talkTicks = (int)strlen(text) * 30 * (textSpeed + 1) + 1000;
 }
 
 void ElementAnimate(Element *element, int imageId, int loopCount) {

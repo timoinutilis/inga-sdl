@@ -85,6 +85,8 @@ GameState *LoadGameState(const char *filename, GameConfig *config) {
                 SDL_RWread(file, itemFilename, sizeof(char), FILE_NAME_SIZE);
                 AddInventoryItem(gameState, id, itemName, itemFilename, true);
             }
+            
+            gameState->textSpeed = SDL_ReadU8(file);
         }
         SDL_RWclose(file);
     }
@@ -119,6 +121,8 @@ void SaveGameState(GameState *gameState, const char *filename, GameConfig *confi
             SDL_RWwrite(file, item->filename, sizeof(char), FILE_NAME_SIZE);
             item = item->next;
         }
+        
+        SDL_WriteU8(file, gameState->textSpeed);
         
         SDL_RWclose(file);
     }
