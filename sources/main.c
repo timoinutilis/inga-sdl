@@ -20,6 +20,7 @@
 
 #include <SDL2/SDL.h>
 #include <SDL2_ttf/SDL_ttf.h>
+#include <SDL2_mixer/SDL_mixer.h>
 #include "Config.h"
 #include "Global.h"
 #include "Game.h"
@@ -29,8 +30,14 @@
 #define MAX_CHEAT_SIZE 30
 
 int main(int argc, const char * argv[]) {
-    SDL_Init(SDL_INIT_VIDEO);
+    SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO);
     TTF_Init();
+    
+    int flags = MIX_INIT_OGG;
+    int initted = Mix_Init(flags);
+    if ((initted & flags) != flags) {
+        printf("Mix_Init: %s\n", Mix_GetError());
+    }
     
     GameConfig *config = LoadGameConfig();
     if (!config) {
@@ -43,6 +50,10 @@ int main(int argc, const char * argv[]) {
     SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
     SDL_RenderSetLogicalSize(renderer, SCREEN_WIDTH, SCREEN_HEIGHT);
     SDL_Texture *prerenderTexture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, SCREEN_WIDTH, SCREEN_HEIGHT);
+    
+    if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 1024) == -1) {
+        printf("Mix_OpenAudio: %s\n", Mix_GetError());
+    }
     
     SDL_Event event;
     
@@ -130,10 +141,13 @@ int main(int argc, const char * argv[]) {
     FreeImage(paletteImage);
     FreeGameConfig(config);
     
+    Mix_CloseAudio();
+    
     SDL_DestroyTexture(prerenderTexture);
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     
+    Mix_Quit();
     TTF_Quit();
     SDL_Quit();
     

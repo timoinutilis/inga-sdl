@@ -38,6 +38,7 @@
 #include "Menu.h"
 #include "SlotList.h"
 #include "GameConfig.h"
+#include "SoundManager.h"
 
 typedef struct Focus {
     const char *name;
@@ -74,6 +75,7 @@ typedef struct Game {
     Fader fader;
     Menu *menu;
     SlotList *slotList;
+    SoundManager *soundManager;
 } Game;
 
 Game *CreateGame(GameConfig *config);

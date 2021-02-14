@@ -42,6 +42,7 @@ Game *CreateGame(GameConfig *config) {
         game->escImage = LoadImage("Esc", GetGlobalPalette(), true, false);
         game->menu = CreateMenu(game);
         game->slotList = CreateSlotList(config);
+        game->soundManager = CreateSoundManager();
         InitFader(&game->fader, FADE_DURATION);
         
         // Main Person
@@ -57,6 +58,7 @@ Game *CreateGame(GameConfig *config) {
 
 void FreeGame(Game *game) {
     if (!game) return;
+    FreeSoundManager(game->soundManager);
     FreeSlotList(game->slotList);
     FreeMenu(game->menu);
     FreeCursor(game->cursorNormal);

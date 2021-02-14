@@ -72,7 +72,13 @@ unsigned long LaufeINGA(Thread *thread, Game *game, unsigned long ptr, bool *wie
         SetLocation(game, peekv(game, ptr + 2), peeks(script, ptr + 4));
 //        SndSchleifeAbbruch();
 //        MeldungAbbruch();
-//        if (peekv(game, ptr + 8) > 0) SpieleCDTrack(peekv(game, ptr + 8)); else StoppeCD();
+        
+        int trackNumber = peekv(game, ptr + 8);
+        if (trackNumber > 0) {
+            PlayTrack(game->soundManager, trackNumber);
+        } else {
+            StopTrack(game->soundManager);
+        }
         return(ptr + 10);
     }
     if (opc == 2) { //EinrichtungEnde.
@@ -585,11 +591,11 @@ unsigned long LaufeINGA(Thread *thread, Game *game, unsigned long ptr, bool *wie
         return(ptr + 6);
     }
     if (opc == 47) { //CDNummer.
-//        SpieleCDTrack(peekv(game, ptr + 2));
+        PlayTrack(game->soundManager, peekv(game, ptr + 2));
         return(ptr + 4);
     }
     if (opc == 48) { //CDStopp.
-//        StoppeCD();
+        StopTrack(game->soundManager);
         return(ptr + 2);
     }
     if (opc == 61) { //LadeSound.
