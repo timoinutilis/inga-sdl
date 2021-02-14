@@ -31,12 +31,20 @@ SoundManager *CreateSoundManager() {
 
 void FreeSoundManager(SoundManager *soundManager) {
     if (!soundManager) return;
+    
+    Mix_HaltChannel(-1);
+    
     StopTrack(soundManager);
+    
+    for (int i = 0; i < NUM_SOUND_SLOTS; ++i) {
+        FreeSound(soundManager, i);
+    }
+    
     free(soundManager);
 }
 
 void PlayTrack(SoundManager *soundManager, int number) {
-    if (!soundManager && number != soundManager->currentTrackNumber) return;
+    if (!soundManager || number == soundManager->currentTrackNumber) return;
     StopTrack(soundManager);
     
     char path[FILENAME_MAX];
@@ -63,4 +71,57 @@ void StopTrack(SoundManager *soundManager) {
     }
     
     soundManager->currentTrackNumber = 0;
+}
+
+void LoadSound(SoundManager *soundManager, int slot, const char *filename) {
+    if (!soundManager) return;
+    
+    FreeSound(soundManager, slot);
+    
+    char path[FILENAME_MAX];
+    sprintf(path, "game/Sounds/%s.aiff", filename);
+    
+    Mix_Chunk *sound = Mix_LoadWAV(path);
+    if (!sound) {
+        printf("Mix_LoadWAV: %s\n", Mix_GetError());
+    } else {
+        soundManager->sounds[slot] = sound;
+    }
+}
+
+void FreeSound(SoundManager *soundManager, int slot) {
+    if (!soundManager) return;
+    
+    Mix_Chunk *sound = soundManager->sounds[slot];
+    if (sound) {
+        Mix_FreeChunk(sound);
+        soundManager->sounds[slot] = NULL;
+    }
+}
+
+void PlaySound(SoundManager *soundManager, int slot, int volume, int pan) {
+    if (!soundManager) return;
+    
+    Mix_Chunk *sound = soundManager->sounds[slot];
+    if (!sound) return;
+    
+    if (Mix_PlayChannel(0, sound, 0) == -1) {
+        printf("Mix_PlayChannel: %s\n", Mix_GetError());
+    }
+}
+
+void PlaySoundLoop(SoundManager *soundManager, int slot, int volume, int pan) {
+    if (!soundManager) return;
+    
+    Mix_Chunk *sound = soundManager->sounds[slot];
+    if (!sound) return;
+    
+    if (Mix_PlayChannel(1, sound, -1) == -1) {
+        printf("Mix_PlayChannel: %s\n", Mix_GetError());
+    }
+}
+
+void StopSoundLoop(SoundManager *soundManager) {
+    if (!soundManager) return;
+    Mix_HaltChannel(1);
 }

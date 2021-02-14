@@ -39,4 +39,6 @@
 
 #define MAX_TEXT_SPEED 2
 
+#define NUM_SOUND_SLOTS 8
+
 #endif /* Config_h */

@@ -23,10 +23,12 @@
 
 #include <stdio.h>
 #include <SDL2_mixer/SDL_mixer.h>
+#include "Config.h"
 
 typedef struct SoundManager {
     Mix_Music *music;
     int currentTrackNumber;
+    Mix_Chunk *sounds[NUM_SOUND_SLOTS];
 } SoundManager;
 
 SoundManager *CreateSoundManager(void);
@@ -34,5 +36,11 @@ void FreeSoundManager(SoundManager *soundManager);
 
 void PlayTrack(SoundManager *soundManager, int number);
 void StopTrack(SoundManager *soundManager);
+
+void LoadSound(SoundManager *soundManager, int slot, const char *filename);
+void FreeSound(SoundManager *soundManager, int slot);
+void PlaySound(SoundManager *soundManager, int slot, int volume, int pan);
+void PlaySoundLoop(SoundManager *soundManager, int slot, int volume, int pan);
+void StopSoundLoop(SoundManager *soundManager);
 
 #endif /* SoundManager_h */

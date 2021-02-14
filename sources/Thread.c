@@ -70,7 +70,7 @@ unsigned long LaufeINGA(Thread *thread, Game *game, unsigned long ptr, bool *wie
             return(ptr);
         }
         SetLocation(game, peekv(game, ptr + 2), peeks(script, ptr + 4));
-//        SndSchleifeAbbruch();
+        StopSoundLoop(game->soundManager);
 //        MeldungAbbruch();
         
         int trackNumber = peekv(game, ptr + 8);
@@ -599,23 +599,23 @@ unsigned long LaufeINGA(Thread *thread, Game *game, unsigned long ptr, bool *wie
         return(ptr + 2);
     }
     if (opc == 61) { //LadeSound.
-//        SndLadeSound(peeks(script, ptr + 4), peekv(game, ptr + 2));
+        LoadSound(game->soundManager, peekv(game, ptr + 2), peeks(script, ptr + 4));
         return(ptr + 8);
     }
     if (opc == 64) { //EntferneSound.
-//        SndEntferneSound(peekv(game, ptr + 2));
+        FreeSound(game->soundManager, peekv(game, ptr + 2));
         return(ptr + 4);
     }
     if (opc == 66) { //SpieleSound.
-//        SndSpieleSound(peekv(game, ptr + 2), peekv(game, ptr + 4), peekv(game, ptr + 6));
+        PlaySound(game->soundManager, peekv(game, ptr + 2), peekv(game, ptr + 4), peekv(game, ptr + 6));
         return(ptr + 8);
     }
     if (opc == 95) { //SpieleSoundSchleife.
-//        SndSpieleSoundSchleife(peekv(game, ptr + 2), peekv(game, ptr + 4), peekv(game, ptr + 6));
+        PlaySoundLoop(game->soundManager, peekv(game, ptr + 2), peekv(game, ptr + 4), peekv(game, ptr + 6));
         return(ptr + 8);
     }
     if (opc == 96) { //StoppeSoundSchleife.
-//        SndSchleifeAbbruch();
+        StopSoundLoop(game->soundManager);
         return(ptr + 2);
     }
     if (opc == 97) { //SoundVolPan.
