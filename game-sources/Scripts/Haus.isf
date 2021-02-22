@@ -1,0 +1,13 @@
+; ---Haus.isf---
+
+:House
+Furnishings 2, "Haus", 0
+    Field 1, "Exit", 412, 163, 483, 299, 444, 304, 1
+FurnishingsEnd
+
+List
+IfUsed 1
+	PlaySound 2, 100, 50
+    JumpLocation Start, 520, 309, 2
+Finish
+Stop

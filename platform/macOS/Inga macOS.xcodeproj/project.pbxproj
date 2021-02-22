@@ -34,6 +34,9 @@
 		92B9145F248D5298009FE277 /* Cursor.c in Sources */ = {isa = PBXBuildFile; fileRef = 92B9145D248D5298009FE277 /* Cursor.c */; };
 		92BD6FEC24980B9D00478C4F /* GameConfig.h in Resources */ = {isa = PBXBuildFile; fileRef = 92BD6FEB24980B9D00478C4F /* GameConfig.h */; };
 		92BD6FEF24980C0C00478C4F /* SlotList.c in Sources */ = {isa = PBXBuildFile; fileRef = 92BD6FEE24980C0C00478C4F /* SlotList.c */; };
+		92C9DD7225E42B4A0078AC2F /* SoundManager.c in Sources */ = {isa = PBXBuildFile; fileRef = 92C9DD7025E42B4A0078AC2F /* SoundManager.c */; };
+		92C9DD7425E42B7D0078AC2F /* SDL2_mixer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92C9DD7325E42B7D0078AC2F /* SDL2_mixer.framework */; };
+		92C9DD7525E42B7D0078AC2F /* SDL2_mixer.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 92C9DD7325E42B7D0078AC2F /* SDL2_mixer.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		92CEB3B0249AB4B000CF969A /* GameConfig.c in Sources */ = {isa = PBXBuildFile; fileRef = 92CEB3AF249AB4B000CF969A /* GameConfig.c */; };
 		92F6EF78249CAFDD00B147C3 /* cJSON.c in Sources */ = {isa = PBXBuildFile; fileRef = 92F6EF77249CAFDC00B147C3 /* cJSON.c */; };
 /* End PBXBuildFile section */
@@ -45,6 +48,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				92C9DD7525E42B7D0078AC2F /* SDL2_mixer.framework in Embed Frameworks */,
 				925A82452458D41D00610C63 /* SDL2_ttf.framework in Embed Frameworks */,
 				929EDBE1244E46E300DC64D9 /* SDL2.framework in Embed Frameworks */,
 			);
@@ -101,6 +105,9 @@
 		92BD6FEB24980B9D00478C4F /* GameConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameConfig.h; sourceTree = "<group>"; };
 		92BD6FED24980C0C00478C4F /* SlotList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SlotList.h; sourceTree = "<group>"; };
 		92BD6FEE24980C0C00478C4F /* SlotList.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = SlotList.c; sourceTree = "<group>"; };
+		92C9DD7025E42B4A0078AC2F /* SoundManager.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = SoundManager.c; sourceTree = "<group>"; };
+		92C9DD7125E42B4A0078AC2F /* SoundManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SoundManager.h; sourceTree = "<group>"; };
+		92C9DD7325E42B7D0078AC2F /* SDL2_mixer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL2_mixer.framework; path = ../../../../../../Library/Frameworks/SDL2_mixer.framework; sourceTree = "<group>"; };
 		92CEB3AF249AB4B000CF969A /* GameConfig.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = GameConfig.c; sourceTree = "<group>"; };
 		92F6EF76249CAFDC00B147C3 /* cJSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cJSON.h; sourceTree = "<group>"; };
 		92F6EF77249CAFDC00B147C3 /* cJSON.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = cJSON.c; sourceTree = "<group>"; };
@@ -111,6 +118,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				92C9DD7425E42B7D0078AC2F /* SDL2_mixer.framework in Frameworks */,
 				925A82442458D41D00610C63 /* SDL2_ttf.framework in Frameworks */,
 				929EDBE0244E46E300DC64D9 /* SDL2.framework in Frameworks */,
 			);
@@ -190,6 +198,8 @@
 				925BA817248A514D008CBA9A /* Sequence.h */,
 				92BD6FEE24980C0C00478C4F /* SlotList.c */,
 				92BD6FED24980C0C00478C4F /* SlotList.h */,
+				92C9DD7025E42B4A0078AC2F /* SoundManager.c */,
+				92C9DD7125E42B4A0078AC2F /* SoundManager.h */,
 				922EADEC245DE60E00E4027E /* Thread.c */,
 				922EADEB245DE60E00E4027E /* Thread.h */,
 				924B17AE2455D598008A9B43 /* Utils.c */,
@@ -202,6 +212,7 @@
 		929EDBDE244E46E300DC64D9 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				92C9DD7325E42B7D0078AC2F /* SDL2_mixer.framework */,
 				925A82432458D41D00610C63 /* SDL2_ttf.framework */,
 				929EDBDF244E46E300DC64D9 /* SDL2.framework */,
 			);
@@ -288,6 +299,7 @@
 				924B17B22455EA08008A9B43 /* NavigationMap.c in Sources */,
 				92F6EF78249CAFDD00B147C3 /* cJSON.c in Sources */,
 				9299FAA2248A78EC007CB594 /* Fader.c in Sources */,
+				92C9DD7225E42B4A0078AC2F /* SoundManager.c in Sources */,
 				923DAD3A2463221F0094F825 /* GameState.c in Sources */,
 				929EDBD6244E32BD00DC64D9 /* main.c in Sources */,
 				924B17AF2455D598008A9B43 /* Utils.c in Sources */,
@@ -311,6 +323,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = x86_64;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -357,7 +370,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -369,6 +382,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = x86_64;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -409,7 +423,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = macosx;

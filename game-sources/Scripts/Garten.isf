@@ -1,0 +1,45 @@
+; ---Garten.isf---
+
+:Start
+LoadSound 1, "SndNehmen"
+LoadSound 2, "SndTuer"
+
+:Garden
+Furnishings 1, "Garten", 2
+    Field 1, "Door", 496, 151, 551, 302, 519, 314, 1
+    Field 2, "Lake", 1, 268, 72, 325, 129, 310, 1
+    Deco 3, "Voegel", 364, 77, 1
+    Object 4, "Key", "Schluessel", 146, 308, 150, 320, 1
+FurnishingsEnd
+
+List
+IfUsed 1
+    IfEqual #1, 0
+        Talk 0, 3, "The door is locked.", ""
+        Stop
+    Finish
+    PlaySound 2, 100, 50
+    JumpLocation House, 438, 304, 2
+Finish
+IfUsedWith 1, 256
+    IfEqual #1, 0
+        Talk 0, 3, "The door is unlocked now.", ""
+        SetVariable 1, 1
+        Stop
+    Finish
+    Talk 0, 3, "I locked it again.", ""
+    SetVariable 1, 0
+    Stop
+Finish
+IfUsed 2
+    Talk 0, 3, "I don't want to go swimming now!", ""
+    Stop
+Finish
+IfUsed 4
+    AnimGet 0, 4, 4, 2
+    PlaySound 1, 100, 50
+    GetInventory 256, "Key", "GegSchluessel"
+    WaitFor 0
+    Stop
+Finish
+Stop
