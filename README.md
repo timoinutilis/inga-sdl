@@ -13,16 +13,18 @@ The Inga SDL project is a complete reimplementation of all important features of
 - New implementation of most old features
 - Loads files in the formats of the old engine
 - Interpreter based on code of the old engine
+- Sound effects
+- Music (ogg files instead of CD audio)
 - 100% compatible with Ermentrud game
-- No sound
 - No new authoring tools
 
 ## Future Ideas
 
 - Support for new file formats (especially PNG)
-- Sound effects and music
 - New script language
 - New authoring tools
+
+Currently the future ideas are halted, because I want to make something new in Unity now.
 
 ## Links
 
