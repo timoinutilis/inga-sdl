@@ -584,7 +584,7 @@ unsigned long LaufeINGA(Thread *thread, Game *game, unsigned long ptr, bool *wie
             *wieder = false;
             return(ptr);
         }
-//        SndSchleifeAbbruch();
+        StopSoundLoop(game->soundManager);
         RefreshGameState(game);
         game->sequence = LoadSequence(peeks(script, ptr + 2));
         *wieder = false;

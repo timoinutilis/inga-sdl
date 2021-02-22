@@ -29,6 +29,7 @@ typedef struct SoundManager {
     Mix_Music *music;
     int currentTrackNumber;
     Mix_Chunk *sounds[NUM_SOUND_SLOTS];
+    const char *soundFilenames[NUM_SOUND_SLOTS];
 } SoundManager;
 
 SoundManager *CreateSoundManager(void);
