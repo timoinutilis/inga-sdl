@@ -1,3 +1,6 @@
 platform/macOS/Inga macOS.xcodeproj/xcuserdata
 platform/macOS/Inga macOS.xcodeproj/project.xcworkspace/xcuserdata
 *.uaem
+.idea
+cmake-build-debug
+cmake-build-release
