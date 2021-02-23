@@ -132,7 +132,7 @@ Image *LoadImage(const char *filename, SDL_Palette *defaultPalette, bool createM
                         SDL_FreeSurface(surface);
                     }
                 }
-                free(pixels);
+//                free(pixels); // don't free pixels because they are used by SDL_Surface! (ageisler)
             }
             if (ibmColors) {
                 free(ibmColors);
