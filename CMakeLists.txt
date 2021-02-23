@@ -11,9 +11,24 @@ pkg_search_module(SDL2 REQUIRED sdl2)
 pkg_search_module(SDL2IMAGE REQUIRED SDL2_image>=2.0.0)
 pkg_search_module(SDL2MIXER REQUIRED SDL2_mixer>=2.0.0)
 pkg_search_module(SDL2TTF REQUIRED SDL2_ttf>=2.0.0)
+link_directories(${SDL2_LIBRARY_DIRS})
 
 # find threads
 find_package(Threads)
+
+if (APPLE)
+    message(STATUS "mac os x target system detected")
+    set(SDL2_INCLUDE_DIR "${SDL2_INCLUDE_DIRS}/..")
+elseif (UNIX AND NOT APPLE)
+    message(STATUS "linux target system detected")
+    set(SDL2_INCLUDE_DIR "${SDL2_INCLUDE_DIRS}")
+else ()
+    message(WARNING "unknown target system detected")
+    set(SDL2_INCLUDE_DIR "${SDL2_INCLUDE_DIRS}")
+endif ()
+
+message(STATUS "SDL2_INCLUDE_DIR=${SDL2_INCLUDE_DIR}")
+message(STATUS "SDL2_LIBRARY_DIRS=${SDL2_LIBRARY_DIRS}")
 
 set(INGA_SDL_SRC
         sources/cJSON.c
@@ -46,7 +61,7 @@ add_executable(${PROJECT_NAME}
         )
 target_include_directories(${PROJECT_NAME}
         PRIVATE sources
-        PRIVATE ${SDL2_INCLUDE_DIRS}
+        PRIVATE ${SDL2_INCLUDE_DIR}
         )
 target_link_libraries(${PROJECT_NAME}
         ${SDL2_LIBRARIES}
