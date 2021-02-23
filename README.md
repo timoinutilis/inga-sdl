@@ -43,7 +43,13 @@ Currently the future ideas are halted, because I want to make something new in U
 - go to inga-sdl
 - mkdir build && cd build
 - cmake ../ -DCMAKE_BUILD_TYPE=Release
-- cmake --build . --target all
+- cmake --build . --target all  
+  
+or your can generate a XCode project (example uses arm build):
+- go to inga-sdl
+- mkdir xc && cd xc
+- cmake ../ -G Xcode -DCMAKE_OSX_ARCHITECTURES=arm64
+- open the generated XCode project
 
 ## Links
 
