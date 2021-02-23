@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.16.3)
 
 project(IngaSdl)
 
@@ -12,6 +12,7 @@ pkg_search_module(SDL2IMAGE REQUIRED SDL2_image>=2.0.0)
 pkg_search_module(SDL2MIXER REQUIRED SDL2_mixer>=2.0.0)
 pkg_search_module(SDL2TTF REQUIRED SDL2_ttf>=2.0.0)
 
+# find threads
 find_package(Threads)
 
 set(INGA_SDL_SRC
@@ -42,7 +43,6 @@ set(INGA_SDL_SRC
         )
 add_executable(${PROJECT_NAME}
         ${INGA_SDL_SRC}
-
         )
 target_include_directories(${PROJECT_NAME}
         PRIVATE sources
