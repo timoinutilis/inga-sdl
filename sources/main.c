@@ -27,60 +27,91 @@
 #include "Font.h"
 #include "GameConfig.h"
 
+#include <stdio.h>
+
 #define MAX_CHEAT_SIZE 30
 
-int main(int argc, const char * argv[]) {
+static Uint32 screen_options = SDL_WINDOW_SHOWN | SDL_WINDOW_FULLSCREEN_DESKTOP;
+
+static bool parse_args(int argc, char **argv) {
+    bool res = false;
+    for (int i = 1; i < argc; ++i) {
+        if ((strcmp(argv[i], "--help") == 0) || (strcmp(argv[i], "-h")) == 0) {
+            res = true;
+        } else if ((strcmp(argv[i], "--window") == 0) || (strcmp(argv[i], "-w")) == 0) {
+            screen_options = SDL_WINDOW_SHOWN;
+        } else {
+            printf("unknown argument: %s\n", argv[i]);
+        }
+    }
+    return res;
+}
+
+static void print_help() {
+    printf("usage:\n"
+           "  -h, --help         show help message and quit\n"
+           "  -w, --window       enable window mode\n");
+}
+
+int main(int argc, char **argv) {
+    if (parse_args(argc, argv)) {
+        print_help();
+        exit(EXIT_SUCCESS);
+    }
+
     SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO);
     TTF_Init();
-    
+
     int flags = MIX_INIT_OGG;
-    int initted = Mix_Init(flags);
-    if ((initted & flags) != flags) {
+    const int inited = Mix_Init(flags);
+    if ((inited & flags) != flags) {
         printf("Mix_Init: %s\n", Mix_GetError());
     }
-    
+
     GameConfig *config = LoadGameConfig();
     if (!config) {
         exit(EXIT_FAILURE);
     }
-    
+
     SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
-    
-    SDL_Window *window = SDL_CreateWindow(config->gameName, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN | SDL_WINDOW_FULLSCREEN_DESKTOP);
+
+    SDL_Window *window = SDL_CreateWindow(config->gameName, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_WIDTH, SCREEN_HEIGHT,
+                                          screen_options);
     SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
     SDL_RenderSetLogicalSize(renderer, SCREEN_WIDTH, SCREEN_HEIGHT);
-    SDL_Texture *prerenderTexture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, SCREEN_WIDTH, SCREEN_HEIGHT);
-    
+    SDL_Texture *prerenderTexture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, SCREEN_WIDTH,
+                                                      SCREEN_HEIGHT);
+
     if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 1024) == -1) {
         printf("Mix_OpenAudio: %s\n", Mix_GetError());
     }
     Mix_AllocateChannels(2);
-    
+
     SDL_Event event;
-    
+
     SetGlobalRenderer(renderer);
-    
+
     Image *paletteImage = LoadImage(config->paletteFilename, NULL, false, true);
     if (paletteImage) {
         SetGlobalPalette(paletteImage->surface->format->palette);
     }
-    
+
     Game *game = CreateGame(config);
-        
+
     int mouseX = 0;
     int mouseY = 0;
     int mouseButtonIndex = 0;
     bool cheatInputActive = false;
     char cheatInput[MAX_CHEAT_SIZE] = {0};
-    
+
     unsigned long lastTicks = SDL_GetTicks();
-    
+
     SDL_Rect screenRect = {0, 0, SCREEN_WIDTH, SCREEN_HEIGHT};
-    
+
     while (!ShouldQuit()) {
         Uint32 ticks = SDL_GetTicks();
-        int deltaTicks = (int)(ticks - lastTicks);
-        
+        int deltaTicks = (int) (ticks - lastTicks);
+
         while (SDL_PollEvent(&event)) {
             switch (event.type) {
                 case SDL_QUIT:
@@ -115,42 +146,41 @@ int main(int argc, const char * argv[]) {
                     break;
             }
         }
-                
+
         HandleMouseInGame(game, mouseX, mouseY, mouseButtonIndex);
         UpdateGame(game, deltaTicks);
-        
+
         SDL_SetRenderTarget(renderer, prerenderTexture);
         DrawGame(game);
-        
+
         SDL_SetRenderTarget(renderer, NULL);
         SDL_RenderClear(renderer);
         SDL_RenderCopy(renderer, prerenderTexture, &screenRect, &screenRect);
         SDL_RenderPresent(renderer);
-        
+
         mouseButtonIndex = 0;
         lastTicks = ticks;
-        
+
         // limit to 60 FPS
         Uint32 ticksDelta = SDL_GetTicks() - ticks;
-        if (ticksDelta < 16)
-        {
+        if (ticksDelta < 16) {
             SDL_Delay(16 - ticksDelta);
         }
     }
-    
+
     FreeGame(game);
     FreeImage(paletteImage);
     FreeGameConfig(config);
-    
+
     Mix_CloseAudio();
-    
+
     SDL_DestroyTexture(prerenderTexture);
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
-    
+
     Mix_Quit();
     TTF_Quit();
     SDL_Quit();
-    
+
     return 0;
 }
