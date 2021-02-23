@@ -25,7 +25,7 @@
 GameConfig *LoadGameConfig(void) {
     GameConfig *config = NULL;
     
-    const char *jsonString = LoadFile("game/config.json", NULL);
+    char *jsonString = LoadFile("game/config.json", NULL);
     if (jsonString) {
         cJSON *json = cJSON_Parse(jsonString);
         if (!json) {
@@ -59,6 +59,7 @@ GameConfig *LoadGameConfig(void) {
                 }
             }
         }
+        free(jsonString);
     }
     return config;
 }

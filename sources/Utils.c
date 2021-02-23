@@ -41,11 +41,12 @@ void *LoadFile(const char *path, Sint64 *outSize) {
     if (!file) {
         printf("LoadFile: %s\n", SDL_GetError());
     } else {
-        Sint64 size = SDL_RWsize(file);
+        const Sint64 size = SDL_RWsize(file);
         if (size < 0) {
             printf("LoadFile: %s\n", SDL_GetError());
         } else {
-            content = malloc(size);
+            content = malloc(size + 1);
+            memset(content, 0, size +1 );
             if (!SDL_RWread(file, content, size, 1)) {
                 printf("LoadFile: %s\n", SDL_GetError());
                 free(content);
