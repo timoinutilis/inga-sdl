@@ -21,10 +21,11 @@
 #include "Font.h"
 #include "Global.h"
 
-Font *LoadFont(const char *filename, int size) {
+Font *LoadFont(const char *filename, const int size) {
     Font *font = NULL;
     
     char path[FILENAME_MAX];
+    memset(path,0, FILENAME_MAX);
     char *basePath = SDL_GetBasePath();
     if (basePath) {
         sprintf(path, "%sgame/%s.ttf", basePath, filename);
