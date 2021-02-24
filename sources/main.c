@@ -28,6 +28,7 @@
 #include "GameConfig.h"
 
 #include <stdio.h>
+#include <assert.h>
 
 #define MAX_CHEAT_SIZE 30
 
@@ -77,11 +78,16 @@ int main(int argc, char **argv) {
 
     SDL_Window *window = SDL_CreateWindow(config->gameName, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_WIDTH, SCREEN_HEIGHT,
                                           screen_options);
-    SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+    assert(window);
+    
+    SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_SOFTWARE);
+    assert(renderer);
+    
     SDL_RenderSetLogicalSize(renderer, SCREEN_WIDTH, SCREEN_HEIGHT);
     SDL_Texture *prerenderTexture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, SCREEN_WIDTH,
                                                       SCREEN_HEIGHT);
-
+    assert(prerenderTexture);
+    
     if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 1024) == -1) {
         printf("Mix_OpenAudio: %s\n", Mix_GetError());
     }
