@@ -28,7 +28,7 @@ Font *LoadFont(const char *filename, const int size) {
     memset(path,0, FILENAME_MAX);
     char *basePath = SDL_GetBasePath();
     if (basePath) {
-        sprintf(path, "%sgame/%s.ttf", basePath, filename);
+        sprintf(path, "%s/game/%s.ttf", basePath, filename);
     } else {
         sprintf(path, "game/%s.ttf", filename);
     }
