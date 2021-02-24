@@ -2,9 +2,6 @@ cmake_minimum_required(VERSION 3.16.3)
 
 project(IngaSdl)
 
-set(CMAKE_CXX_STANDARD 11)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
 # find sdl
 include(FindPkgConfig)
 pkg_search_module(SDL2 REQUIRED sdl2)
@@ -12,9 +9,6 @@ pkg_search_module(SDL2IMAGE REQUIRED SDL2_image>=2.0.0)
 pkg_search_module(SDL2MIXER REQUIRED SDL2_mixer>=2.0.0)
 pkg_search_module(SDL2TTF REQUIRED SDL2_ttf>=2.0.0)
 link_directories(${SDL2_LIBRARY_DIRS})
-
-# find threads
-find_package(Threads)
 
 if (APPLE)
     message(STATUS "mac os x target system detected")
@@ -68,6 +62,5 @@ target_link_libraries(${PROJECT_NAME}
         ${SDL2IMAGE_LIBRARIES}
         ${SDL2MIXER_LIBRARIES}
         ${SDL2TTF_LIBRARIES}
-        ${CMAKE_THREAD_LIBS_INIT}
         m
         )
