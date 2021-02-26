@@ -51,6 +51,13 @@ or your can generate a XCode project (example uses arm build):
 - cmake ../ -G Xcode -DCMAKE_OSX_ARCHITECTURES=arm64
 - open the generated XCode project
 
+## Howto build for MorphOs
+- you will need SDL2 installed inclusive the SDL2 SDK
+- SDL2 static libs should be in gg:usr/local/lib
+- SDL2 header files should be in gg:/usr/local/include
+- go to inga-sdl
+- make -f Makefile.mos
+
 ## Links
 
 - https://www.inutilis.com/portfolio/inga-adventure-game-engine/
