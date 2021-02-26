@@ -1,6 +1,6 @@
 
-C_FLAGS_MOS_GCC_RELEASE=-Ofast -noixemul -faltivec -mabi=altivec -DNDEBUG
-C_FLAGS_MOS_GCC_DEBUG=-O0 -g -noixemul -faltivec -mabi=altivec
+C_FLAGS_MOS_GCC_RELEASE=-Ofast -noixemul -faltivec -mabi=altivec -DNDEBUG -DSDL2_WORKAROUND
+C_FLAGS_MOS_GCC_DEBUG=-O0 -g -noixemul -faltivec -mabi=altivec -DSDL2_WORKAROUND
 LD_FLAGS_MOS_GCC=-Lgg:usr/local/lib -lm -lSDL2 -lSDL2_image -lSDL2_gfx -lSDL2_mixer -lSDL2_ttf
 INCLUDES_MOS_GCC=-Igg:/usr/local/include
 CC_GCC=ppc-morphos-gcc-10

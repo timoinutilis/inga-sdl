@@ -28,7 +28,11 @@ Font *LoadFont(const char *filename, const int size) {
     memset(path,0, FILENAME_MAX);
     char *basePath = SDL_GetBasePath();
     if (basePath) {
-        sprintf(path, "%s/game/%s.ttf", basePath, filename);
+#ifdef SDL2_WORKAROUND
+        sprintf(path, "%s/game/%s.ttf", basePath, filename); // this required because there is a bug in Morphos SDL2 port
+#else
+        sprintf(path, "%sgame/%s.ttf", basePath, filename);
+#endif
     } else {
         sprintf(path, "game/%s.ttf", filename);
     }
