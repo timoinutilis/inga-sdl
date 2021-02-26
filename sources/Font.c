@@ -44,6 +44,7 @@ Font *LoadFont(const char *filename, const int size) {
             font->ttfFont = ttfFont;
         }
     }
+    SDL_free(basePath);
     return font;
 }
 
