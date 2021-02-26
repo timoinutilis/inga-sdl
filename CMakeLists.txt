@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.16.3)
 
 project(IngaSdl)
 
+add_compile_options(-Wall -Wextra -pedantic -Wno-unused-parameter)
+
 # find sdl
 include(FindPkgConfig)
 pkg_search_module(SDL2 REQUIRED sdl2)

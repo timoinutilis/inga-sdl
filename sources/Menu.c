@@ -70,12 +70,12 @@ void CloseMenu(Menu *menu) {
     FadeOut(&menu->fader);
 }
 
-bool HandleMouseInMenu(Menu *menu, int x, int y, int buttonIndex) {
+bool HandleMouseInMenu(Menu *menu, const int x, const int y, const int buttonIndex) {
     if (!menu || menu->fader.state == FaderStateClosed) return false;
     menu->focusedItem = NULL;
     MenuItem *item = menu->rootItem;
     while (item) {
-        if (y >= item->position.y && y < item->position.y + item->image->height) {
+        if (y >= (int)item->position.y && y < (int)item->position.y + item->image->height) {
             menu->focusedItem = item;
             break;
         }

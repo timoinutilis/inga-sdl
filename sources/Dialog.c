@@ -36,12 +36,12 @@ void FreeDialog(Dialog *dialog) {
     free(dialog);
 }
 
-bool HandleMouseInDialog(Dialog *dialog, int x, int y, int buttonIndex) {
+bool HandleMouseInDialog(Dialog *dialog, const int x, const int y, const int buttonIndex) {
     if (!dialog || !dialog->rootItem) return false;
     dialog->focusedItem = NULL;
     DialogItem *item = dialog->rootItem;
     while (item) {
-        if (y >= item->position.y && y < item->position.y + item->image->height) {
+        if (y >= (int)item->position.y && y < (int)item->position.y + item->image->height) {
             dialog->focusedItem = item;
             break;
         }
