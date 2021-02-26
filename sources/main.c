@@ -30,7 +30,8 @@
 #include <stdio.h>
 #include <assert.h>
 
-#define MAX_CHEAT_SIZE 30
+// SDL_TEXTINPUTEVENT_TEXT_SIZE + 1
+#define MAX_CHEAT_SIZE 33
 
 static Uint32 screen_options = SDL_WINDOW_SHOWN | SDL_WINDOW_FULLSCREEN_DESKTOP;
 
@@ -108,7 +109,8 @@ int main(int argc, char **argv) {
     int mouseY = 0;
     int mouseButtonIndex = 0;
     bool cheatInputActive = false;
-    char cheatInput[MAX_CHEAT_SIZE] = {0};
+    char cheatInput[MAX_CHEAT_SIZE];
+    memset(cheatInput,0,MAX_CHEAT_SIZE);
 
     unsigned long lastTicks = SDL_GetTicks();
 
@@ -147,7 +149,7 @@ int main(int argc, char **argv) {
                     break;
                 case SDL_TEXTINPUT:
                     if (cheatInputActive) {
-                        strncat(cheatInput, event.text.text, MAX_CHEAT_SIZE - 1);
+                        strncat(cheatInput, event.text.text, SDL_TEXTINPUTEVENT_TEXT_SIZE);
                     }
                     break;
             }
