@@ -155,7 +155,7 @@ unsigned long LaufeINGA(Thread *thread, Game *game, unsigned long ptr, bool *wie
         if (element) {
             element->isVisible = false;
         }
-        SetVisibility(game->gameState, game->location->id, element->id, false, false);
+        SetVisibility(game->gameState, game->location->id, id, false, false);
         return(ptr + 4);
     }
     if (opc == 62) { //ObjektStandbild.

@@ -35,7 +35,11 @@ NavigationMap *LoadNavigationMap(const char *filename) {
         int width = 640;
         int *topLimits = calloc(width, sizeof(int));
         int *bottomLimits = calloc(width, sizeof(int));
-        if (topLimits && bottomLimits) {
+        if (!topLimits || !bottomLimits) {
+            printf("LoadNavigationMapILK: Out of memory\n");
+            free(topLimits);
+            free(bottomLimits);
+        } else {
             for (int i = 0; i < width; i++) {
                 Uint8 value = SDL_ReadU8(file);
                 topLimits[i] = value * 2;
@@ -50,6 +54,7 @@ NavigationMap *LoadNavigationMap(const char *filename) {
                 navigationMap->topLimits = topLimits;
                 navigationMap->bottomLimits = bottomLimits;
             } else {
+                printf("LoadNavigationMapILK: Out of memory\n");
                 if (topLimits) free(topLimits);
                 if (bottomLimits) free(bottomLimits);
             }
@@ -82,7 +87,6 @@ NavigationPath *CreateNavigationPath(NavigationMap *navigationMap, Vector origin
             if (navigationMap->topLimits[x] > navigationMap->bottomLimits[x]) {
                 destination.x = safeX;
                 destination.y = (navigationMap->topLimits[safeX] + navigationMap->bottomLimits[safeX]) * 0.5;
-                dstX = safeX;
                 path->reachesDestination = false;
                 break;
             }

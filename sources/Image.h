@@ -43,7 +43,7 @@ typedef struct Image {
     int width;
     int height;
     Animation *animation;
-    Uint8 *pixel_buffer;
+    Uint8 *pixelBuffer;
 } Image;
 
 enum StripDirection {

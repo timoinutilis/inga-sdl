@@ -123,11 +123,7 @@ Image *LoadImage(const char *filename, SDL_Palette *defaultPalette, bool createM
                             image->texture = texture;
                             if (keepSurface) {
                                 image->surface = surface;
-                                image->pixel_buffer=pixels;
-                            }else{
-                                image->surface=NULL;
-                                free(pixels);
-                                image->pixel_buffer=NULL;
+                                image->pixelBuffer = pixels;
                             }
                             image->animation = animation;
                             image->width = width;
@@ -136,15 +132,21 @@ Image *LoadImage(const char *filename, SDL_Palette *defaultPalette, bool createM
                     }
                     if (!keepSurface) {
                         SDL_FreeSurface(surface);
+                        surface = NULL;
                     }
                 }
-//                free(pixels); // don't free pixels because they are used by SDL_Surface! (ageisler)
+                if (!surface) {
+                    free(pixels); // don't free pixels when they are used by SDL_Surface! (ageisler)
+                    pixels = NULL;
+                }
             }
             if (ibmColors) {
                 free(ibmColors);
+                ibmColors = NULL;
             }
             if (animation && !image) {
                 FreeAnimation(animation);
+                animation = NULL;
             }
         }
         SDL_RWclose(file);
@@ -230,7 +232,7 @@ void FreeImage(Image *image) {
     SDL_DestroyTexture(image->texture);
     SDL_FreeSurface(image->surface);
     FreeAnimation(image->animation);
-    free(image->pixel_buffer);
+    free(image->pixelBuffer);
     free(image);
 }
 

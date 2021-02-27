@@ -25,7 +25,10 @@
 GameConfig *LoadGameConfig(void) {
     GameConfig *config = NULL;
     
-    char *jsonString = LoadFile("game/config.json", NULL);
+    char path[FILENAME_MAX];
+    GameFilePath(path, NULL, "config", "json");
+    
+    char *jsonString = LoadFile(path, NULL);
     if (jsonString) {
         cJSON *json = cJSON_Parse(jsonString);
         if (!json) {

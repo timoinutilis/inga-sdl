@@ -19,6 +19,7 @@
 //
 
 #include <SDL2/SDL.h>
+
 #ifdef __APPLE__
 #include <SDL2_ttf/SDL_ttf.h>
 #include <SDL2_mixer/SDL_mixer.h>
@@ -26,6 +27,7 @@
 #include <SDL2/SDL_ttf.h>
 #include <SDL2/SDL_mixer.h>
 #endif
+
 #include "Config.h"
 #include "Global.h"
 #include "Game.h"
@@ -33,20 +35,19 @@
 #include "GameConfig.h"
 
 #include <stdio.h>
-#include <assert.h>
 
-// SDL_TEXTINPUTEVENT_TEXT_SIZE + 1
-#define MAX_CHEAT_SIZE 33
+// SDL_TEXTINPUTEVENT_TEXT_SIZE (0-terminator is already included)
+#define MAX_CHEAT_SIZE 32
 
-static Uint32 screen_options = SDL_WINDOW_SHOWN | SDL_WINDOW_FULLSCREEN_DESKTOP;
+static Uint32 screenOptions = SDL_WINDOW_SHOWN | SDL_WINDOW_FULLSCREEN_DESKTOP;
 
-static bool parse_args(int argc, char **argv) {
+static bool parseArgs(int argc, char **argv) {
     bool res = false;
     for (int i = 1; i < argc; ++i) {
         if ((strcmp(argv[i], "--help") == 0) || (strcmp(argv[i], "-h")) == 0) {
             res = true;
         } else if ((strcmp(argv[i], "--window") == 0) || (strcmp(argv[i], "-w")) == 0) {
-            screen_options = SDL_WINDOW_SHOWN;
+            screenOptions = SDL_WINDOW_SHOWN;
         } else {
             printf("unknown argument: %s\n", argv[i]);
         }
@@ -54,17 +55,21 @@ static bool parse_args(int argc, char **argv) {
     return res;
 }
 
-static void print_help() {
+static void printHelp() {
     printf("usage:\n"
            "  -h, --help         show help message and quit\n"
            "  -w, --window       enable window mode\n");
 }
 
 int main(int argc, char **argv) {
-    if (parse_args(argc, argv)) {
-        print_help();
+    if (parseArgs(argc, argv)) {
+        printHelp();
         exit(EXIT_SUCCESS);
     }
+    
+    SDL_Window *window = NULL;
+    SDL_Renderer *renderer = NULL;
+    SDL_Texture *prerenderTexture = NULL;
 
     SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO);
     TTF_Init();
@@ -77,26 +82,33 @@ int main(int argc, char **argv) {
 
     GameConfig *config = LoadGameConfig();
     if (!config) {
-        exit(EXIT_FAILURE);
+        goto out;
     }
 
     SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
 
-    SDL_Window *window = SDL_CreateWindow(config->gameName, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_WIDTH, SCREEN_HEIGHT,
-                                          screen_options);
-    assert(window);
+    window = SDL_CreateWindow(config->gameName, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_WIDTH, SCREEN_HEIGHT, screenOptions);
+    if (!window) {
+        printf("SDL_CreateWindow: %s\n", SDL_GetError());
+        goto out;
+    }
 
 #ifdef SDL2_WORKAROUND
-    SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_SOFTWARE);
+    renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_SOFTWARE);
 #else
-    SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED|SDL_RENDERER_PRESENTVSYNC);
+    renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 #endif
-    assert(renderer);
+    if (!renderer) {
+        printf("SDL_CreateRenderer: %s\n", SDL_GetError());
+        goto out;
+    }
     
     SDL_RenderSetLogicalSize(renderer, SCREEN_WIDTH, SCREEN_HEIGHT);
-    SDL_Texture *prerenderTexture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, SCREEN_WIDTH,
-                                                      SCREEN_HEIGHT);
-    assert(prerenderTexture);
+    prerenderTexture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, SCREEN_WIDTH, SCREEN_HEIGHT);
+    if (!prerenderTexture) {
+        printf("SDL_CreateTexture: %s\n", SDL_GetError());
+        goto out;
+    }
     
     if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 1024) == -1) {
         printf("Mix_OpenAudio: %s\n", Mix_GetError());
@@ -119,7 +131,7 @@ int main(int argc, char **argv) {
     int mouseButtonIndex = 0;
     bool cheatInputActive = false;
     char cheatInput[MAX_CHEAT_SIZE];
-    memset(cheatInput,0,MAX_CHEAT_SIZE);
+    memset(cheatInput, 0, MAX_CHEAT_SIZE);
 
     unsigned long lastTicks = SDL_GetTicks();
 
@@ -157,8 +169,8 @@ int main(int argc, char **argv) {
                     }
                     break;
                 case SDL_TEXTINPUT:
-                    if (cheatInputActive) {
-                        strncat(cheatInput, event.text.text, SDL_TEXTINPUTEVENT_TEXT_SIZE);
+                    if (cheatInputActive && strlen(cheatInput) + strlen(event.text.text) < MAX_CHEAT_SIZE) {
+                        strcat(cheatInput, event.text.text);
                     }
                     break;
             }
@@ -188,9 +200,10 @@ int main(int argc, char **argv) {
     FreeGame(game);
     FreeImage(paletteImage);
     FreeGameConfig(config);
-
+    
     Mix_CloseAudio();
 
+out:
     SDL_DestroyTexture(prerenderTexture);
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
