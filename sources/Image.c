@@ -20,6 +20,7 @@
 
 #include "Image.h"
 #include "Global.h"
+#include "Utils.h"
 
 typedef struct IBMColor {
     Uint8 r;
@@ -35,7 +36,7 @@ Image *LoadImage(const char *filename, SDL_Palette *defaultPalette, bool createM
     SDL_Renderer *renderer = GetGlobalRenderer();
     
     char path[FILENAME_MAX];
-    sprintf(path, "game/BitMaps/%s.ibm", filename);
+    GameFilePath(path, "BitMaps", filename, "ibm");
     
     SDL_RWops *file = SDL_RWFromFile(path, "rb");
     if (!file) {
@@ -151,13 +152,16 @@ Image *LoadMaskedImage(const char *filename, Image *sourceImage) {
     Image *image = NULL;
     SDL_Renderer *renderer = GetGlobalRenderer();
     
-    char path[FILENAME_MAX];
-    sprintf(path, "game/BitMaps/%s.imp", filename);
-    
-    char *p = strrchr(path, '_');
+    // truncate after "_": For example image files "House", "House_1", "House_2" all use mask file "House"
+    char maskFilename[FILENAME_MAX];
+    strcpy(maskFilename, filename);
+    char *p = strrchr(maskFilename, '_');
     if (p) {
-        strcpy(p, ".imp");
+        *p = 0;
     }
+    
+    char path[FILENAME_MAX];
+    GameFilePath(path, "BitMaps", maskFilename, "imp");
     
     SDL_RWops *file = SDL_RWFromFile(path, "rb");
     if (!file) {

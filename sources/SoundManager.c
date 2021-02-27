@@ -19,6 +19,7 @@
 //
 
 #include "SoundManager.h"
+#include "Utils.h"
 
 void FreeTrack(SoundManager *soundManager);
 
@@ -51,7 +52,9 @@ void PlayTrack(SoundManager *soundManager, int number) {
     FreeTrack(soundManager);
     
     char path[FILENAME_MAX];
-    sprintf(path, "game/Tracks/Track%02d.ogg", number);
+    char filename[30];
+    sprintf(filename, "Track%02d", number);
+    GameFilePath(path, "Tracks", filename, "ogg");
     
     soundManager->music = Mix_LoadMUS(path);
     if (!soundManager->music) {
@@ -92,7 +95,7 @@ void LoadSound(SoundManager *soundManager, int slot, const char *filename) {
     FreeSound(soundManager, slot);
     
     char path[FILENAME_MAX];
-    sprintf(path, "game/Sounds/%s.aiff", filename);
+    GameFilePath(path, "Sounds", filename, "aiff");
     
     Mix_Chunk *sound = Mix_LoadWAV(path);
     if (!sound) {

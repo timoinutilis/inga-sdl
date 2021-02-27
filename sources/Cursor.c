@@ -19,12 +19,13 @@
 //
 
 #include "Cursor.h"
+#include "Utils.h"
 
 SDL_Cursor *LoadCursor(const char *filename) {
     SDL_Cursor *cursor = NULL;
     
     char path[FILENAME_MAX];
-    sprintf(path, "game/%s.bmp", filename);
+    GameFilePath(path, NULL, filename, "bmp");
     
     SDL_Surface *surface = SDL_LoadBMP(path);
     if (!surface) {

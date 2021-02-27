@@ -60,3 +60,21 @@ void *LoadFile(const char *path, Sint64 *outSize) {
     }
     return content;
 }
+
+void GameFilePath(char *dest, const char *subfolder, const char *filename, const char *extension) {
+    char *basePath = SDL_GetBasePath();
+    if (basePath) {
+        strcpy(dest, basePath);
+        SDL_free(basePath);
+    } else {
+        strcpy(dest, "");
+    }
+    strcat(dest, "game/");
+    if (subfolder) {
+        strcat(dest, subfolder);
+        strcat(dest, "/");
+    }
+    strcat(dest, filename);
+    strcat(dest, ".");
+    strcat(dest, extension);
+}

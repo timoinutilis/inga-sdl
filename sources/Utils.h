@@ -33,5 +33,6 @@ Vector MakeVector(float x, float y);
 SDL_Rect MakeRect(int x, int y, int width, int height);
 SDL_Rect MakeRectFromTo(int x1, int y1, int x2, int y2);
 void *LoadFile(const char *path, Sint64 *outSize);
+void GameFilePath(char *dest, const char *subfolder, const char *filename, const char *extension);
 
 #endif /* Utils_h */

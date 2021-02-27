@@ -26,10 +26,10 @@ Script *LoadScript(const char *filename) {
     Script *script = NULL;
     
     char ingaPath[FILENAME_MAX];
-    sprintf(ingaPath, "game/Dats/%s.inga", filename);
+    GameFilePath(ingaPath, "Dats", filename, "inga");
     
     char itxtPath[FILENAME_MAX];
-    sprintf(itxtPath, "game/Dats/%s.itxt", filename);
+    GameFilePath(itxtPath, "Dats", filename, "itxt");
     
     void *inga = LoadFile(ingaPath, NULL);
     void *itxt = LoadFile(itxtPath, NULL);

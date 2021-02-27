@@ -20,17 +20,13 @@
 
 #include "Font.h"
 #include "Global.h"
+#include "Utils.h"
 
 Font *LoadFont(const char *filename, int size) {
     Font *font = NULL;
     
     char path[FILENAME_MAX];
-    char *basePath = SDL_GetBasePath();
-    if (basePath) {
-        sprintf(path, "%sgame/%s.ttf", basePath, filename);
-    } else {
-        sprintf(path, "game/%s.ttf", filename);
-    }
+    GameFilePath(path, NULL, filename, "ttf");
     
     TTF_Font *ttfFont = TTF_OpenFont(path, size);
     if (!ttfFont) {
