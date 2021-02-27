@@ -23,7 +23,11 @@
 
 #include <stdio.h>
 #include <SDL2/SDL.h>
+#ifdef __APPLE__
+#include <SDL2_ttf/SDL_ttf.h>
+#else
 #include <SDL2/SDL_ttf.h>
+#endif
 #include "Image.h"
 
 typedef struct Font {
