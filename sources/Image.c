@@ -82,7 +82,7 @@ Image *LoadImage(const char *filename, SDL_Palette *defaultPalette, bool createM
                 animation = CreateAnimationFromStrip(numFrames, direction, frameWidth, frameHeight, pivotX, pivotY, ticks);
             }
             
-            size_t size = bytesPerRow * height;
+            const size_t size = bytesPerRow * height;
             Uint8 *pixels = calloc(sizeof(Uint8), size);
             if (!pixels) {
                 printf("LoadImage: Out of memory\n");
@@ -123,6 +123,11 @@ Image *LoadImage(const char *filename, SDL_Palette *defaultPalette, bool createM
                             image->texture = texture;
                             if (keepSurface) {
                                 image->surface = surface;
+                                image->pixel_buffer=pixels;
+                            }else{
+                                image->surface=NULL;
+                                free(pixels);
+                                image->pixel_buffer=NULL;
                             }
                             image->animation = animation;
                             image->width = width;
@@ -133,7 +138,7 @@ Image *LoadImage(const char *filename, SDL_Palette *defaultPalette, bool createM
                         SDL_FreeSurface(surface);
                     }
                 }
-                free(pixels);
+//                free(pixels); // don't free pixels because they are used by SDL_Surface! (ageisler)
             }
             if (ibmColors) {
                 free(ibmColors);
@@ -225,6 +230,7 @@ void FreeImage(Image *image) {
     SDL_DestroyTexture(image->texture);
     SDL_FreeSurface(image->surface);
     FreeAnimation(image->animation);
+    free(image->pixel_buffer);
     free(image);
 }
 

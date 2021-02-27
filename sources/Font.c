@@ -22,10 +22,11 @@
 #include "Global.h"
 #include "Utils.h"
 
-Font *LoadFont(const char *filename, int size) {
+Font *LoadFont(const char *filename, const int size) {
     Font *font = NULL;
     
     char path[FILENAME_MAX];
+
     GameFilePath(path, NULL, filename, "ttf");
     
     TTF_Font *ttfFont = TTF_OpenFont(path, size);
@@ -39,6 +40,7 @@ Font *LoadFont(const char *filename, int size) {
             font->ttfFont = ttfFont;
         }
     }
+    SDL_free(basePath);
     return font;
 }
 

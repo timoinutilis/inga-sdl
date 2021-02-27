@@ -26,6 +26,38 @@ The Inga SDL project is a complete reimplementation of all important features of
 
 Currently the future ideas are halted, because I want to make something new in Unity now.
 
+## Howto build with CMake
+
+### Linux (Ubuntu)
+- install required libraries:  
+  sudo apt install libsdl2-dev libsdl2-gfx-dev libsdl2-image-dev libsdl2-mixer-dev libsdl2-ttf-dev
+- go to inga-sdl
+- mkdir build && cd build
+- cmake ../ -DCMAKE_BUILD_TYPE=Release
+- cmake --build . --target all
+
+### MacOsX
+- install homebrew and CMake
+- install required libraries:
+  brew install sdl2 sdl2_gfx sdl2_image sdl2_mixer sdl2_ttf
+- go to inga-sdl
+- mkdir build && cd build
+- cmake ../ -DCMAKE_BUILD_TYPE=Release
+- cmake --build . --target all  
+  
+or your can generate a XCode project (example uses arm build):
+- go to inga-sdl
+- mkdir xc && cd xc
+- cmake ../ -G Xcode -DCMAKE_OSX_ARCHITECTURES=arm64
+- open the generated XCode project
+
+## Howto build for MorphOs
+- you will need SDL2 installed inclusive the SDL2 SDK
+- SDL2 static libs should be in gg:usr/local/lib
+- SDL2 header files should be in gg:/usr/local/include
+- go to inga-sdl
+- make -f Makefile.mos
+
 ## Links
 
 - https://www.inutilis.com/portfolio/inga-adventure-game-engine/

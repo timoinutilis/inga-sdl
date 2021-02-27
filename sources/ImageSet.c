@@ -126,7 +126,7 @@ Image *GetImageFromSet(ImageSet *imageSet, int id, Vector direction) {
     return NULL;
 }
 
-Vector DirectionForSide(ImageSide side) {
+Vector DirectionForSide(const ImageSide side) {
     switch (side) {
         case ImageSideLeft:
             return MakeVector(-1, 0);
@@ -137,4 +137,5 @@ Vector DirectionForSide(ImageSide side) {
         case ImageSideBack:
             return MakeVector(0, -1);
     }
+    return MakeVector(0,0);
 }

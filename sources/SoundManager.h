@@ -22,7 +22,7 @@
 #define SoundManager_h
 
 #include <stdio.h>
-#include <SDL2_mixer/SDL_mixer.h>
+#include <SDL2/SDL_mixer.h>
 #include "Config.h"
 
 typedef struct SoundManager {

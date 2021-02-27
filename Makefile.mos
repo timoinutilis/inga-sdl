@@ -1,0 +1,65 @@
+
+C_FLAGS_MOS_GCC_RELEASE=-Ofast -noixemul -faltivec -mabi=altivec -DNDEBUG -DSDL2_WORKAROUND
+C_FLAGS_MOS_GCC_DEBUG=-O0 -g -noixemul -faltivec -mabi=altivec -DSDL2_WORKAROUND
+LD_FLAGS_MOS_GCC=-Lgg:usr/local/lib -lm -lSDL2 -lSDL2_image -lSDL2_gfx -lSDL2_mixer -lSDL2_ttf
+INCLUDES_MOS_GCC=-Igg:/usr/local/include
+CC_GCC=ppc-morphos-gcc-10
+
+all: IngaSdlRelease_mos IngaSdlDebug_mos
+
+#--- IngaSdl Release ---#
+IngaSdlRelease_mos: sources/cJSON.c\
+         sources/Cursor.c\
+         sources/Dialog.c\
+         sources/Element.c\
+         sources/Fader.c\
+         sources/Font.c\
+         sources/Game.c\
+         sources/GameConfig.c\
+         sources/GameState.c\
+         sources/Global.c\
+         sources/Image.c\
+         sources/ImageSet.c\
+         sources/InventoryBar.c\
+         sources/Location.c\
+         sources/Menu.c\
+         sources/NavigationMap.c\
+         sources/Script.c\
+         sources/Sequence.c\
+         sources/SlotList.c\
+         sources/SoundManager.c\
+         sources/Thread.c\
+         sources/Utils.c\
+         sources/main.c
+	$(CC_GCC) -o ${@} ${INCLUDES_MOS_GCC} $(^) ${C_FLAGS_MOS_GCC_RELEASE} ${LD_FLAGS_MOS_GCC}
+
+#--- IngaSdl Debug ---#
+IngaSdlDebug_mos: sources/cJSON.c\
+         sources/Cursor.c\
+         sources/Dialog.c\
+         sources/Element.c\
+         sources/Fader.c\
+         sources/Font.c\
+         sources/Game.c\
+         sources/GameConfig.c\
+         sources/GameState.c\
+         sources/Global.c\
+         sources/Image.c\
+         sources/ImageSet.c\
+         sources/InventoryBar.c\
+         sources/Location.c\
+         sources/Menu.c\
+         sources/NavigationMap.c\
+         sources/Script.c\
+         sources/Sequence.c\
+         sources/SlotList.c\
+         sources/SoundManager.c\
+         sources/Thread.c\
+         sources/Utils.c\
+         sources/main.c
+	$(CC_GCC) -o ${@} ${INCLUDES_MOS_GCC} $(^) ${C_FLAGS_MOS_GCC_DEBUG} ${LD_FLAGS_MOS_GCC}
+
+#--- clean ---#
+.PHONY: clean
+clean: 
+	delete IngaSdlRelease_mos IngaSdlDebug_mos
