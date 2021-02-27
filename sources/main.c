@@ -35,35 +35,41 @@
 #include "GameConfig.h"
 
 #include <stdio.h>
+#include <string.h>
 
 // SDL_TEXTINPUTEVENT_TEXT_SIZE (0-terminator is already included)
 #define MAX_CHEAT_SIZE 32
 
-static Uint32 screenOptions = SDL_WINDOW_SHOWN | SDL_WINDOW_FULLSCREEN_DESKTOP;
+typedef struct Arguments {
+    bool help;
+    bool window;
+} Arguments;
 
-static bool parseArgs(int argc, char **argv) {
-    bool res = false;
+void ParseArguments(Arguments *arguments, int argc, char **argv) {
+    memset(arguments, 0, sizeof(Arguments));
     for (int i = 1; i < argc; ++i) {
         if ((strcmp(argv[i], "--help") == 0) || (strcmp(argv[i], "-h")) == 0) {
-            res = true;
+            arguments->help = true;
         } else if ((strcmp(argv[i], "--window") == 0) || (strcmp(argv[i], "-w")) == 0) {
-            screenOptions = SDL_WINDOW_SHOWN;
+            arguments->window = true;
         } else {
             printf("unknown argument: %s\n", argv[i]);
         }
     }
-    return res;
 }
 
-static void printHelp() {
+void PrintHelp() {
     printf("usage:\n"
            "  -h, --help         show help message and quit\n"
            "  -w, --window       enable window mode\n");
 }
 
 int main(int argc, char **argv) {
-    if (parseArgs(argc, argv)) {
-        printHelp();
+    Arguments arguments;
+    
+    ParseArguments(&arguments, argc, argv);
+    if (arguments.help) {
+        PrintHelp();
         exit(EXIT_SUCCESS);
     }
     
@@ -86,8 +92,13 @@ int main(int argc, char **argv) {
     }
 
     SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
-
-    window = SDL_CreateWindow(config->gameName, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_WIDTH, SCREEN_HEIGHT, screenOptions);
+    
+    Uint32 windowFlags = SDL_WINDOW_SHOWN;
+    if (!arguments.window) {
+        windowFlags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
+    }
+    
+    window = SDL_CreateWindow(config->gameName, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_WIDTH, SCREEN_HEIGHT, windowFlags);
     if (!window) {
         printf("SDL_CreateWindow: %s\n", SDL_GetError());
         goto out;
