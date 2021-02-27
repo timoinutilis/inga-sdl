@@ -20,22 +20,14 @@
 
 #include "Font.h"
 #include "Global.h"
+#include "Utils.h"
 
 Font *LoadFont(const char *filename, const int size) {
     Font *font = NULL;
     
     char path[FILENAME_MAX];
-    memset(path,0, FILENAME_MAX);
-    char *basePath = SDL_GetBasePath();
-    if (basePath) {
-#ifdef SDL2_WORKAROUND
-        sprintf(path, "%s/game/%s.ttf", basePath, filename); // this required because there is a bug in Morphos SDL2 port
-#else
-        sprintf(path, "%sgame/%s.ttf", basePath, filename);
-#endif
-    } else {
-        sprintf(path, "game/%s.ttf", filename);
-    }
+
+    GameFilePath(path, NULL, filename, "ttf");
     
     TTF_Font *ttfFont = TTF_OpenFont(path, size);
     if (!ttfFont) {

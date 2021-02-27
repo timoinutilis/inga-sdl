@@ -20,12 +20,13 @@
 
 #include "NavigationMap.h"
 #include <SDL2/SDL.h>
+#include "Utils.h"
 
 NavigationMap *LoadNavigationMap(const char *filename) {
     NavigationMap *navigationMap = NULL;
     
     char path[FILENAME_MAX];
-    sprintf(path, "game/Dats/%s.ilk", filename);
+    GameFilePath(path, "Dats", filename, "ilk");
     
     SDL_RWops *file = SDL_RWFromFile(path, "rb");
     if (!file) {

@@ -19,12 +19,13 @@
 //
 
 #include "ImageSet.h"
+#include "Utils.h"
 
 ImageSet *LoadImageSet(const char *filename, SDL_Palette *defaultPalette, bool createMasks) {
     ImageSet *imageSet = NULL;
     
     char path[FILENAME_MAX];
-    sprintf(path, "game/Dats/%s.ipe", filename);
+    GameFilePath(path, "Dats", filename, "ipe");
     
     SDL_RWops *file = SDL_RWFromFile(path, "rb");
     if (!file) {

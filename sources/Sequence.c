@@ -28,7 +28,7 @@ Sequence *LoadSequence(const char *filename) {
     Sequence *sequence = NULL;
     
     char path[FILENAME_MAX];
-    sprintf(path, "game/Dats/%s.isq", filename);
+    GameFilePath(path, "Dats", filename, "isq");
     
     Sint64 size = 0;
     char *text = LoadFile(path, &size);
