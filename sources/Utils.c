@@ -66,6 +66,9 @@ void GameFilePath(char *dest, const char *subfolder, const char *filename, const
     char *basePath = SDL_GetBasePath();
     if (basePath) {
         strcpy(dest, basePath);
+#ifdef SDL2_WORKAROUND
+        strcat(dest, "/");
+#endif
         SDL_free(basePath);
     } else {
         strcpy(dest, "");
