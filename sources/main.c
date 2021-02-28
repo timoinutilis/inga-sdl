@@ -43,6 +43,7 @@
 typedef struct Arguments {
     bool help;
     bool window;
+    bool borderless;
 } Arguments;
 
 void ParseArguments(Arguments *arguments, int argc, char **argv) {
@@ -52,6 +53,8 @@ void ParseArguments(Arguments *arguments, int argc, char **argv) {
             arguments->help = true;
         } else if ((strcmp(argv[i], "--window") == 0) || (strcmp(argv[i], "-w")) == 0) {
             arguments->window = true;
+        } else if ((strcmp(argv[i], "--borderless") == 0) || (strcmp(argv[i], "-b")) == 0) {
+            arguments->borderless = true;
         } else {
             printf("unknown argument: %s\n", argv[i]);
         }
@@ -61,7 +64,8 @@ void ParseArguments(Arguments *arguments, int argc, char **argv) {
 void PrintHelp() {
     printf("usage:\n"
            "  -h, --help         show help message and quit\n"
-           "  -w, --window       enable window mode\n");
+           "  -w, --window       enable window mode\n"
+           "  -b, --borderless   removes window border (for better screenshots)\n");
 }
 
 int main(int argc, char **argv) {
@@ -96,6 +100,9 @@ int main(int argc, char **argv) {
     Uint32 windowFlags = SDL_WINDOW_SHOWN;
     if (!arguments.window) {
         windowFlags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
+    }
+    if (arguments.borderless) {
+        windowFlags |= SDL_WINDOW_BORDERLESS;
     }
     
     window = SDL_CreateWindow(config->gameName, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_WIDTH, SCREEN_HEIGHT, windowFlags);
