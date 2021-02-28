@@ -1,0 +1,39 @@
+# Inga SDL - AmigaOS 4 Makefile
+
+CXX = gcc
+
+INCPATH = -I. -I/sdk/local/newlib/include -I/sdk/local/newlib/include/SDL2
+
+DEPDIR = build
+DEPFLAGS = -MMD -MP -MF $(DEPDIR)/$*.d
+
+CXXFLAGS = -O3 -athread=native
+CXXFLAGS_ALL = $(INCPATH) $(DEPFLAGS) $(CXXFLAGS)
+
+LDFLAGS =
+LDFLAGS_ALL = $(LDFLAGS)
+
+LIBS = -lSDL2_ttf -lfreetype -lSDL2_mixer -lflac -lmikmod -lmodplug -lsmpeg2 -lvorbisfile -lvorbis -logg -lstdc++ -lsdl2 -lauto
+
+SOURCES = sources/cJSON.c sources/Font.c sources/Image.c sources/Menu.c sources/SoundManager.c \
+		  sources/Cursor.c sources/Game.c sources/ImageSet.c sources/NavigationMap.c \
+		  sources/Thread.c sources/Dialog.c sources/GameConfig.c sources/InventoryBar.c \
+		  sources/Script.c sources/Utils.c sources/Element.c sources/GameState.c sources/Location.c \
+		  sources/Sequence.c sources/Fader.c sources/Global.c sources/main.c sources/SlotList.c
+
+OBJECTS = $(SOURCES:%=$(DEPDIR)/%.o)
+DEPENDENCIES = $(SOURCES:%=$(DEPDIR)/%.d)
+
+all: inga
+
+include $(wildcard $(DEPENDENCIES))
+
+$(DEPDIR)/%.o: %
+	mkdir -p $(@D)
+	$(CXX) $(CXXFLAGS_ALL) $< -o $@ -c
+
+inga: $(OBJECTS)
+	$(CXX) $(CXXFLAGS_ALL) $(LDFLAGS_ALL) $^ -o $@ $(LIBS)
+
+clean: $(OBJECTS) $(DEPENDENCIES) inga
+	 rm $^
