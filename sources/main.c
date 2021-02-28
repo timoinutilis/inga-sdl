@@ -111,11 +111,14 @@ int main(int argc, char **argv) {
         goto out;
     }
 
-#ifdef SDL2_WORKAROUND
-    renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_SOFTWARE);
-#else
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
-#endif
+    if(!renderer) {
+        renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_SOFTWARE);
+        printf("using software renderer\n");
+    } else {
+        printf("using hardware renderer\n");
+    }
+    
     if (!renderer) {
         printf("SDL_CreateRenderer: %s\n", SDL_GetError());
         goto out;
