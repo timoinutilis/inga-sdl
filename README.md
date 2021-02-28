@@ -58,6 +58,12 @@ or your can generate a XCode project (example uses arm build):
 - go to inga-sdl
 - make -f Makefile.mos
 
+## Howto build for AmigaOS 4
+- you need to have SDL2 library installed, get it here
+- https://github.com/AmigaPorts/SDL/releases
+- go to inga-sdl
+- make -f Makefile.os4
+
 ## Links
 
 - https://www.inutilis.com/portfolio/inga-adventure-game-engine/
