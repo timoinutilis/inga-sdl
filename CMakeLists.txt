@@ -2,7 +2,10 @@ cmake_minimum_required(VERSION 3.16.3)
 
 project(IngaSdl)
 
-add_compile_options(-Wall -Wextra -pedantic -Wno-unused-parameter)
+if (UNIX)
+    add_compile_options(-Wall -Wextra -pedantic -Wno-unused-parameter)
+endif ()
+
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/SDL2)
 
 # find sdl
@@ -46,5 +49,4 @@ target_link_libraries(${PROJECT_NAME}
         SDL2::Main
         SDL2::Mixer
         SDL2::TTF
-        m
         )
