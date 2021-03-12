@@ -22,6 +22,8 @@
 #include "Global.h"
 #include "Utils.h"
 
+#include <stdlib.h>
+
 typedef struct IBMColor {
     Uint8 r;
     Uint8 g;
@@ -94,16 +96,17 @@ Image *LoadImage(const char *filename, SDL_Palette *defaultPalette, bool createM
                 } else {
                     SDL_Palette *surfacePalette = surface->format->palette;
                     if (ibmColors) {
-                        SDL_Color colors[surfacePalette->ncolors];
-                        for (int i = 0; i < surfacePalette->ncolors; i++) {
+                        SDL_Color *colors = malloc(sizeof(SDL_Color) * surfacePalette->ncolors);
+                        for (int i = 0; i < surfacePalette->ncolors; ++i) {
                             SDL_Color *sdlColor = &colors[i];
-                            IBMColor *ibmColor = &ibmColors[i];
+                            const IBMColor *ibmColor = &ibmColors[i];
                             sdlColor->r = ibmColor->r;
                             sdlColor->g = ibmColor->g;
                             sdlColor->b = ibmColor->b;
                             sdlColor->a = 255;
                         }
                         SDL_SetPaletteColors(surfacePalette, colors, 0, surfacePalette->ncolors);
+                        free(colors);
                     } else if (defaultPalette) {
                         SDL_SetPaletteColors(surfacePalette, defaultPalette->colors, 0, surfacePalette->ncolors);
                     }

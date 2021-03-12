@@ -2,9 +2,10 @@ cmake_minimum_required(VERSION 3.16.3)
 
 project(IngaSdl)
 
-if (UNIX)
-    add_compile_options(-Wall -Wextra -pedantic -Wno-unused-parameter)
-endif ()
+if(UNIX)
+  add_compile_options(-Wall -Wextra -pedantic -Wno-unused-parameter)
+endif()
+
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/SDL2)
 
@@ -44,7 +45,8 @@ add_executable(${PROJECT_NAME}
         )
 target_include_directories(${PROJECT_NAME}
         PRIVATE sources
-        )
+	PRIVATE ${SDL2_INCLUDE_DIR}/../
+	)
 target_link_libraries(${PROJECT_NAME}
         SDL2::Main
         SDL2::Mixer
