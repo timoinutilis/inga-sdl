@@ -50,3 +50,8 @@ target_link_libraries(${PROJECT_NAME}
         SDL2::Mixer
         SDL2::TTF
         )
+if (UNIX)
+    target_link_libraries(${PROJECT_NAME}
+            m
+            )
+endif ()
