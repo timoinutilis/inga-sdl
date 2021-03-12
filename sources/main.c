@@ -19,6 +19,7 @@
 //
 
 #include <SDL2/SDL.h>
+#include <stdlib.h>
 
 #ifdef __APPLE__
 #include <SDL2_ttf/SDL_ttf.h>
