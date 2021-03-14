@@ -1,0 +1,48 @@
+<html>
+<head>
+<title>ListeAbbruch</title>
+<meta name="Generator" content="GuideML 2.6 (http://www.unsatisfactorysoftware.co.uk)">
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="Database" content="Kompendium.guide">
+<link rel="up" href="main.html" title="Contents" />
+<link rel="previous" href="lis.html" title="&lt; Browse" />
+<link rel="next" href="setvar.html" title="Browse &gt;" />
+<link rel="help" href="http://www.unsatisfactorysoftware.co.uk/help.guide/main.html" title="AmigaGuide Help" />
+<link rel="GuideML" href="http://www.unsatisfactorysoftware.co.uk/" title="Unsatisfactory Software" />
+</head>
+<body>
+<a href="main.html">Contents</a> | <a href="lis.html">&lt; Browse</a> | <a href="setvar.html">Browse &gt;</a>
+<hr>
+<tt>
+<b>ListeAbbruch</b><p>
+<br>
+Nachdem der Spieler ein Objekt oder eine Antwort angeklickt hat, wird das Skript
+bekannterma&szlig;en nach einem &quot;Liste&quot;- bzw. &quot;Dialogliste&quot;-Befehl fortgef&uuml;hrt. Dabei
+befindet sich das Programm in einem speziellen Modus, der keine Personenaktionen
+zul&auml;sst. Dies &auml;ndert sich erst nach einer bestandenen &quot;Wenn&quot;-Abfrage, oder beim
+&quot;Stopp&quot;-Befehl.<p>
+Mit dem &quot;ListeAbbruch&quot;-Befehl wird ebenfalls der spezielle Modus verlassen, ohne
+aber die Skriptausf&uuml;hrung zu beenden.<p>
+<br>
+Beispiel:<p>
+Antwort 1, &quot;eins&quot;, 0, 0<p>
+Antwort 2, &quot;zwei&quot;, 0, 0<p>
+Antwort 3, &quot;drei&quot;, 0, 0<p>
+Dialogliste<p>
+WennGesagt 2<p>
+    Anim 0, 4, 1<p>
+    Rede 0, 3, &quot;Zwei war richtig!&quot;, &quot;&quot;<p>
+    Stopp<p>
+Abschluss<p>
+ListeAbbruch<p>
+Anim 0, 5, 1<p>
+Rede 0, 3, &quot;Das war falsch.&quot;, &quot;&quot;  *<p>
+Stopp<p>
+* Beim Warten auf die Vollendung von &quot;Anim&quot; w&uuml;rde ohne &quot;ListeAbbruch&quot;
+eine Endlosschleife entstehen, da &quot;Anim&quot; im speziellen Modus nicht ausgef&uuml;hrt
+werden kann.<p>
+<br>
+siehe auch: <a href="dia.html">Dialogliste</a>, <a href="lis.html">Liste</a>, <a href="sto.html">Stopp</a><p>
+</tt>
+</body>
+</html>
