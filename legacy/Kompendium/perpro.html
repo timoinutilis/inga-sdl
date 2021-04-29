@@ -1,0 +1,41 @@
+<html>
+<head>
+<title>PersonProg</title>
+<meta name="Generator" content="GuideML 2.6 (http://www.unsatisfactorysoftware.co.uk)">
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="Database" content="Kompendium.guide">
+<link rel="up" href="main.html" title="Contents" />
+<link rel="previous" href="per.html" title="&lt; Browse" />
+<link rel="next" href="permasakt.html" title="Browse &gt;" />
+<link rel="help" href="http://www.unsatisfactorysoftware.co.uk/help.guide/main.html" title="AmigaGuide Help" />
+<link rel="GuideML" href="http://www.unsatisfactorysoftware.co.uk/" title="Unsatisfactory Software" />
+</head>
+<body>
+<a href="main.html">Contents</a> | <a href="per.html">&lt; Browse</a> | <a href="permasakt.html">Browse &gt;</a>
+<hr>
+<tt>
+<b>PersonProg id<p>
+   ...<p>
+Abschluss</b><p>
+<br>
+Definiert ein Skript f&uuml;r eine Person, das im Inga-internen Multitasking ausgef&uuml;hrt
+wird, solange die Person sichtbar und die Ausf&uuml;hrung aktiv ist.
+Dieser Skriptteil MUSS entweder in einer Endlosschleife stehen, oder
+mit einem &quot;Inaktiv&quot; beendet werden. Auf keinen Fall darf der &quot;Stopp&quot;-Befehl
+in solch einem Skriptteil benutzt werden.<p>
+<br>
+id &middot; ID-Nummer der Person, zu der das Skript geh&ouml;rt<p>
+<br>
+Beispiel:<p>
+Person 10, &quot;Person&quot;, &quot;Mensch&quot;, 500, 400, 1<p>
+PersonProg 10<p>
+    Beginn<p>
+        Laufe 10, 600, 400, 2<p>
+        Laufe 10, 300, 400, 2<p>
+    Schleife<p>
+Abschluss<p>
+<br>
+siehe auch: <a href="per.html">Person</a>, <a href="akt.html">Aktiv</a>, <a href="ina.html">Inaktiv</a>, <a href="sch.html">Schleife</a><p>
+</tt>
+</body>
+</html>

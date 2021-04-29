@@ -51,6 +51,14 @@ or your can generate a XCode project (example uses arm build):
 - cmake ../ -G Xcode -DCMAKE_OSX_ARCHITECTURES=arm64
 - open the generated XCode project
 
+### Windows
+- your will need SDL2 2.0.4 (SDL2, SDL2_TTF, SDL2_MIXER) or newer
+- open developer command prompt and go to niga-sdl
+- mkdir build
+- cd build
+- cmake ../ -DSDL2_PATH=C:\3rdParty\SDL2 -DSDL2_MIXER_PATH=C:\3rdParty\SDL2 -DSDL2_TTF_PATH=C:\3rdParty\SDL2
+- cmake --build . --config Release --target IngaSdl
+
 ## Howto build for MorphOs
 - you will need SDL2 installed inclusive the SDL2 SDK
 - SDL2 static libs should be in gg:usr/local/lib
@@ -59,10 +67,10 @@ or your can generate a XCode project (example uses arm build):
 - make -f Makefile.mos
 
 ## Howto build for AmigaOS 4
-- you need to have SDL2 library installed, get it here:
+- you need to have SDL2 library installed, get it here
 - https://github.com/AmigaPorts/SDL/releases
 - go to inga-sdl
-- make -f Makefile.amigaos4
+- make -f Makefile.os4
 
 ## Links
 
