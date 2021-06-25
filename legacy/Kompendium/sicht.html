@@ -1,0 +1,35 @@
+<html>
+<head>
+<title>Sichtbarkeit</title>
+<meta name="Generator" content="GuideML 2.6 (http://www.unsatisfactorysoftware.co.uk)">
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="Database" content="Kompendium.guide">
+<link rel="up" href="main.html" title="Contents" />
+<link rel="previous" href="zeidif.html" title="&lt; Browse" />
+<link rel="help" href="http://www.unsatisfactorysoftware.co.uk/help.guide/main.html" title="AmigaGuide Help" />
+<link rel="GuideML" href="http://www.unsatisfactorysoftware.co.uk/" title="Unsatisfactory Software" />
+</head>
+<body>
+<a href="main.html">Contents</a> | <a href="zeidif.html">&lt; Browse</a>
+<hr>
+<tt>
+Jedes Element, was irgendwo im Spiel vorkommt, hat eine Variable, welche angibt,
+ob das Element gerade vorhanden (&quot;sichtbar&quot;) ist oder nicht (&quot;unsichtbar&quot;). Diese
+Variable wird aber erst angelegt, wenn das Element das erste Mal definiert wird
+(mit dem Befehl &quot;Feld&quot;, &quot;Zierde&quot;, &quot;Objekt&quot; oder &quot;Person&quot;). Der &quot;sicht&quot;-Parameter
+bei diesen Befehlen gibt den Initialisierungswert der Sichtbarkeitsvariable an, wobei
+0 f&uuml;r unsichtbar, und 1 f&uuml;r sichtbar steht. Nach der ersten Definition wird der
+&quot;sicht&quot;-Parameter dann ignoriert, da die Variable ja schon initialisiert ist.<p>
+Ein Beispiel: Ein Ort wird im Spiel zum ersten Mal betreten, wobei ein Objekt
+definiert wird. Dieses hat den &quot;sicht&quot;-Parameter auf 1, also sichtbar gestellt. Somit
+sieht der Spieler das Objekt und kann es ggf. benutzen. Nun verl&auml;sst er den Ort und
+schwirrt ein wenig in der Weltgeschichte herum. Schlie&szlig;lich gelangt er wieder zum
+schon besuchten Ort. Dort wird im Skript wieder das Objekt definiert, jedoch wird
+nun der &quot;sicht&quot;-Parameter ignoriert, da der Wert schon initialisiert wurde. Das Objekt
+ist also immernoch sichtbar. Nun wird aber mit einem Skriptbefehl das Objekt unsichtbar
+gemacht. Wird dann der Ort nach einem weiteren Ausflug wieder betreten, so bleibt
+das Objekt nat&uuml;rlich unsichtbar, da ja die Sichtbarkeitsvariable auf Unsichtbar
+gestellt ist (und nicht mehr durch den &quot;sicht&quot;-Parameter beeinflusst wird).<p>
+</tt>
+</body>
+</html>
