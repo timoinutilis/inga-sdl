@@ -220,6 +220,15 @@ void HandleGameCheat(Game *game, const char *cheat) {
                 }
             }
         }
+    } else if (cheat[0] == 'i' && cheat[1] == 'i' && cheat[2] == 'i') {
+        int id = atoi(cheat + 3);
+        if (id >= 0) {
+            printf("inventory item %d\n", id);
+            char name[30];
+            sprintf(name, "Test %d", id);
+            AddInventoryItem(game->gameState, id, name, "Esc", false); // "Esc" is one of the few small standard images
+            RefreshInventoryBar(game->inventoryBar, true);
+        }
     }
 }
 
