@@ -78,6 +78,8 @@ void GameFilePath(char *dest, const char *subfolder, const char *filename, const
         strcat(dest, "/");
     }
     strcat(dest, filename);
-    strcat(dest, ".");
-    strcat(dest, extension);
+    if (extension) {
+        strcat(dest, ".");
+        strcat(dest, extension);
+    }
 }

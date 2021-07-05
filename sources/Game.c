@@ -335,7 +335,8 @@ void SetGameState(Game *game, GameState *gameState) {
     game->gameState = gameState;
     game->inventoryBar->gameState = gameState;
     RefreshInventoryBar(game->inventoryBar, true);
-    RunThread(game->mainThread, gameState->locationPtr);
+    Label *label = GetLabelWithName(game->script, gameState->locationLabel);
+    RunThread(game->mainThread, label ? label->ptr : 0);
     game->fader.state = FaderStateClosed;
 }
 

@@ -64,7 +64,7 @@ GameState *LoadGameState(const char *filename, GameConfig *config) {
         if (!gameState) {
             printf("LoadGameState: Out of memory\n");
         } else {
-            gameState->locationPtr = SDL_ReadBE32(file);
+            SDL_RWread(file, gameState->locationLabel, sizeof(char), LABEL_NAME_SIZE);
             SDL_RWread(file, &gameState->startPosition, sizeof(Vector), 1);
             SDL_RWread(file, &gameState->startDirection, sizeof(Vector), 1);
             gameState->playtimeTicks = SDL_ReadBE32(file);
@@ -100,7 +100,7 @@ void SaveGameState(GameState *gameState, const char *filename, GameConfig *confi
     if (!file) {
         printf("SaveGameState: %s\n", SDL_GetError());
     } else {
-        SDL_WriteBE32(file, (Uint32)gameState->locationPtr);
+        SDL_RWwrite(file, gameState->locationLabel, sizeof(char), LABEL_NAME_SIZE);
         SDL_RWwrite(file, &gameState->startPosition, sizeof(Vector), 1);
         SDL_RWwrite(file, &gameState->startDirection, sizeof(Vector), 1);
         SDL_WriteBE32(file, (Uint32)gameState->playtimeTicks);

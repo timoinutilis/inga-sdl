@@ -47,7 +47,7 @@ typedef struct GameState {
     int numVariables;
     InventoryItem *rootInventoryItem;
     int numInventoryItems;
-    unsigned long locationPtr;
+    char locationLabel[LABEL_NAME_SIZE];
     Vector startPosition;
     Vector startDirection;
     unsigned long playtimeTicks;

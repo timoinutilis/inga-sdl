@@ -62,7 +62,7 @@ void ParseArguments(Arguments *arguments, int argc, char **argv) {
     }
 }
 
-void PrintHelp() {
+void PrintHelp(void) {
     printf("usage:\n"
            "  -h, --help         show help message and quit\n"
            "  -w, --window       enable window mode\n"

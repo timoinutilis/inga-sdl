@@ -488,7 +488,11 @@ unsigned long LaufeINGA(Thread *thread, Game *game, unsigned long ptr, bool *wie
     }
     if (opc == 29) { //SpringeOrt.
         unsigned long locationPtr = peekl(script, ptr + 2);
-        game->gameState->locationPtr = locationPtr;
+        Label *label = GetLabelWithPtr(game->script, locationPtr);
+        if (label) {
+            printf("Label for ptr %lu: %s\n", locationPtr, label->name);
+            strcpy(game->gameState->locationLabel, label->name);
+        }
         game->gameState->startPosition = MakeVector(peekv(game, ptr + 6), peekv(game, ptr + 8));
         game->gameState->startDirection = DirectionForSide(peekv(game, ptr + 10));
         return(locationPtr);
