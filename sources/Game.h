@@ -76,6 +76,7 @@ typedef struct Game {
     Menu *menu;
     SlotList *slotList;
     SoundManager *soundManager;
+    FILE *logFile;
 } Game;
 
 Game *CreateGame(GameConfig *config);

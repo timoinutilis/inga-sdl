@@ -21,9 +21,11 @@
 #include "Game.h"
 #include "Global.h"
 #include "Cursor.h"
+#include <time.h>
 
 void SetFocus(Game *game, int x, int y, const char *name);
 void UpdateIdleProg(Game *game, int deltaTicks);
+void InitLogger(Game *game);
 
 Game *CreateGame(GameConfig *config) {
     Game *game = calloc(1, sizeof(Game));
@@ -44,6 +46,7 @@ Game *CreateGame(GameConfig *config) {
         game->slotList = CreateSlotList(config);
         game->soundManager = CreateSoundManager();
         InitFader(&game->fader, FADE_DURATION);
+        InitLogger(game);
         
         // Main Person
         Element *element = CreateElement(MainPersonID);
@@ -58,6 +61,9 @@ Game *CreateGame(GameConfig *config) {
 
 void FreeGame(Game *game) {
     if (!game) return;
+    if (game->logFile) {
+        fclose(game->logFile);
+    }
     FreeSoundManager(game->soundManager);
     FreeSlotList(game->slotList);
     FreeMenu(game->menu);
@@ -102,6 +108,9 @@ void HandleMouseInGame(Game *game, int x, int y, int buttonIndex) {
         SetFocus(game, x, y, NULL);
         game->draggingItemView.item = NULL;
         if (buttonIndex == SDL_BUTTON_LEFT && game->dialog->focusedItem) {
+            if (game->logFile) {
+                fprintf(game->logFile, "Say '%s'\n", game->dialog->focusedItem->text);
+            }
             StartInteraction(game->mainThread, game->dialog->focusedItem->id, 0, VerbSay);
             ResetDialog(game->dialog);
         }
@@ -126,6 +135,9 @@ void HandleMouseInGame(Game *game, int x, int y, int buttonIndex) {
             SetFocus(game, x, y, focusedItem->name);
             if (buttonIndex == SDL_BUTTON_LEFT) {
                 if (game->draggingItemView.item) {
+                    if (game->logFile) {
+                        fprintf(game->logFile, "Use %s with %s\n", focusedItem->name, game->draggingItemView.item->name);
+                    }
                     StartInteraction(game->mainThread, focusedItem->id, game->draggingItemView.item->id, VerbUse);
                     game->draggingItemView.item = NULL;
                     game->inventoryBar->isVisible = false;
@@ -135,6 +147,9 @@ void HandleMouseInGame(Game *game, int x, int y, int buttonIndex) {
                 }
             } else if (buttonIndex == SDL_BUTTON_RIGHT) {
                 game->draggingItemView.item = NULL;
+                if (game->logFile) {
+                    fprintf(game->logFile, "Look at %s\n", focusedItem->name);
+                }
                 StartInteraction(game->mainThread, focusedItem->id, 0, VerbLook);
             }
         } else {
@@ -151,12 +166,18 @@ void HandleMouseInGame(Game *game, int x, int y, int buttonIndex) {
         if (buttonIndex > 0) {
             game->selectedId = focusedElement->id;
             if (game->draggingItemView.item) {
+                if (game->logFile) {
+                    fprintf(game->logFile, "Use %s with %s\n", focusedElement->name, game->draggingItemView.item->name);
+                }
                 game->draggedId = game->draggingItemView.item->id;
                 game->selectedVerb = VerbUse;
                 game->draggingItemView.item = NULL;
                 SetCursor(game->cursorNormal);
             } else {
                 game->selectedVerb = buttonIndex == SDL_BUTTON_RIGHT ? VerbLook : VerbUse;
+                if (game->logFile) {
+                    fprintf(game->logFile, "Click on %s\n", focusedElement->name);
+                }
             }
             Thread *thread = GetThread(game->location, focusedElement->id);
             if (thread) {
@@ -327,10 +348,20 @@ void SetLocation(Game *game, int id, const char *background) {
     
     game->inventoryBar->isEnabled = true;
     game->inventoryBar->isVisible = false;
+    
+    if (game->logFile) {
+        fprintf(game->logFile, "\nLocation %s\n", background);
+        fflush(game->logFile);
+    }
 }
 
 void SetGameState(Game *game, GameState *gameState) {
     if (!game || !gameState) return;
+    
+    if (game->logFile) {
+        fprintf(game->logFile, "\n--- New Game State ---\n");
+    }
+    
     FreeGameState(game->gameState);
     game->gameState = gameState;
     game->inventoryBar->gameState = gameState;
@@ -352,4 +383,20 @@ void MainPersonDidFinishWalking(Game *game) {
         game->selectedId = 0;
         game->draggedId = 0;
     }
+}
+
+void InitLogger(Game *game) {
+    if (!game || !game->config) return;
+    
+    char path[FILENAME_MAX];
+    char *prefPath = SDL_GetPrefPath(game->config->organizationName, game->config->gameName);
+    sprintf(path, "%s%s", prefPath, "log.txt");
+    SDL_free(prefPath);
+    
+    game->logFile = fopen(path, "a");
+    if (!game->logFile) return;
+    
+    time_t now;
+    time(&now);
+    fprintf(game->logFile, "\n--- New Session ---\n\n%s", ctime(&now));
 }
