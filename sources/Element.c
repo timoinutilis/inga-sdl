@@ -194,8 +194,13 @@ Vector GetElementTarget(Element *element, Vector fromPosition) {
 
 void SetElementImageFromSet(Element *element, int imageId) {
     if (!element || !element->imageSet) return;
+    Image *image = GetImageFromSet(element->imageSet, imageId, element->direction);
+    if (!image) {
+        printf("SetElementImageFromSet: Image ID %d not found\n", imageId);
+        return;
+    }
     element->imageId = imageId;
-    element->image = GetImageFromSet(element->imageSet, imageId, element->direction);
+    element->image = image;
     element->frameIndex = 0;
     element->frameTicks = 0;
 }

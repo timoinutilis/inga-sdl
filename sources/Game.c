@@ -300,7 +300,7 @@ void SetFocus(Game *game, int x, int y, const char *name) {
 }
 
 void UpdateIdleProg(Game *game, int deltaTicks) {
-    if (game->mainPerson && game->idleScript.delay && game->mainPerson->action == ElementActionIdle && !game->mainThread->isActive) {
+    if (game->mainPerson && game->idleScript.delay && game->mainPerson->action == ElementActionIdle && !game->mainThread->isActive && !game->draggingItemView.item) {
         game->idleScript.idleTicks += deltaTicks;
         if (game->idleScript.idleTicks >= game->idleScript.delay) {
             RunThread(game->mainThread, game->idleScript.scriptPtr);
