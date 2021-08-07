@@ -544,22 +544,33 @@ unsigned long LaufeINGA(Thread *thread, Game *game, unsigned long ptr, bool *wie
     }
     if (opc == 26) { //WennBenutzt.
         if ((thread->benutzt == 0) || (thread->invbenutzt > 0)) return(peekl(script, ptr + 4));
-        if ((peekv(game, ptr + 2) == thread->benutzt) || (peekv(game, ptr + 2) == 0)) {
+        unsigned short param = peekv(game, ptr + 2);
+        if (param == thread->benutzt) {
             return(ptr + 8);
-        } else {
-            return(peekl(script, ptr + 4));
         }
+        if (param == 0) {
+            if (game->logFile) {
+                fprintf(game->logFile, "> Default handler\n");
+            }
+            return(ptr + 8);
+        }
+        return(peekl(script, ptr + 4));
     }
     if (opc == 27) { //WennBenutztMit.
         if ((thread->benutzt > 0) && (thread->invbenutzt > 0)) {
-            if (((peekv(game, ptr + 2) == thread->benutzt) && (peekv(game, ptr + 4) == thread->invbenutzt)) ||
-                ((peekv(game, ptr + 2) == thread->invbenutzt) && (peekv(game, ptr + 4) == thread->benutzt))) {
+            unsigned short param1 = peekv(game, ptr + 2);
+            unsigned short param2 = peekv(game, ptr + 4);
+            if (((param1 == thread->benutzt) && (param2 == thread->invbenutzt)) ||
+                ((param1 == thread->invbenutzt) && (param2 == thread->benutzt))) {
                 return(ptr + 10);
             }
-            if ((peekv(game, ptr + 2) == 0) && ((peekv(game, ptr + 4) == thread->benutzt) || (peekv(game, ptr + 4) == thread->invbenutzt))) {
+            if ((param1 == 0) && ((param2 == thread->benutzt) || (param2 == thread->invbenutzt))) {
                 return(ptr + 10);
             }
-            if ((peekv(game, ptr + 2) == 0) && (peekv(game, ptr + 4) == 0)) {
+            if ((param1 == 0) && (param2 == 0)) {
+                if (game->logFile) {
+                    fprintf(game->logFile, "> Default handler\n");
+                }
                 return(ptr + 10);
             }
         }

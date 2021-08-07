@@ -176,7 +176,11 @@ void HandleMouseInGame(Game *game, int x, int y, int buttonIndex) {
             } else {
                 game->selectedVerb = buttonIndex == SDL_BUTTON_RIGHT ? VerbLook : VerbUse;
                 if (game->logFile) {
-                    fprintf(game->logFile, "Click on %s\n", focusedElement->name);
+                    if (game->selectedVerb == VerbUse) {
+                        fprintf(game->logFile, "Use %s\n", focusedElement->name);
+                    } else if (game->selectedVerb == VerbLook) {
+                        fprintf(game->logFile, "Look at %s\n", focusedElement->name);
+                    }
                 }
             }
             Thread *thread = GetThread(game->location, focusedElement->id);
