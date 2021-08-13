@@ -44,6 +44,10 @@ Menu *CreateMenu(Game *game) {
         menu->image = LoadImage("Menue", NULL, false, true);
         menu->itemImage = LoadImage("Menuepunkt", menu->image->surface->format->palette, true, false);
         menu->frameIndex = 1;
+        
+        SDL_Color color = {255, 255, 255, 255};
+        menu->versionImage = CreateImageFromText(game->config->version, menu->game->font, color);
+        
         InitFader(&menu->fader, FADE_DURATION);
     }
     return menu;
@@ -54,6 +58,7 @@ void FreeMenu(Menu *menu) {
     ResetMenu(menu);
     FreeImage(menu->image);
     FreeImage(menu->itemImage);
+    FreeImage(menu->versionImage);
     free(menu);
 }
 
@@ -126,6 +131,8 @@ bool DrawMenu(Menu *menu) {
         }
         item = item->next;
     }
+    
+    DrawImage(menu->versionImage, MakeVector(634 - menu->versionImage->width, 478 - menu->versionImage->height));
     
     DrawFader(&menu->fader);
     

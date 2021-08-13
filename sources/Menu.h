@@ -44,6 +44,7 @@ typedef struct Menu {
     Image *image;
     Image *itemImage;
     Image *titleImage;
+    Image *versionImage;
     Vector titlePosition;
     MenuItem *rootItem;
     MenuItem *lastItem;

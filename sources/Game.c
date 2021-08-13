@@ -104,6 +104,10 @@ void HandleMouseInGame(Game *game, int x, int y, int buttonIndex) {
         return;
     }
     
+    if (game->fader.state != FaderStateOpen) {
+        return;
+    }
+    
     if (HandleMouseInDialog(game->dialog, x, y, buttonIndex)) {
         SetFocus(game, x, y, NULL);
         game->draggingItemView.item = NULL;
@@ -125,7 +129,8 @@ void HandleMouseInGame(Game *game, int x, int y, int buttonIndex) {
             if (buttonIndex == SDL_BUTTON_LEFT) {
                 if (game->inventoryBar->focusedButton == InventoryBarButtonMenu) {
                     RefreshGameState(game);
-                    OpenMenu(game->menu);
+                    game->openMenuAfterFadeOut = true;
+                    FadeOut(&game->fader);
                 }
             }
             return;
@@ -211,7 +216,7 @@ void HandleMouseInGame(Game *game, int x, int y, int buttonIndex) {
 void HandleKeyInGame(Game *game, SDL_Keysym keysym) {
     if (!game) return;
     
-    if (game->menu->fader.state != FaderStateClosed) {
+    if (game->fader.state != FaderStateOpen) {
         return;
     }
     
@@ -282,6 +287,15 @@ void UpdateGame(Game *game, int deltaTicks) {
     UpdateInventoryBar(game->inventoryBar, deltaTicks);
     UpdateIdleProg(game, deltaTicks);
     UpdateFader(&game->fader, deltaTicks);
+    
+    if (game->fader.state == FaderStateClosed) {
+        if (game->openMenuAfterFadeOut) {
+            game->openMenuAfterFadeOut = false;
+            OpenMenu(game->menu);
+        } else if (game->mainThread && !game->mainThread->isActive) {
+            FadeIn(&game->fader);
+        }
+    }
 }
 
 void DrawGame(Game *game) {

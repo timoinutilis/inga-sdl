@@ -77,6 +77,7 @@ typedef struct Game {
     SlotList *slotList;
     SoundManager *soundManager;
     FILE *logFile;
+    bool openMenuAfterFadeOut;
 } Game;
 
 Game *CreateGame(GameConfig *config);

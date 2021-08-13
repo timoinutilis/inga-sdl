@@ -29,6 +29,7 @@ typedef struct GameConfig {
     const char *organizationName;
     const char *gameName;
     const char *paletteFilename;
+    const char *version;
 } GameConfig;
 
 GameConfig *LoadGameConfig(void);

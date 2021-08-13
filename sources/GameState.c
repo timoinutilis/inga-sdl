@@ -35,6 +35,7 @@ GameState *CreateGameState() {
     } else {
         gameState->startPosition = MakeVector(320, 360);
         gameState->startDirection = MakeVector(0, 1);
+        gameState->textSpeed = DEFAULT_TEXT_SPEED;
     }
     return gameState;
 }
