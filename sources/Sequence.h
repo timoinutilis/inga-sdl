@@ -33,6 +33,7 @@ typedef struct Sequence {
     char *currentLine;
     int waitTicks;
     bool isWaitingForClick;
+    bool wasSkipped;
     bool isFinished;
     Fader fader;
 } Sequence;
@@ -40,6 +41,7 @@ typedef struct Sequence {
 Sequence *LoadSequence(const char *filename);
 void FreeSequence(Sequence *sequence);
 bool HandleMouseInSequence(Sequence *sequence, int x, int y, int buttonIndex);
+bool HandleKeyInSequence(Sequence *sequence, SDL_Keysym keysym);
 void UpdateSequence(Sequence *sequence, int deltaTicks);
 void DrawSequence(Sequence *sequence);
 

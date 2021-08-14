@@ -63,12 +63,17 @@ void UpdateElement(Element *element, int deltaTicks) {
         element->frameTicks += deltaTicks;
         if (element->frameTicks >= element->image->animation->frames[element->frameIndex].ticks) {
             element->frameTicks = 0;
-            element->frameIndex += 1;
             int numFrames = element->image->animation->numFrames;
-            if (element->frameIndex >= numFrames) {
-                element->frameIndex = 0;
+            if (element->frameIndex + 1 < numFrames) {
+                element->frameIndex += 1;
+            } else {
                 if (element->loopCount > 0) {
                     element->loopCount -= 1;
+                    if (element->loopCount > 0) {
+                        element->frameIndex = 0;
+                    }
+                } else {
+                    element->frameIndex = 0;
                 }
             }
         }

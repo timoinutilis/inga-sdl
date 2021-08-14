@@ -69,6 +69,16 @@ bool HandleMouseInSequence(Sequence *sequence, int x, int y, int buttonIndex) {
     return true;
 }
 
+bool HandleKeyInSequence(Sequence *sequence, SDL_Keysym keysym) {
+    if (!sequence || sequence->isFinished) return false;
+    if (keysym.sym == SDLK_ESCAPE) {
+        sequence->waitTicks = 0;
+        sequence->isWaitingForClick = false;
+        sequence->wasSkipped = true;
+    }
+    return true;
+}
+
 void UpdateSequence(Sequence *sequence, int deltaTicks) {
     if (!sequence || sequence->isFinished) return;
     
@@ -84,7 +94,7 @@ void UpdateSequence(Sequence *sequence, int deltaTicks) {
         return;
     }
     
-    if (sequence->currentLine >= sequence->text + sequence->textSize) {
+    if (sequence->wasSkipped || sequence->currentLine >= sequence->text + sequence->textSize) {
         // end of sequence
         if (sequence->fader.state != FaderStateClosed) {
             if (sequence->fader.state != FaderStateFadingOut) {

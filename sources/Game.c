@@ -216,11 +216,11 @@ void HandleMouseInGame(Game *game, int x, int y, int buttonIndex) {
 void HandleKeyInGame(Game *game, SDL_Keysym keysym) {
     if (!game) return;
     
-    if (game->fader.state != FaderStateOpen) {
+    if (HandleKeyInSequence(game->sequence, keysym)) {
         return;
     }
     
-    if (game->sequence) {
+    if (game->fader.state != FaderStateOpen) {
         return;
     }
     
@@ -282,10 +282,10 @@ void UpdateGame(Game *game, int deltaTicks) {
         }
     }
     
-    UpdateThread(game->mainThread, game);
     UpdateLocation(game->location, deltaTicks);
     UpdateInventoryBar(game->inventoryBar, deltaTicks);
     UpdateIdleProg(game, deltaTicks);
+    UpdateThread(game->mainThread, game);
     UpdateFader(&game->fader, deltaTicks);
     
     if (game->fader.state == FaderStateClosed) {
@@ -311,15 +311,17 @@ void DrawGame(Game *game) {
     }
     
     DrawLocation(game->location);
+    
+    if (game->mainThread->escptr) {
+        DrawImage(game->escImage, MakeVector(1, 1));
+    }
+    
+    DrawLocationOverlays(game->location);
     DrawInventoryBar(game->inventoryBar);
     DrawImage(game->focus.image, game->focus.position);
     DrawInventoryItemView(&game->draggingItemView);
     DrawDialog(game->dialog);
     DrawFader(&game->fader);
-    
-    if (game->mainThread->escptr) {
-        DrawImage(game->escImage, MakeVector(1, 1));
-    }
 }
 
 void SetFocus(Game *game, int x, int y, const char *name) {
