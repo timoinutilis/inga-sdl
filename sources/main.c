@@ -98,7 +98,7 @@ int main(int argc, char **argv) {
 
     SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
     
-    Uint32 windowFlags = SDL_WINDOW_SHOWN;
+    Uint32 windowFlags = SDL_WINDOW_SHOWN | SDL_WINDOW_ALLOW_HIGHDPI;
     if (!arguments.window) {
         windowFlags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
     }

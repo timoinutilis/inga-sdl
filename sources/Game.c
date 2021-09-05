@@ -140,12 +140,19 @@ void HandleMouseInGame(Game *game, int x, int y, int buttonIndex) {
             SetFocus(game, x, y, focusedItem->name);
             if (buttonIndex == SDL_BUTTON_LEFT) {
                 if (game->draggingItemView.item) {
-                    if (game->logFile) {
-                        fprintf(game->logFile, "Use %s with %s\n", focusedItem->name, game->draggingItemView.item->name);
+                    if (focusedItem->id == game->draggingItemView.item->id) {
+                        if (game->logFile) {
+                            fprintf(game->logFile, "Look at %s\n", focusedItem->name);
+                        }
+                        StartInteraction(game->mainThread, focusedItem->id, 0, VerbLook);
+                    } else {
+                        if (game->logFile) {
+                            fprintf(game->logFile, "Use %s with %s\n", focusedItem->name, game->draggingItemView.item->name);
+                        }
+                        StartInteraction(game->mainThread, focusedItem->id, game->draggingItemView.item->id, VerbUse);
+                        game->inventoryBar->isVisible = false;
                     }
-                    StartInteraction(game->mainThread, focusedItem->id, game->draggingItemView.item->id, VerbUse);
                     game->draggingItemView.item = NULL;
-                    game->inventoryBar->isVisible = false;
                 } else {
                     SetCursor(game->cursorDrag);
                     game->draggingItemView.item = focusedItem;
