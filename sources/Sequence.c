@@ -61,9 +61,9 @@ void FreeSequence(Sequence *sequence) {
     free(sequence);
 }
 
-bool HandleMouseInSequence(Sequence *sequence, int x, int y, int buttonIndex) {
+bool HandleMouseInSequence(Sequence *sequence, int x, int y, ButtonState buttonState) {
     if (!sequence || sequence->isFinished) return false;
-    if (buttonIndex != 0) {
+    if (buttonState == ButtonStateClickLeft) {
         sequence->isWaitingForClick = false;
     }
     return true;

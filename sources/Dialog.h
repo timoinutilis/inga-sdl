@@ -24,6 +24,7 @@
 #include <stdio.h>
 #include "Image.h"
 #include "Font.h"
+#include "Enums.h"
 
 typedef struct DialogItem {
     int id;
@@ -41,7 +42,7 @@ typedef struct Dialog {
 
 Dialog *CreateDialog(void);
 void FreeDialog(Dialog *dialog);
-bool HandleMouseInDialog(Dialog *dialog, int x, int y, int buttonIndex);
+bool HandleMouseInDialog(Dialog *dialog, int x, int y, ButtonState buttonState);
 void DrawDialog(Dialog *dialog);
 void AddDialogItem(Dialog *dialog, int id, const char *text, Font *font);
 void RefreshDialog(Dialog *dialog);

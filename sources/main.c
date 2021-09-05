@@ -150,7 +150,8 @@ int main(int argc, char **argv) {
 
     int mouseX = 0;
     int mouseY = 0;
-    int mouseButtonIndex = 0;
+    ButtonState buttonState = ButtonStateIdle;
+    bool isMouseDown = false;
     bool cheatInputActive = false;
     char cheatInput[MAX_CHEAT_SIZE];
     memset(cheatInput, 0, MAX_CHEAT_SIZE);
@@ -177,7 +178,20 @@ int main(int argc, char **argv) {
                     if (mouseY >= SCREEN_HEIGHT) mouseY = SCREEN_HEIGHT - 1;
                     break;
                 case SDL_MOUSEBUTTONDOWN:
-                    mouseButtonIndex = event.button.button;
+                    isMouseDown = true;
+                    if (event.button.button == SDL_BUTTON_LEFT) {
+                        buttonState = ButtonStateClickLeft;
+                    } else if (event.button.button == SDL_BUTTON_RIGHT) {
+                        buttonState = ButtonStateClickRight;
+                    }
+                    break;
+                case SDL_MOUSEBUTTONUP:
+                    isMouseDown = false;
+                    // On touchpads button down and up events might happen in the same loop,
+                    // so make sure not to overwrite the click states immediately.
+                    if (buttonState == ButtonStateDrag) {
+                        buttonState = ButtonStateRelease;
+                    }
                     break;
                 case SDL_KEYDOWN:
                     if (event.key.keysym.sym == SDLK_TAB) {
@@ -197,8 +211,8 @@ int main(int argc, char **argv) {
                     break;
             }
         }
-
-        HandleMouseInGame(game, mouseX, mouseY, mouseButtonIndex);
+        
+        HandleMouseInGame(game, mouseX, mouseY, buttonState);
         UpdateGame(game, deltaTicks);
 
         SDL_SetRenderTarget(renderer, prerenderTexture);
@@ -208,8 +222,13 @@ int main(int argc, char **argv) {
         SDL_RenderClear(renderer);
         SDL_RenderCopy(renderer, prerenderTexture, &screenRect, &screenRect);
         SDL_RenderPresent(renderer);
-
-        mouseButtonIndex = 0;
+        
+        if (buttonState == ButtonStateClickLeft || buttonState == ButtonStateClickRight) {
+            buttonState = isMouseDown ? ButtonStateDrag : ButtonStateRelease;
+        } else if (buttonState == ButtonStateRelease) {
+            buttonState = ButtonStateIdle;
+        }
+        
         lastTicks = ticks;
 
         // limit to 60 FPS

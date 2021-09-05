@@ -67,7 +67,7 @@ void RefreshInventoryBar(InventoryBar *bar, bool showNew) {
     }
 }
 
-bool HandleMouseInInventoryBar(InventoryBar *bar, int x, int y, int buttonIndex) {
+bool HandleMouseInInventoryBar(InventoryBar *bar, int x, int y, ButtonState buttonState) {
     if (!bar || !bar->image || !bar->buttonsImage) return false;
     bar->focusedButton = InventoryBarButtonNone;
     if (bar->isVisible) {
@@ -89,7 +89,7 @@ bool HandleMouseInInventoryBar(InventoryBar *bar, int x, int y, int buttonIndex)
                 }
             }
         }
-        if (buttonIndex == SDL_BUTTON_LEFT) {
+        if (buttonState == ButtonStateClickLeft) {
             switch (bar->focusedButton) {
                 case InventoryBarButtonNone:
                     break;

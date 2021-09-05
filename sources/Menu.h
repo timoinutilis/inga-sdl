@@ -27,6 +27,7 @@
 #include "Image.h"
 #include "Config.h"
 #include "Fader.h"
+#include "Enums.h"
 
 typedef struct Game Game;
 
@@ -58,7 +59,7 @@ Menu *CreateMenu(Game *game);
 void FreeMenu(Menu *menu);
 void OpenMenu(Menu *menu);
 void CloseMenu(Menu *menu);
-bool HandleMouseInMenu(Menu *menu, int x, int y, int buttonIndex);
+bool HandleMouseInMenu(Menu *menu, int x, int y, ButtonState buttonState);
 bool UpdateMenu(Menu *menu, int deltaTicks);
 bool DrawMenu(Menu *menu);
 

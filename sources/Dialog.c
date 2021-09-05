@@ -36,7 +36,7 @@ void FreeDialog(Dialog *dialog) {
     free(dialog);
 }
 
-bool HandleMouseInDialog(Dialog *dialog, const int x, const int y, const int buttonIndex) {
+bool HandleMouseInDialog(Dialog *dialog, const int x, const int y, const ButtonState buttonState) {
     if (!dialog || !dialog->rootItem) return false;
     dialog->focusedItem = NULL;
     DialogItem *item = dialog->rootItem;

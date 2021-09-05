@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2020 Timo Kloss
+// Copyright (c) 2021 Timo Kloss
 //
 // This software is provided 'as-is', without any express or implied
 // warranty. In no event will the authors be held liable for any damages
@@ -18,23 +18,15 @@
 // 3. This notice may not be removed or altered from any source distribution.
 //
 
-#ifndef Global_h
-#define Global_h
+#ifndef Enums_h
+#define Enums_h
 
-#include <stdio.h>
-#include <stdbool.h>
-#include <SDL2/SDL.h>
+typedef enum ButtonState {
+    ButtonStateIdle = 0,
+    ButtonStateClickLeft = 1,
+    ButtonStateClickRight = 2,
+    ButtonStateDrag = 3,
+    ButtonStateRelease = 4
+} ButtonState;
 
-extern int MainPersonID;
-extern int ForegroundID;
-
-void SetGlobalRenderer(SDL_Renderer *renderer);
-SDL_Renderer *GetGlobalRenderer(void);
-
-void SetGlobalPalette(SDL_Palette *palette);
-SDL_Palette *GetGlobalPalette(void);
-
-void SetShouldQuit(void);
-bool ShouldQuit(void);
-
-#endif /* Global_h */
+#endif /* Enums_h */

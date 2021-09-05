@@ -39,6 +39,7 @@
 #include "SlotList.h"
 #include "GameConfig.h"
 #include "SoundManager.h"
+#include "Enums.h"
 
 typedef struct Focus {
     const char *name;
@@ -82,7 +83,7 @@ typedef struct Game {
 
 Game *CreateGame(GameConfig *config);
 void FreeGame(Game *game);
-void HandleMouseInGame(Game *game, int x, int y, int buttonIndex);
+void HandleMouseInGame(Game *game, int x, int y, ButtonState buttonState);
 void HandleKeyInGame(Game *game, SDL_Keysym keysym);
 void HandleGameCheat(Game *game, const char *cheat);
 void UpdateGame(Game *game, int deltaTicks);

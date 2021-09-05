@@ -83,16 +83,16 @@ void FreeGame(Game *game) {
     free(game);
 }
 
-void HandleMouseInGame(Game *game, int x, int y, int buttonIndex) {
+void HandleMouseInGame(Game *game, int x, int y, ButtonState buttonState) {
     if (!game) return;
     
-    if (HandleMouseInMenu(game->menu, x, y, buttonIndex)) {
+    if (HandleMouseInMenu(game->menu, x, y, buttonState)) {
         SetFocus(game, x, y, NULL);
         game->draggingItemView.item = NULL;
         return;
     }
     
-    if (HandleMouseInSequence(game->sequence, x, y, buttonIndex)) {
+    if (HandleMouseInSequence(game->sequence, x, y, buttonState)) {
         SetFocus(game, x, y, NULL);
         game->draggingItemView.item = NULL;
         return;
@@ -108,10 +108,10 @@ void HandleMouseInGame(Game *game, int x, int y, int buttonIndex) {
         return;
     }
     
-    if (HandleMouseInDialog(game->dialog, x, y, buttonIndex)) {
+    if (HandleMouseInDialog(game->dialog, x, y, buttonState)) {
         SetFocus(game, x, y, NULL);
         game->draggingItemView.item = NULL;
-        if (buttonIndex == SDL_BUTTON_LEFT && game->dialog->focusedItem) {
+        if (buttonState == ButtonStateClickLeft && game->dialog->focusedItem) {
             if (game->logFile) {
                 fprintf(game->logFile, "Say '%s'\n", game->dialog->focusedItem->text);
             }
@@ -123,10 +123,10 @@ void HandleMouseInGame(Game *game, int x, int y, int buttonIndex) {
     
     game->draggingItemView.position = MakeVector(x, y);
     
-    if (HandleMouseInInventoryBar(game->inventoryBar, x, y, buttonIndex)) {
+    if (HandleMouseInInventoryBar(game->inventoryBar, x, y, buttonState)) {
         if (game->inventoryBar->focusedButton != InventoryBarButtonNone) {
             SetFocus(game, x, y, NULL);
-            if (buttonIndex == SDL_BUTTON_LEFT) {
+            if (buttonState == ButtonStateClickLeft) {
                 if (game->inventoryBar->focusedButton == InventoryBarButtonMenu) {
                     RefreshGameState(game);
                     game->openMenuAfterFadeOut = true;
@@ -138,7 +138,7 @@ void HandleMouseInGame(Game *game, int x, int y, int buttonIndex) {
         InventoryItem *focusedItem = GetItemInInventoryBarAt(game->inventoryBar, x, y);
         if (focusedItem) {
             SetFocus(game, x, y, focusedItem->name);
-            if (buttonIndex == SDL_BUTTON_LEFT) {
+            if (buttonState == ButtonStateClickLeft) {
                 if (game->draggingItemView.item) {
                     if (focusedItem->id == game->draggingItemView.item->id) {
                         if (game->logFile) {
@@ -157,7 +157,7 @@ void HandleMouseInGame(Game *game, int x, int y, int buttonIndex) {
                     SetCursor(game->cursorDrag);
                     game->draggingItemView.item = focusedItem;
                 }
-            } else if (buttonIndex == SDL_BUTTON_RIGHT) {
+            } else if (buttonState == ButtonStateClickRight) {
                 game->draggingItemView.item = NULL;
                 if (game->logFile) {
                     fprintf(game->logFile, "Look at %s\n", focusedItem->name);
@@ -175,7 +175,7 @@ void HandleMouseInGame(Game *game, int x, int y, int buttonIndex) {
     Element *focusedElement = GetElementAt(game->location, x, y);
     if (focusedElement) {
         SetFocus(game, x, y, focusedElement->name);
-        if (buttonIndex > 0) {
+        if (buttonState == ButtonStateClickLeft || buttonState == ButtonStateClickRight) {
             game->selectedId = focusedElement->id;
             if (game->draggingItemView.item) {
                 if (game->logFile) {
@@ -186,7 +186,7 @@ void HandleMouseInGame(Game *game, int x, int y, int buttonIndex) {
                 game->draggingItemView.item = NULL;
                 SetCursor(game->cursorNormal);
             } else {
-                game->selectedVerb = buttonIndex == SDL_BUTTON_RIGHT ? VerbLook : VerbUse;
+                game->selectedVerb = buttonState == ButtonStateClickRight ? VerbLook : VerbUse;
                 if (game->logFile) {
                     if (game->selectedVerb == VerbUse) {
                         fprintf(game->logFile, "Use %s\n", focusedElement->name);
@@ -213,7 +213,7 @@ void HandleMouseInGame(Game *game, int x, int y, int buttonIndex) {
     
     SetFocus(game, x, y, NULL);
     
-    if (buttonIndex == SDL_BUTTON_LEFT) {
+    if (buttonState == ButtonStateClickLeft) {
         game->selectedId = 0;
         Element *person = GetElement(game->location, MainPersonID);
         ElementMoveTo(person, x, y, 0, false);

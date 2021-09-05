@@ -75,7 +75,7 @@ void CloseMenu(Menu *menu) {
     FadeOut(&menu->fader);
 }
 
-bool HandleMouseInMenu(Menu *menu, const int x, const int y, const int buttonIndex) {
+bool HandleMouseInMenu(Menu *menu, const int x, const int y, const ButtonState buttonState) {
     if (!menu || menu->fader.state == FaderStateClosed) return false;
     menu->focusedItem = NULL;
     MenuItem *item = menu->rootItem;
@@ -86,7 +86,7 @@ bool HandleMouseInMenu(Menu *menu, const int x, const int y, const int buttonInd
         }
         item = item->next;
     }
-    if (buttonIndex == SDL_BUTTON_LEFT && menu->focusedItem) {
+    if (buttonState == ButtonStateClickLeft && menu->focusedItem) {
         HandleMenuItem(menu, menu->focusedItem->id);
     }
     return true;

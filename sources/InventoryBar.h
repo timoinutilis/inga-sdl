@@ -26,6 +26,7 @@
 #include "GameState.h"
 #include "Utils.h"
 #include "Image.h"
+#include "Enums.h"
 
 typedef enum InventoryBarButton {
     InventoryBarButtonNone = -1,
@@ -53,7 +54,7 @@ typedef struct InventoryBar {
 InventoryBar *CreateInventoryBar(GameState *gameState);
 void FreeInventoryBar(InventoryBar *bar);
 void RefreshInventoryBar(InventoryBar *bar, bool showNew);
-bool HandleMouseInInventoryBar(InventoryBar *bar, int x, int y, int buttonIndex);
+bool HandleMouseInInventoryBar(InventoryBar *bar, int x, int y, ButtonState buttonState);
 void UpdateInventoryBar(InventoryBar *bar, int deltaTicks);
 void DrawInventoryBar(InventoryBar *bar);
 

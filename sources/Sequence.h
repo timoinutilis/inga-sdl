@@ -25,6 +25,7 @@
 #include <stdbool.h>
 #include "Image.h"
 #include "Fader.h"
+#include "Enums.h"
 
 typedef struct Sequence {
     char *text;
@@ -40,7 +41,7 @@ typedef struct Sequence {
 
 Sequence *LoadSequence(const char *filename);
 void FreeSequence(Sequence *sequence);
-bool HandleMouseInSequence(Sequence *sequence, int x, int y, int buttonIndex);
+bool HandleMouseInSequence(Sequence *sequence, int x, int y, ButtonState buttonState);
 bool HandleKeyInSequence(Sequence *sequence, SDL_Keysym keysym);
 void UpdateSequence(Sequence *sequence, int deltaTicks);
 void DrawSequence(Sequence *sequence);
