@@ -24,9 +24,6 @@ SDL_Renderer *globalRenderer = NULL;
 SDL_Palette *globalPalette = NULL;
 bool shouldQuit = false;
 
-int MainPersonID = 0;
-int ForegroundID = 0xFFFF;
-
 void SetGlobalRenderer(SDL_Renderer *renderer) {
     globalRenderer = renderer;
 }
@@ -49,4 +46,28 @@ void SetShouldQuit(void) {
 
 bool ShouldQuit(void) {
     return shouldQuit;
+}
+
+bool canHover(ButtonState buttonState) {
+#ifdef TOUCH
+    return buttonState != ButtonStateIdle;
+#else
+    return true;
+#endif
+}
+
+ButtonState SelectionButtonState(void) {
+#ifdef TOUCH
+    return ButtonStateRelease;
+#else
+    return ButtonStateClickLeft;
+#endif
+}
+
+int FocusOffset(void) {
+#ifdef TOUCH
+    return 44;
+#else
+    return 4;
+#endif
 }

@@ -111,7 +111,7 @@ void HandleMouseInGame(Game *game, int x, int y, ButtonState buttonState) {
     if (HandleMouseInDialog(game->dialog, x, y, buttonState)) {
         SetFocus(game, x, y, NULL);
         game->draggingItemView.item = NULL;
-        if (buttonState == ButtonStateClickLeft && game->dialog->focusedItem) {
+        if (buttonState == SelectionButtonState() && game->dialog->focusedItem) {
             if (game->logFile) {
                 fprintf(game->logFile, "Say '%s'\n", game->dialog->focusedItem->text);
             }
@@ -172,10 +172,10 @@ void HandleMouseInGame(Game *game, int x, int y, ButtonState buttonState) {
     
     if (!game->location) return;
     
-    Element *focusedElement = GetElementAt(game->location, x, y);
+    Element *focusedElement = canHover(buttonState) ? GetElementAt(game->location, x, y) : NULL;
     if (focusedElement) {
         SetFocus(game, x, y, focusedElement->name);
-        if (buttonState == ButtonStateClickLeft || buttonState == ButtonStateClickRight) {
+        if (buttonState == SelectionButtonState() || buttonState == ButtonStateClickRight) {
             game->selectedId = focusedElement->id;
             if (game->draggingItemView.item) {
                 if (game->logFile) {
@@ -213,7 +213,7 @@ void HandleMouseInGame(Game *game, int x, int y, ButtonState buttonState) {
     
     SetFocus(game, x, y, NULL);
     
-    if (buttonState == ButtonStateClickLeft) {
+    if (buttonState == SelectionButtonState()) {
         game->selectedId = 0;
         Element *person = GetElement(game->location, MainPersonID);
         ElementMoveTo(person, x, y, 0, false);
@@ -343,7 +343,7 @@ void SetFocus(Game *game, int x, int y, const char *name) {
     }
     if (game->focus.image) {
         int width = game->focus.image->width;
-        game->focus.position = MakeVector(fmin(fmax(0, x - width * 0.5), SCREEN_WIDTH - width), y - game->focus.image->height - 4);
+        game->focus.position = MakeVector(fmin(fmax(0, x - width * 0.5), SCREEN_WIDTH - width), y - game->focus.image->height - FocusOffset());
     }
 }
 

@@ -23,6 +23,7 @@
 #include <stdlib.h>
 #include "Utils.h"
 #include "Config.h"
+#include "Global.h"
 
 Sequence *LoadSequence(const char *filename) {
     Sequence *sequence = NULL;
@@ -63,7 +64,7 @@ void FreeSequence(Sequence *sequence) {
 
 bool HandleMouseInSequence(Sequence *sequence, int x, int y, ButtonState buttonState) {
     if (!sequence || sequence->isFinished) return false;
-    if (buttonState == ButtonStateClickLeft) {
+    if (buttonState == SelectionButtonState()) {
         sequence->isWaitingForClick = false;
     }
     return true;

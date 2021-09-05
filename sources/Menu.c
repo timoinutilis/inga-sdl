@@ -78,16 +78,18 @@ void CloseMenu(Menu *menu) {
 bool HandleMouseInMenu(Menu *menu, const int x, const int y, const ButtonState buttonState) {
     if (!menu || menu->fader.state == FaderStateClosed) return false;
     menu->focusedItem = NULL;
-    MenuItem *item = menu->rootItem;
-    while (item) {
-        if (y >= (int)item->position.y && y < (int)item->position.y + item->image->height) {
-            menu->focusedItem = item;
-            break;
+    if (canHover(buttonState)) {
+        MenuItem *item = menu->rootItem;
+        while (item) {
+            if (y >= (int)item->position.y && y < (int)item->position.y + item->image->height) {
+                menu->focusedItem = item;
+                break;
+            }
+            item = item->next;
         }
-        item = item->next;
-    }
-    if (buttonState == ButtonStateClickLeft && menu->focusedItem) {
-        HandleMenuItem(menu, menu->focusedItem->id);
+        if (buttonState == SelectionButtonState() && menu->focusedItem) {
+            HandleMenuItem(menu, menu->focusedItem->id);
+        }
     }
     return true;
 }

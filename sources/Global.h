@@ -24,9 +24,7 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <SDL2/SDL.h>
-
-extern int MainPersonID;
-extern int ForegroundID;
+#include "Enums.h"
 
 void SetGlobalRenderer(SDL_Renderer *renderer);
 SDL_Renderer *GetGlobalRenderer(void);
@@ -36,5 +34,10 @@ SDL_Palette *GetGlobalPalette(void);
 
 void SetShouldQuit(void);
 bool ShouldQuit(void);
+
+// touch control utils
+bool canHover(ButtonState buttonState);
+ButtonState SelectionButtonState(void);
+int FocusOffset(void);
 
 #endif /* Global_h */

@@ -34,6 +34,9 @@
 
 typedef struct Location Location;
 
+extern const int MainPersonID;
+extern const int ForegroundID;
+
 typedef enum ElementAction {
     ElementActionIdle,
     ElementActionMove,

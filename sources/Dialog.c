@@ -20,6 +20,7 @@
 
 #include "Dialog.h"
 #include "Config.h"
+#include "Global.h"
 
 Dialog *CreateDialog() {
     Dialog *dialog = calloc(1, sizeof(Dialog));
@@ -39,13 +40,15 @@ void FreeDialog(Dialog *dialog) {
 bool HandleMouseInDialog(Dialog *dialog, const int x, const int y, const ButtonState buttonState) {
     if (!dialog || !dialog->rootItem) return false;
     dialog->focusedItem = NULL;
-    DialogItem *item = dialog->rootItem;
-    while (item) {
-        if (y >= (int)item->position.y && y < (int)item->position.y + item->image->height) {
-            dialog->focusedItem = item;
-            break;
+    if (canHover(buttonState)) {
+        DialogItem *item = dialog->rootItem;
+        while (item) {
+            if (y >= (int)item->position.y && y < (int)item->position.y + item->image->height) {
+                dialog->focusedItem = item;
+                break;
+            }
+            item = item->next;
         }
-        item = item->next;
     }
     return true;
 }

@@ -23,6 +23,9 @@
 #include "Global.h"
 #include "Game.h"
 
+const int MainPersonID = 0;
+const int ForegroundID = 0xFFFF;
+
 void SetElementImageFromSet(Element *element, int imageId);
 void ElementFreeAction(Element *element);
 void UpdateMove(Element *element, int deltaTicks);
