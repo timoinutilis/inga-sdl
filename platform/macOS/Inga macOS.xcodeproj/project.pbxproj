@@ -88,6 +88,8 @@
 		925BA818248A514E008CBA9A /* Sequence.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Sequence.c; sourceTree = "<group>"; };
 		927438C9246B1E81007C434D /* Dialog.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Dialog.h; sourceTree = "<group>"; };
 		927438CA246B1E81007C434D /* Dialog.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = Dialog.c; sourceTree = "<group>"; };
+		928D218B26EB77440038EFEC /* SDL_includes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SDL_includes.h; sourceTree = "<group>"; };
+		928D218C26EB77440038EFEC /* Enums.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Enums.h; sourceTree = "<group>"; };
 		9299FAA0248A78EC007CB594 /* Fader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Fader.h; sourceTree = "<group>"; };
 		9299FAA1248A78EC007CB594 /* Fader.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = Fader.c; sourceTree = "<group>"; };
 		929EDBC9244E32BA00DC64D9 /* Inga.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Inga.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -167,6 +169,7 @@
 				927438C9246B1E81007C434D /* Dialog.h */,
 				924B17A724556BC8008A9B43 /* Element.c */,
 				924B17A624556BC8008A9B43 /* Element.h */,
+				928D218C26EB77440038EFEC /* Enums.h */,
 				9299FAA1248A78EC007CB594 /* Fader.c */,
 				9299FAA0248A78EC007CB594 /* Fader.h */,
 				922EADDD245C222A00E4027E /* Font.c */,
@@ -194,6 +197,7 @@
 				924B17B02455EA08008A9B43 /* NavigationMap.h */,
 				922EADE9245DD1E100E4027E /* Script.c */,
 				922EADE8245DD1E100E4027E /* Script.h */,
+				928D218B26EB77440038EFEC /* SDL_includes.h */,
 				925BA818248A514E008CBA9A /* Sequence.c */,
 				925BA817248A514D008CBA9A /* Sequence.h */,
 				92BD6FEE24980C0C00478C4F /* SlotList.c */,

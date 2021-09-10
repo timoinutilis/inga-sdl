@@ -19,7 +19,7 @@
 //
 
 #include "Script.h"
-#include <SDL2/SDL.h>
+#include "SDL_includes.h"
 #include "Utils.h"
 
 void ParseLog(Script *script, void *log);

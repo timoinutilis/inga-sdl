@@ -23,6 +23,9 @@
 #include "Cursor.h"
 #include <time.h>
 
+void LookAtItem(Game *game, InventoryItem *focusedItem);
+void DragItem(Game *game, InventoryItem *focusedItem);
+void DropItem(Game *game, InventoryItem *focusedItem);
 void SetFocus(Game *game, int x, int y, const char *name);
 void UpdateIdleProg(Game *game, int deltaTicks);
 void InitLogger(Game *game);
@@ -99,6 +102,11 @@ void HandleMouseInGame(Game *game, int x, int y, ButtonState buttonState) {
     }
     
     if (game->mainThread && game->mainThread->isActive) {
+#ifdef TOUCH
+        if (x < 44 && y < 44 && buttonState == ButtonStateRelease) {
+            EscapeThread(game->mainThread);
+        }
+#endif
         SetFocus(game, x, y, NULL);
         game->draggingItemView.item = NULL;
         return;
@@ -121,58 +129,60 @@ void HandleMouseInGame(Game *game, int x, int y, ButtonState buttonState) {
         return;
     }
     
+#if TOUCH
+    game->draggingItemView.position = MakeVector(x - 24, y - 100);
+#else
     game->draggingItemView.position = MakeVector(x, y);
+#endif
     
-    if (HandleMouseInInventoryBar(game->inventoryBar, x, y, buttonState)) {
-        if (game->inventoryBar->focusedButton != InventoryBarButtonNone) {
-            SetFocus(game, x, y, NULL);
-            if (buttonState == ButtonStateClickLeft) {
-                if (game->inventoryBar->focusedButton == InventoryBarButtonMenu) {
-                    RefreshGameState(game);
-                    game->openMenuAfterFadeOut = true;
-                    FadeOut(&game->fader);
+    if (HandleMouseInInventoryBar(game->inventoryBar, x, y, buttonState, game->draggingItemView.item != NULL)) {
+#if TOUCH
+        if (buttonState != ButtonStateIdle) {
+            InventoryItem *focusedItem = GetItemInInventoryBarAt(game->inventoryBar, x, y);
+            if (focusedItem) {
+                SetFocus(game, x, y, focusedItem->name);
+                if (buttonState == ButtonStateClickLeft) {
+                    DragItem(game, focusedItem);
                 }
+            } else {
+                SetFocus(game, x, y, NULL);
             }
-            return;
+            if (buttonState == ButtonStateRelease) {
+                DropItem(game, focusedItem);
+                SetFocus(game, x, y, NULL);
+            }
         }
+#else
         InventoryItem *focusedItem = GetItemInInventoryBarAt(game->inventoryBar, x, y);
         if (focusedItem) {
             SetFocus(game, x, y, focusedItem->name);
             if (buttonState == ButtonStateClickLeft) {
                 if (game->draggingItemView.item) {
-                    if (focusedItem->id == game->draggingItemView.item->id) {
-                        if (game->logFile) {
-                            fprintf(game->logFile, "Look at %s\n", focusedItem->name);
-                        }
-                        StartInteraction(game->mainThread, focusedItem->id, 0, VerbLook);
-                    } else {
-                        if (game->logFile) {
-                            fprintf(game->logFile, "Use %s with %s\n", focusedItem->name, game->draggingItemView.item->name);
-                        }
-                        StartInteraction(game->mainThread, focusedItem->id, game->draggingItemView.item->id, VerbUse);
-                        game->inventoryBar->isVisible = false;
-                    }
-                    game->draggingItemView.item = NULL;
+                    DropItem(game, focusedItem);
                 } else {
-                    SetCursor(game->cursorDrag);
-                    game->draggingItemView.item = focusedItem;
+                    DragItem(game, focusedItem);
                 }
             } else if (buttonState == ButtonStateClickRight) {
-                game->draggingItemView.item = NULL;
-                if (game->logFile) {
-                    fprintf(game->logFile, "Look at %s\n", focusedItem->name);
-                }
-                StartInteraction(game->mainThread, focusedItem->id, 0, VerbLook);
+                LookAtItem(game, focusedItem);
             }
         } else {
             SetFocus(game, x, y, NULL);
+        }
+#endif
+        
+        if (buttonState == SelectionButtonState()) {
+            if (game->inventoryBar->focusedButton == InventoryBarButtonMenu) {
+                RefreshGameState(game);
+                game->openMenuAfterFadeOut = true;
+                FadeOut(&game->fader);
+            }
         }
         return;
     }
     
     if (!game->location) return;
     
-    Element *focusedElement = canHover(buttonState) ? GetElementAt(game->location, x, y) : NULL;
+    Element *focusedElement = CanHover(buttonState) ? GetElementAt(game->location, x, y) : NULL;
     if (focusedElement) {
         SetFocus(game, x, y, focusedElement->name);
         if (buttonState == SelectionButtonState() || buttonState == ButtonStateClickRight) {
@@ -215,9 +225,43 @@ void HandleMouseInGame(Game *game, int x, int y, ButtonState buttonState) {
     
     if (buttonState == SelectionButtonState()) {
         game->selectedId = 0;
+#if TOUCH
+        if (game->draggingItemView.item) {
+            game->draggingItemView.item = NULL;
+            return;
+        }
+#endif
         Element *person = GetElement(game->location, MainPersonID);
         ElementMoveTo(person, x, y, 0, false);
     }
+}
+
+void LookAtItem(Game *game, InventoryItem *focusedItem) {
+    game->draggingItemView.item = NULL;
+    if (game->logFile) {
+        fprintf(game->logFile, "Look at %s\n", focusedItem->name);
+    }
+    StartInteraction(game->mainThread, focusedItem->id, 0, VerbLook);
+}
+
+void DragItem(Game *game, InventoryItem *focusedItem) {
+    SetCursor(game->cursorDrag);
+    game->draggingItemView.item = focusedItem;
+}
+
+void DropItem(Game *game, InventoryItem *focusedItem) {
+    if (focusedItem && game->draggingItemView.item) {
+        if (focusedItem->id == game->draggingItemView.item->id) {
+            LookAtItem(game, focusedItem);
+        } else {
+            if (game->logFile) {
+                fprintf(game->logFile, "Use %s with %s\n", focusedItem->name, game->draggingItemView.item->name);
+            }
+            StartInteraction(game->mainThread, focusedItem->id, game->draggingItemView.item->id, VerbUse);
+            game->inventoryBar->isVisible = false;
+        }
+    }
+    game->draggingItemView.item = NULL;
 }
 
 void HandleKeyInGame(Game *game, SDL_Keysym keysym) {
@@ -325,8 +369,8 @@ void DrawGame(Game *game) {
     
     DrawLocationOverlays(game->location);
     DrawInventoryBar(game->inventoryBar);
-    DrawImage(game->focus.image, game->focus.position);
     DrawInventoryItemView(&game->draggingItemView);
+    DrawImage(game->focus.image, game->focus.position);
     DrawDialog(game->dialog);
     DrawFader(&game->fader);
 }
@@ -343,7 +387,7 @@ void SetFocus(Game *game, int x, int y, const char *name) {
     }
     if (game->focus.image) {
         int width = game->focus.image->width;
-        game->focus.position = MakeVector(fmin(fmax(0, x - width * 0.5), SCREEN_WIDTH - width), y - game->focus.image->height - FocusOffset());
+        game->focus.position = MakeVector(fmin(fmax(0, x - width * 0.5), SCREEN_WIDTH - width), fmax(0, y - game->focus.image->height - FocusOffset()));
     }
 }
 

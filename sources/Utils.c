@@ -35,6 +35,17 @@ SDL_Rect MakeRectFromTo(int x1, int y1, int x2, int y2) {
     return rect;
 }
 
+void SetRectToMinimumSize(SDL_Rect *rect, int min) {
+    if (rect->w < min) {
+        rect->x += (rect->w - min) / 2;
+        rect->w = min;
+    }
+    if (rect->h < min) {
+        rect->y += (rect->h - min) / 2;
+        rect->h = min;
+    }
+}
+
 void *LoadFile(const char *path, Sint64 *outSize) {
     void *content = NULL;
     SDL_RWops *file = SDL_RWFromFile(path, "rb");

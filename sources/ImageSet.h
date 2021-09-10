@@ -23,7 +23,7 @@
 
 #include <stdio.h>
 #include <stdbool.h>
-#include <SDL2/SDL.h>
+#include "SDL_includes.h"
 #include "Config.h"
 #include "Image.h"
 #include "Utils.h"

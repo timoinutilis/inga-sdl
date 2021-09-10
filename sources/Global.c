@@ -48,7 +48,7 @@ bool ShouldQuit(void) {
     return shouldQuit;
 }
 
-bool canHover(ButtonState buttonState) {
+bool CanHover(ButtonState buttonState) {
 #ifdef TOUCH
     return buttonState != ButtonStateIdle;
 #else
@@ -66,7 +66,7 @@ ButtonState SelectionButtonState(void) {
 
 int FocusOffset(void) {
 #ifdef TOUCH
-    return 44;
+    return 64;
 #else
     return 4;
 #endif

@@ -49,12 +49,13 @@ typedef struct InventoryBar {
     bool isEnabled;
     InventoryBarButton focusedButton;
     int firstItemIndex;
+    int scrollTimer;
 } InventoryBar;
 
 InventoryBar *CreateInventoryBar(GameState *gameState);
 void FreeInventoryBar(InventoryBar *bar);
 void RefreshInventoryBar(InventoryBar *bar, bool showNew);
-bool HandleMouseInInventoryBar(InventoryBar *bar, int x, int y, ButtonState buttonState);
+bool HandleMouseInInventoryBar(InventoryBar *bar, int x, int y, ButtonState buttonState, bool isDraggingItem);
 void UpdateInventoryBar(InventoryBar *bar, int deltaTicks);
 void DrawInventoryBar(InventoryBar *bar);
 

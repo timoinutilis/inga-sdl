@@ -18,17 +18,8 @@
 // 3. This notice may not be removed or altered from any source distribution.
 //
 
-#include <SDL2/SDL.h>
 #include <stdlib.h>
-
-#ifdef __APPLE__
-#include <SDL2_ttf/SDL_ttf.h>
-#include <SDL2_mixer/SDL_mixer.h>
-#else
-#include <SDL2/SDL_ttf.h>
-#include <SDL2/SDL_mixer.h>
-#endif
-
+#include "SDL_includes.h"
 #include "Config.h"
 #include "Global.h"
 #include "Game.h"

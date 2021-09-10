@@ -22,13 +22,7 @@
 #define SoundManager_h
 
 #include <stdio.h>
-
-#ifdef __APPLE__
-#include <SDL2_mixer/SDL_mixer.h>
-#else
-#include <SDL2/SDL_mixer.h>
-#endif
-
+#include "SDL_includes.h"
 #include "Config.h"
 
 typedef struct SoundManager {

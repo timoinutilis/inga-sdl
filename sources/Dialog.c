@@ -40,7 +40,7 @@ void FreeDialog(Dialog *dialog) {
 bool HandleMouseInDialog(Dialog *dialog, const int x, const int y, const ButtonState buttonState) {
     if (!dialog || !dialog->rootItem) return false;
     dialog->focusedItem = NULL;
-    if (canHover(buttonState)) {
+    if (CanHover(buttonState)) {
         DialogItem *item = dialog->rootItem;
         while (item) {
             if (y >= (int)item->position.y && y < (int)item->position.y + item->image->height) {

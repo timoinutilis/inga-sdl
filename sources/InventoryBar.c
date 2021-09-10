@@ -67,8 +67,28 @@ void RefreshInventoryBar(InventoryBar *bar, bool showNew) {
     }
 }
 
-bool HandleMouseInInventoryBar(InventoryBar *bar, int x, int y, ButtonState buttonState) {
+void ScrollInventoryBar(InventoryBar *bar) {
+    switch (bar->focusedButton) {
+        case InventoryBarButtonNone:
+            break;
+        case InventoryBarButtonMenu:
+            break;
+        case InventoryBarButtonUp:
+            bar->firstItemIndex -= INVENTORY_BAR_SIZE;
+            bar->scrollTimer = 0;
+            RefreshInventoryBar(bar, false);
+            break;
+        case InventoryBarButtonDown:
+            bar->firstItemIndex += INVENTORY_BAR_SIZE;
+            bar->scrollTimer = 0;
+            RefreshInventoryBar(bar, false);
+            break;
+    }
+}
+
+bool HandleMouseInInventoryBar(InventoryBar *bar, int x, int y, ButtonState buttonState, bool isDraggingItem) {
     if (!bar || !bar->image || !bar->buttonsImage) return false;
+    InventoryBarButton lastFocusedButton = bar->focusedButton;
     bar->focusedButton = InventoryBarButtonNone;
     if (bar->isVisible) {
         int barY = SCREEN_HEIGHT - bar->image->height;
@@ -76,7 +96,7 @@ bool HandleMouseInInventoryBar(InventoryBar *bar, int x, int y, ButtonState butt
             bar->isVisible = false;
             return false;
         }
-        if (x < 56) {
+        if (CanHover(buttonState) && x < 56) {
             if (y >= barY && y < barY + 30) {
                 bar->focusedButton = InventoryBarButtonMenu;
             } else if (y >= barY + 38 && y < barY + 52) {
@@ -89,28 +109,31 @@ bool HandleMouseInInventoryBar(InventoryBar *bar, int x, int y, ButtonState butt
                 }
             }
         }
-        if (buttonState == ButtonStateClickLeft) {
-            switch (bar->focusedButton) {
-                case InventoryBarButtonNone:
-                    break;
-                case InventoryBarButtonMenu:
-                    break;
-                case InventoryBarButtonUp:
-                    bar->firstItemIndex -= INVENTORY_BAR_SIZE;
-                    RefreshInventoryBar(bar, false);
-                    break;
-                case InventoryBarButtonDown:
-                    bar->firstItemIndex += INVENTORY_BAR_SIZE;
-                    RefreshInventoryBar(bar, false);
-                    break;
-            }
+        if (lastFocusedButton != bar->focusedButton || buttonState == ButtonStateIdle) {
+            bar->scrollTimer = 0;
         }
+#ifdef TOUCH
+        if ((!isDraggingItem && buttonState == ButtonStateRelease) || (isDraggingItem && bar->scrollTimer >= 500)) {
+            ScrollInventoryBar(bar);
+        }
+#else
+        if (buttonState == ButtonStateClickLeft || (buttonState == ButtonStateDrag && bar->scrollTimer >= 500)) {
+            ScrollInventoryBar(bar);
+        }
+#endif
         return true;
     } else {
+#ifdef TOUCH
+        if (buttonState == ButtonStateRelease && x < 44 && y >= SCREEN_HEIGHT - 44) {
+            bar->isVisible = true;
+            return true;
+        }
+#else
         if (y >= SCREEN_HEIGHT - 16) {
             bar->isVisible = true;
             return true;
         }
+#endif
         return false;
     }
 }
@@ -119,7 +142,9 @@ void UpdateInventoryBar(InventoryBar *bar, int deltaTicks) {
     if (!bar) return;
     if (bar->isVisible && !bar->isEnabled) {
         bar->isVisible = false;
+        return;
     }
+    bar->scrollTimer += deltaTicks;
 }
 
 void DrawInventoryBar(InventoryBar *bar) {

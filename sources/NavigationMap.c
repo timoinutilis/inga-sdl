@@ -19,7 +19,7 @@
 //
 
 #include "NavigationMap.h"
-#include <SDL2/SDL.h>
+#include "SDL_includes.h"
 #include "Utils.h"
 
 NavigationMap *LoadNavigationMap(const char *filename) {

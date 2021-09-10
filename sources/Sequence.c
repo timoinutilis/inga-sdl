@@ -19,7 +19,7 @@
 //
 
 #include "Sequence.h"
-#include <SDL2/SDL.h>
+#include "SDL_includes.h"
 #include <stdlib.h>
 #include "Utils.h"
 #include "Config.h"

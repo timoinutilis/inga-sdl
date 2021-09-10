@@ -20,7 +20,7 @@
 
 #include "Fader.h"
 #include "Config.h"
-#include <SDL2/SDL.h>
+#include "SDL_includes.h"
 #include "Global.h"
 
 void InitFader(Fader *fader, int fadeDuration) {

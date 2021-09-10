@@ -23,7 +23,7 @@
 
 #include <stdio.h>
 #include <stdbool.h>
-#include <SDL2/SDL.h>
+#include "SDL_includes.h"
 #include "Enums.h"
 
 void SetGlobalRenderer(SDL_Renderer *renderer);
@@ -36,7 +36,7 @@ void SetShouldQuit(void);
 bool ShouldQuit(void);
 
 // touch control utils
-bool canHover(ButtonState buttonState);
+bool CanHover(ButtonState buttonState);
 ButtonState SelectionButtonState(void);
 int FocusOffset(void);
 

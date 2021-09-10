@@ -154,6 +154,9 @@ bool IsPointInElement(Element *element, int x, int y) {
         }
     }
     if (rect.w > 0) {
+#ifdef TOUCH
+        SetRectToMinimumSize(&rect, 33);
+#endif
         return x >= rect.x && x < rect.x + rect.w && y >= rect.y && y < rect.y + rect.h;
     }
     return false;
