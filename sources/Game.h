@@ -92,6 +92,9 @@ void DrawGame(Game *game);
 void SetLocation(Game *game, int id, const char *background);
 void SetGameState(Game *game, GameState *gameState);
 void RefreshGameState(Game *game);
+void SaveGameSlot(Game *game, int slot);
+void LoadGameSlot(Game *game, int slot);
+void AutosaveIfPossible(Game *game);
 
 void MainPersonDidFinishWalking(Game *game);
 

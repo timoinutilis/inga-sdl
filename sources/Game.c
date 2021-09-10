@@ -40,7 +40,12 @@ Game *CreateGame(GameConfig *config) {
         game->cursorNormal = LoadCursor("CursorNormal");
         game->cursorDrag = LoadCursor("CursorDrag");
         game->script = LoadScript("story");
+    #ifdef AUTOSAVE
+        GameState *autosaveGameState = LoadGameState("slot_0", config);
+        game->gameState = autosaveGameState ? autosaveGameState : CreateGameState();
+    #else
         game->gameState = CreateGameState();
+    #endif
         game->inventoryBar = CreateInventoryBar(game->gameState);
         game->dialog = CreateDialog();
         game->mainThread = CreateThread(0);
@@ -58,6 +63,11 @@ Game *CreateGame(GameConfig *config) {
         game->mainPerson = element;
         
         HideCursor();
+        
+        Label *label = GetLabelWithName(game->script, game->gameState->locationLabel);
+        if (label) {
+            RunThread(game->mainThread, label->ptr);
+        }
     }
     return game;
 }
@@ -446,6 +456,35 @@ void RefreshGameState(Game *game) {
     if (!game || !game->gameState) return;
     game->gameState->startPosition = game->mainPerson->position;
     game->gameState->startDirection = game->mainPerson->direction;
+}
+
+void SaveGameSlot(Game *game, int slot) {
+    char filename[FILE_NAME_SIZE];
+    char slotname[SLOT_NAME_SIZE];
+    sprintf(filename, "slot_%d", slot);
+    SaveGameState(game->gameState, filename, game->config);
+#ifdef AUTOSAVE
+    GameStateName(game->gameState, slotname, slot == 0);
+#else
+    GameStateName(game->gameState, slotname, false);
+#endif
+    SetSlotName(game->slotList, slot, slotname, game->config);
+}
+
+void LoadGameSlot(Game *game, int slot) {
+    char filename[FILE_NAME_SIZE];
+    sprintf(filename, "slot_%d", slot);
+    GameState *gameState = LoadGameState(filename, game->config);
+    SetGameState(game, gameState);
+}
+
+void AutosaveIfPossible(Game *game) {
+    if (!game) return;
+    // do not save while the main thread is active to avoid broken game states
+    if (!game->mainThread->isActive) {
+        RefreshGameState(game);
+        SaveGameSlot(game, 0);
+    }
 }
 
 void MainPersonDidFinishWalking(Game *game) {

@@ -216,7 +216,9 @@ void HandleMenuItem(Menu *menu, int id) {
             AddMenuItem(menu, 3, "Spielstand speichern");
             AddMenuItem(menu, 6, MenuTextSpeed[menu->game->gameState->textSpeed]);
             AddMenuItem(menu, 1, "Spiel neu beginnen");
+#ifndef AUTOSAVE
             AddMenuItem(menu, 5, "Spiel beenden");
+#endif
             RefreshMenu(menu);
             break;
         case 1:
@@ -268,21 +270,12 @@ void HandleMenuItem(Menu *menu, int id) {
             if (id >= 20 && id < 30) {
                 // load
                 int slot = id - 20;
-                char filename[FILE_NAME_SIZE];
-                sprintf(filename, "slot_%d", slot);
-                GameState *gameState = LoadGameState(filename, menu->game->config);
-                SetGameState(menu->game, gameState);
+                LoadGameSlot(menu->game, slot);
                 CloseMenu(menu);
             } else if (id >= 30 && id < 40) {
                 // save
                 int slot = id - 30;
-                char filename[FILE_NAME_SIZE];
-                char slotname[SLOT_NAME_SIZE];
-                sprintf(filename, "slot_%d", slot);
-                SaveGameState(menu->game->gameState, filename, menu->game->config);
-                GameStateName(menu->game->gameState, slotname);
-                SetSlotName(menu->game->slotList, slot, slotname, menu->game->config);
-                
+                SaveGameSlot(menu->game, slot);
                 SetMenuTitle(menu, "Der Spielstand wurde gespeichert.");
                 AddMenuItem(menu, 0, "OK");
                 RefreshMenu(menu);

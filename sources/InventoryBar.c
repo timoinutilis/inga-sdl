@@ -34,6 +34,7 @@ InventoryBar *CreateInventoryBar(GameState *gameState) {
             bar->itemViews[i].position = MakeVector(75 + (i * 71), SCREEN_HEIGHT - 68);
         }
         bar->isEnabled = true;
+        RefreshInventoryBar(bar, false);
     }
     return bar;
 }

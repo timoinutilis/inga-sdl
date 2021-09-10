@@ -160,6 +160,11 @@ int main(int argc, char **argv) {
                 case SDL_QUIT:
                     SetShouldQuit();
                     break;
+#ifdef AUTOSAVE
+                case SDL_APP_WILLENTERBACKGROUND:
+                    AutosaveIfPossible(game);
+                    break;
+#endif
                 case SDL_MOUSEMOTION:
                     mouseX = event.motion.x;
                     mouseY = event.motion.y;

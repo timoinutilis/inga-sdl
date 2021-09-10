@@ -495,6 +495,9 @@ unsigned long LaufeINGA(Thread *thread, Game *game, unsigned long ptr, bool *wie
         }
         game->gameState->startPosition = MakeVector(peekv(game, ptr + 6), peekv(game, ptr + 8));
         game->gameState->startDirection = DirectionForSide(peekv(game, ptr + 10));
+#ifdef AUTOSAVE
+        SaveGameSlot(game, 0);
+#endif
         return(locationPtr);
     }
     if (opc == 43) { //SpringeSub.
