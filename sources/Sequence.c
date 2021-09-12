@@ -80,7 +80,7 @@ bool HandleKeyInSequence(Sequence *sequence, SDL_Keysym keysym) {
     return true;
 }
 
-void UpdateSequence(Sequence *sequence, int deltaTicks) {
+void UpdateSequence(Sequence *sequence, int deltaTicks, SoundManager *soundManager) {
     if (!sequence || sequence->isFinished) return;
     
     UpdateFader(&sequence->fader, deltaTicks);
@@ -129,6 +129,9 @@ void UpdateSequence(Sequence *sequence, int deltaTicks) {
         } else if (command == 'M') {
             // wait for click
             sequence->isWaitingForClick = true;
+        } else if (command == 'S') {
+            // stop music
+            StopTrack(soundManager);
         }
     } else {
         // text to show (not implemented)

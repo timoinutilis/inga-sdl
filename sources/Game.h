@@ -79,6 +79,9 @@ typedef struct Game {
     SoundManager *soundManager;
     FILE *logFile;
     bool openMenuAfterFadeOut;
+#ifdef TOUCH
+    Image *inventoryButtonImage;
+#endif
 } Game;
 
 Game *CreateGame(GameConfig *config);

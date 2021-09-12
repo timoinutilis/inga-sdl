@@ -43,7 +43,13 @@ typedef struct InventoryItemView {
 typedef struct InventoryBar {
     GameState *gameState;
     Image *image;
+#ifdef TOUCH
+    Image *buttonLeftImage;
+    Image *buttonRightImage;
+    Image *menuButtonImage;
+#else
     Image *buttonsImage;
+#endif
     InventoryItemView itemViews[INVENTORY_BAR_SIZE];
     bool isVisible;
     bool isEnabled;

@@ -40,16 +40,21 @@ Game *CreateGame(GameConfig *config) {
         game->cursorNormal = LoadCursor("CursorNormal");
         game->cursorDrag = LoadCursor("CursorDrag");
         game->script = LoadScript("story");
-    #ifdef AUTOSAVE
+#ifdef AUTOSAVE
         GameState *autosaveGameState = LoadGameState("slot_0", config);
         game->gameState = autosaveGameState ? autosaveGameState : CreateGameState();
-    #else
+#else
         game->gameState = CreateGameState();
-    #endif
+#endif
         game->inventoryBar = CreateInventoryBar(game->gameState);
         game->dialog = CreateDialog();
         game->mainThread = CreateThread(0);
+#ifdef TOUCH
+        game->inventoryButtonImage = LoadImage("InventarKnopf", GetGlobalPalette(), true, false);
+        game->escImage = LoadImage("EscMobile", GetGlobalPalette(), true, false);
+#else
         game->escImage = LoadImage("Esc", GetGlobalPalette(), true, false);
+#endif
         game->menu = CreateMenu(game);
         game->slotList = CreateSlotList(config);
         game->soundManager = CreateSoundManager();
@@ -83,6 +88,9 @@ void FreeGame(Game *game) {
     FreeCursor(game->cursorNormal);
     FreeCursor(game->cursorDrag);
     FreeImage(game->escImage);
+#ifdef TOUCH
+    FreeImage(game->inventoryButtonImage);
+#endif
     FreeImage(game->focus.image);
     FreeSequence(game->sequence);
     FreeLocation(game->location);
@@ -334,7 +342,7 @@ void UpdateGame(Game *game, int deltaTicks) {
     UpdatePlaytime(game->gameState, deltaTicks);
     
     if (game->sequence) {
-        UpdateSequence(game->sequence, deltaTicks);
+        UpdateSequence(game->sequence, deltaTicks, game->soundManager);
         if (game->sequence->isFinished) {
             FreeSequence(game->sequence);
             game->sequence = NULL;
@@ -376,6 +384,11 @@ void DrawGame(Game *game) {
     if (game->mainThread->escptr) {
         DrawImage(game->escImage, MakeVector(1, 1));
     }
+#ifdef TOUCH
+    if (!game->mainThread->isActive && !game->inventoryBar->isVisible && game->inventoryBar->isEnabled && !game->dialog->rootItem) {
+        DrawImage(game->inventoryButtonImage, MakeVector(0, SCREEN_HEIGHT - 44));
+    }
+#endif
     
     DrawLocationOverlays(game->location);
     DrawInventoryBar(game->inventoryBar);

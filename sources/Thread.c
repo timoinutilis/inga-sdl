@@ -787,9 +787,10 @@ unsigned long LaufeINGA(Thread *thread, Game *game, unsigned long ptr, bool *wie
     }
     if (opc == 81) { //SpielEnde.
 //        FadeOut(4);
-        SetShouldQuit();
+//        SetShouldQuit();
+        SetGameState(game, CreateGameState());
         *wieder = false;
-        return ptr;
+        return thread->ptr;
     }
     if (opc == 89) { //HoleZeit.
 //        if (peekv(game, ptr + 2) > 0) SetzeVar(peekv(game, ptr + 2), (WORD)zeit.stunden);
