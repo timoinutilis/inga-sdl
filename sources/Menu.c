@@ -81,7 +81,7 @@ bool HandleMouseInMenu(Menu *menu, const int x, const int y, const ButtonState b
     if (CanHover(buttonState)) {
         MenuItem *item = menu->rootItem;
         while (item) {
-            if (y >= (int)item->position.y && y < (int)item->position.y + item->image->height) {
+            if (y >= (int)item->position.y - 8 && y < (int)item->position.y + item->image->height + 8) {
                 menu->focusedItem = item;
                 break;
             }

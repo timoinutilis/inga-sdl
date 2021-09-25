@@ -51,9 +51,6 @@ Game *CreateGame(GameConfig *config) {
         game->mainThread = CreateThread(0);
 #ifdef TOUCH
         game->inventoryButtonImage = LoadImage("InventarKnopf", GetGlobalPalette(), true, false);
-        game->escImage = LoadImage("EscMobile", GetGlobalPalette(), true, false);
-#else
-        game->escImage = LoadImage("Esc", GetGlobalPalette(), true, false);
 #endif
         game->menu = CreateMenu(game);
         game->slotList = CreateSlotList(config);
@@ -87,7 +84,6 @@ void FreeGame(Game *game) {
     FreeMenu(game->menu);
     FreeCursor(game->cursorNormal);
     FreeCursor(game->cursorDrag);
-    FreeImage(game->escImage);
 #ifdef TOUCH
     FreeImage(game->inventoryButtonImage);
 #endif
@@ -120,11 +116,9 @@ void HandleMouseInGame(Game *game, int x, int y, ButtonState buttonState) {
     }
     
     if (game->mainThread && game->mainThread->isActive) {
-#ifdef TOUCH
-        if (x < 44 && y < 44 && buttonState == ButtonStateRelease) {
+        if (buttonState == SelectionButtonState()) {
             EscapeThread(game->mainThread);
         }
-#endif
         SetFocus(game, x, y, NULL);
         game->draggingItemView.item = NULL;
         return;
@@ -292,10 +286,6 @@ void HandleKeyInGame(Game *game, SDL_Keysym keysym) {
     if (game->fader.state != FaderStateOpen) {
         return;
     }
-    
-    if (keysym.sym == SDLK_ESCAPE) {
-        EscapeThread(game->mainThread);
-    }
 }
 
 void HandleGameCheat(Game *game, const char *cheat) {
@@ -381,9 +371,6 @@ void DrawGame(Game *game) {
     
     DrawLocation(game->location);
     
-    if (game->mainThread->escptr) {
-        DrawImage(game->escImage, MakeVector(1, 1));
-    }
 #ifdef TOUCH
     if (!game->mainThread->isActive && !game->inventoryBar->isVisible && game->inventoryBar->isEnabled && !game->dialog->rootItem) {
         DrawImage(game->inventoryButtonImage, MakeVector(0, SCREEN_HEIGHT - 44));

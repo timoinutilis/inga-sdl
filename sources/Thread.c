@@ -604,7 +604,16 @@ unsigned long LaufeINGA(Thread *thread, Game *game, unsigned long ptr, bool *wie
         }
         StopSoundLoop(game->soundManager);
         RefreshGameState(game);
-        game->sequence = LoadSequence(peeks(script, ptr + 2));
+        const char *filename = peeks(script, ptr + 2);
+#ifdef TOUCH
+        if (strcmp(filename, "SeqTutorial") == 0) {
+            game->sequence = LoadSequence("SeqTutorialMobile");
+        } else {
+            game->sequence = LoadSequence(filename);
+        }
+#else
+        game->sequence = LoadSequence(filename);
+#endif
         *wieder = false;
         return(ptr + 6);
     }

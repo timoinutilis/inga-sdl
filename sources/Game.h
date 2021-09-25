@@ -72,7 +72,6 @@ typedef struct Game {
     int draggedId;
     Verb selectedVerb;
     IdleScript idleScript;
-    Image *escImage;
     Fader fader;
     Menu *menu;
     SlotList *slotList;

@@ -43,7 +43,7 @@ bool HandleMouseInDialog(Dialog *dialog, const int x, const int y, const ButtonS
     if (CanHover(buttonState)) {
         DialogItem *item = dialog->rootItem;
         while (item) {
-            if (y >= (int)item->position.y && y < (int)item->position.y + item->image->height) {
+            if (y >= (int)item->position.y - 2 && y < (int)item->position.y + item->image->height + 2) {
                 dialog->focusedItem = item;
                 break;
             }
@@ -93,7 +93,7 @@ void RefreshDialog(Dialog *dialog) {
         position.y += item->image->height + 4;
         item = item->next;
     }
-    float offsetY = SCREEN_HEIGHT - position.y - 12;
+    float offsetY = SCREEN_HEIGHT - position.y - 33;
     item = dialog->rootItem;
     while (item) {
         item->position.y += offsetY;
