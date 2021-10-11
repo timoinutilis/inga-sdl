@@ -23,7 +23,7 @@
 
 #include <stdio.h>
 #include <stdbool.h>
-#include <SDL2/SDL.h>
+#include "SDL_includes.h"
 #include "Image.h"
 #include "NavigationMap.h"
 #include "Element.h"
@@ -45,6 +45,7 @@ Location *CreateLocation(int id, const char *background);
 void FreeLocation(Location *location);
 void UpdateLocation(Location *location, int deltaTicks);
 void DrawLocation(Location *location);
+void DrawLocationOverlays(Location *location);
 
 void LoadLocationBackground(Location *location, const char *background);
 void LoadLocationNavigationMap(Location *location, const char *background);

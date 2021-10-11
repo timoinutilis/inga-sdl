@@ -23,7 +23,7 @@
 
 #include <stdio.h>
 #include <stdbool.h>
-#include <SDL2/SDL.h>
+#include "SDL_includes.h"
 #include "Location.h"
 #include "Image.h"
 #include "Element.h"
@@ -39,6 +39,7 @@
 #include "SlotList.h"
 #include "GameConfig.h"
 #include "SoundManager.h"
+#include "Enums.h"
 
 typedef struct Focus {
     const char *name;
@@ -71,16 +72,20 @@ typedef struct Game {
     int draggedId;
     Verb selectedVerb;
     IdleScript idleScript;
-    Image *escImage;
     Fader fader;
     Menu *menu;
     SlotList *slotList;
     SoundManager *soundManager;
+    FILE *logFile;
+    bool openMenuAfterFadeOut;
+#ifdef TOUCH
+    Image *inventoryButtonImage;
+#endif
 } Game;
 
 Game *CreateGame(GameConfig *config);
 void FreeGame(Game *game);
-void HandleMouseInGame(Game *game, int x, int y, int buttonIndex);
+void HandleMouseInGame(Game *game, int x, int y, ButtonState buttonState);
 void HandleKeyInGame(Game *game, SDL_Keysym keysym);
 void HandleGameCheat(Game *game, const char *cheat);
 void UpdateGame(Game *game, int deltaTicks);
@@ -89,6 +94,9 @@ void DrawGame(Game *game);
 void SetLocation(Game *game, int id, const char *background);
 void SetGameState(Game *game, GameState *gameState);
 void RefreshGameState(Game *game);
+void SaveGameSlot(Game *game, int slot);
+void LoadGameSlot(Game *game, int slot);
+void AutosaveIfPossible(Game *game);
 
 void MainPersonDidFinishWalking(Game *game);
 

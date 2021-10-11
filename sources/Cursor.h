@@ -22,7 +22,7 @@
 #define Cursor_h
 
 #include <stdio.h>
-#include <SDL2/SDL.h>
+#include "SDL_includes.h"
 
 SDL_Cursor *LoadCursor(const char *filename);
 void FreeCursor(SDL_Cursor *cursor);

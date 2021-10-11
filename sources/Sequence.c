@@ -19,10 +19,11 @@
 //
 
 #include "Sequence.h"
-#include <SDL2/SDL.h>
+#include "SDL_includes.h"
 #include <stdlib.h>
 #include "Utils.h"
 #include "Config.h"
+#include "Global.h"
 
 Sequence *LoadSequence(const char *filename) {
     Sequence *sequence = NULL;
@@ -61,15 +62,25 @@ void FreeSequence(Sequence *sequence) {
     free(sequence);
 }
 
-bool HandleMouseInSequence(Sequence *sequence, int x, int y, int buttonIndex) {
+bool HandleMouseInSequence(Sequence *sequence, int x, int y, ButtonState buttonState) {
     if (!sequence || sequence->isFinished) return false;
-    if (buttonIndex != 0) {
+    if (buttonState == SelectionButtonState()) {
         sequence->isWaitingForClick = false;
     }
     return true;
 }
 
-void UpdateSequence(Sequence *sequence, int deltaTicks) {
+bool HandleKeyInSequence(Sequence *sequence, SDL_Keysym keysym) {
+    if (!sequence || sequence->isFinished) return false;
+    if (keysym.sym == SDLK_ESCAPE) {
+        sequence->waitTicks = 0;
+        sequence->isWaitingForClick = false;
+        sequence->wasSkipped = true;
+    }
+    return true;
+}
+
+void UpdateSequence(Sequence *sequence, int deltaTicks, SoundManager *soundManager) {
     if (!sequence || sequence->isFinished) return;
     
     UpdateFader(&sequence->fader, deltaTicks);
@@ -84,7 +95,7 @@ void UpdateSequence(Sequence *sequence, int deltaTicks) {
         return;
     }
     
-    if (sequence->currentLine >= sequence->text + sequence->textSize) {
+    if (sequence->wasSkipped || sequence->currentLine >= sequence->text + sequence->textSize) {
         // end of sequence
         if (sequence->fader.state != FaderStateClosed) {
             if (sequence->fader.state != FaderStateFadingOut) {
@@ -118,6 +129,9 @@ void UpdateSequence(Sequence *sequence, int deltaTicks) {
         } else if (command == 'M') {
             // wait for click
             sequence->isWaitingForClick = true;
+        } else if (command == 'S') {
+            // stop music
+            StopTrack(soundManager);
         }
     } else {
         // text to show (not implemented)

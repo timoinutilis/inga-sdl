@@ -488,9 +488,16 @@ unsigned long LaufeINGA(Thread *thread, Game *game, unsigned long ptr, bool *wie
     }
     if (opc == 29) { //SpringeOrt.
         unsigned long locationPtr = peekl(script, ptr + 2);
-        game->gameState->locationPtr = locationPtr;
+        Label *label = GetLabelWithPtr(game->script, locationPtr);
+        if (label) {
+            printf("Label for ptr %lu: %s\n", locationPtr, label->name);
+            strcpy(game->gameState->locationLabel, label->name);
+        }
         game->gameState->startPosition = MakeVector(peekv(game, ptr + 6), peekv(game, ptr + 8));
         game->gameState->startDirection = DirectionForSide(peekv(game, ptr + 10));
+#ifdef AUTOSAVE
+        SaveGameSlot(game, 0);
+#endif
         return(locationPtr);
     }
     if (opc == 43) { //SpringeSub.
@@ -540,22 +547,33 @@ unsigned long LaufeINGA(Thread *thread, Game *game, unsigned long ptr, bool *wie
     }
     if (opc == 26) { //WennBenutzt.
         if ((thread->benutzt == 0) || (thread->invbenutzt > 0)) return(peekl(script, ptr + 4));
-        if ((peekv(game, ptr + 2) == thread->benutzt) || (peekv(game, ptr + 2) == 0)) {
+        unsigned short param = peekv(game, ptr + 2);
+        if (param == thread->benutzt) {
             return(ptr + 8);
-        } else {
-            return(peekl(script, ptr + 4));
         }
+        if (param == 0) {
+            if (game->logFile) {
+                fprintf(game->logFile, "> Default handler\n");
+            }
+            return(ptr + 8);
+        }
+        return(peekl(script, ptr + 4));
     }
     if (opc == 27) { //WennBenutztMit.
         if ((thread->benutzt > 0) && (thread->invbenutzt > 0)) {
-            if (((peekv(game, ptr + 2) == thread->benutzt) && (peekv(game, ptr + 4) == thread->invbenutzt)) ||
-                ((peekv(game, ptr + 2) == thread->invbenutzt) && (peekv(game, ptr + 4) == thread->benutzt))) {
+            unsigned short param1 = peekv(game, ptr + 2);
+            unsigned short param2 = peekv(game, ptr + 4);
+            if (((param1 == thread->benutzt) && (param2 == thread->invbenutzt)) ||
+                ((param1 == thread->invbenutzt) && (param2 == thread->benutzt))) {
                 return(ptr + 10);
             }
-            if ((peekv(game, ptr + 2) == 0) && ((peekv(game, ptr + 4) == thread->benutzt) || (peekv(game, ptr + 4) == thread->invbenutzt))) {
+            if ((param1 == 0) && ((param2 == thread->benutzt) || (param2 == thread->invbenutzt))) {
                 return(ptr + 10);
             }
-            if ((peekv(game, ptr + 2) == 0) && (peekv(game, ptr + 4) == 0)) {
+            if ((param1 == 0) && (param2 == 0)) {
+                if (game->logFile) {
+                    fprintf(game->logFile, "> Default handler\n");
+                }
                 return(ptr + 10);
             }
         }
@@ -586,7 +604,16 @@ unsigned long LaufeINGA(Thread *thread, Game *game, unsigned long ptr, bool *wie
         }
         StopSoundLoop(game->soundManager);
         RefreshGameState(game);
-        game->sequence = LoadSequence(peeks(script, ptr + 2));
+        const char *filename = peeks(script, ptr + 2);
+#ifdef TOUCH
+        if (strcmp(filename, "SeqTutorial") == 0) {
+            game->sequence = LoadSequence("SeqTutorialMobile");
+        } else {
+            game->sequence = LoadSequence(filename);
+        }
+#else
+        game->sequence = LoadSequence(filename);
+#endif
         *wieder = false;
         return(ptr + 6);
     }
@@ -769,9 +796,10 @@ unsigned long LaufeINGA(Thread *thread, Game *game, unsigned long ptr, bool *wie
     }
     if (opc == 81) { //SpielEnde.
 //        FadeOut(4);
-        SetShouldQuit();
+//        SetShouldQuit();
+        SetGameState(game, CreateGameState());
         *wieder = false;
-        return ptr;
+        return thread->ptr;
     }
     if (opc == 89) { //HoleZeit.
 //        if (peekv(game, ptr + 2) > 0) SetzeVar(peekv(game, ptr + 2), (WORD)zeit.stunden);

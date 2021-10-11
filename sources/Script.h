@@ -22,10 +22,18 @@
 #define Script_h
 
 #include <stdio.h>
+#include "Config.h"
+
+typedef struct Label {
+    char name[LABEL_NAME_SIZE];
+    unsigned long ptr;
+    struct Label *next;
+} Label;
 
 typedef struct Script {
     unsigned char *inga;
     char *itxt;
+    struct Label *rootLabel;
 } Script;
 
 Script *LoadScript(const char *filename);
@@ -34,5 +42,8 @@ void FreeScript(Script *script);
 unsigned short peekw(Script *script, unsigned long pointer);
 unsigned long peekl(Script *script, unsigned long pointer);
 const char *peeks(Script *script, unsigned long pointer);
+
+Label *GetLabelWithName(Script *script, const char *name);
+Label *GetLabelWithPtr(Script *script, unsigned long ptr);
 
 #endif /* Script_h */

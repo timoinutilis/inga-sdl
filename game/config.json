@@ -1,5 +1,6 @@
 {
 	"organizationName": "Inutilis Software",
 	"gameName": "Inga Example",
-	"paletteFilename": "Garten"
+	"paletteFilename": "Garten",
+    "version": "1.0"
 }

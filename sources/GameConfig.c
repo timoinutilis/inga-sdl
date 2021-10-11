@@ -55,7 +55,12 @@ GameConfig *LoadGameConfig(void) {
                     config->paletteFilename = paletteFilename->valuestring;
                 }
                 
-                if (!organizationName || !gameName || !paletteFilename) {
+                const cJSON *version = cJSON_GetObjectItemCaseSensitive(json, "version");
+                if (cJSON_IsString(version)) {
+                    config->version = version->valuestring;
+                }
+                
+                if (!organizationName || !gameName || !paletteFilename || !version) {
                     printf("LoadGameConfig: missing values\n");
                     FreeGameConfig(config);
                     config = NULL;

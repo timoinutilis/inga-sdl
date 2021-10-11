@@ -23,6 +23,9 @@
 #include "Global.h"
 #include "Game.h"
 
+const int MainPersonID = 0;
+const int ForegroundID = 0xFFFF;
+
 void SetElementImageFromSet(Element *element, int imageId);
 void ElementFreeAction(Element *element);
 void UpdateMove(Element *element, int deltaTicks);
@@ -63,12 +66,17 @@ void UpdateElement(Element *element, int deltaTicks) {
         element->frameTicks += deltaTicks;
         if (element->frameTicks >= element->image->animation->frames[element->frameIndex].ticks) {
             element->frameTicks = 0;
-            element->frameIndex += 1;
             int numFrames = element->image->animation->numFrames;
-            if (element->frameIndex >= numFrames) {
-                element->frameIndex = 0;
+            if (element->frameIndex + 1 < numFrames) {
+                element->frameIndex += 1;
+            } else {
                 if (element->loopCount > 0) {
                     element->loopCount -= 1;
+                    if (element->loopCount > 0) {
+                        element->frameIndex = 0;
+                    }
+                } else {
+                    element->frameIndex = 0;
                 }
             }
         }
@@ -146,6 +154,9 @@ bool IsPointInElement(Element *element, int x, int y) {
         }
     }
     if (rect.w > 0) {
+#ifdef TOUCH
+        SetRectToMinimumSize(&rect, 33);
+#endif
         return x >= rect.x && x < rect.x + rect.w && y >= rect.y && y < rect.y + rect.h;
     }
     return false;
@@ -194,8 +205,13 @@ Vector GetElementTarget(Element *element, Vector fromPosition) {
 
 void SetElementImageFromSet(Element *element, int imageId) {
     if (!element || !element->imageSet) return;
+    Image *image = GetImageFromSet(element->imageSet, imageId, element->direction);
+    if (!image) {
+        printf("SetElementImageFromSet: Image ID %d not found\n", imageId);
+        return;
+    }
     element->imageId = imageId;
-    element->image = GetImageFromSet(element->imageSet, imageId, element->direction);
+    element->image = image;
     element->frameIndex = 0;
     element->frameTicks = 0;
 }

@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2020 Timo Kloss
+// Copyright (c) 2021 Timo Kloss
 //
 // This software is provided 'as-is', without any express or implied
 // warranty. In no event will the authors be held liable for any damages
@@ -18,33 +18,15 @@
 // 3. This notice may not be removed or altered from any source distribution.
 //
 
-#ifndef Sequence_h
-#define Sequence_h
+#ifndef Enums_h
+#define Enums_h
 
-#include <stdio.h>
-#include <stdbool.h>
-#include "Image.h"
-#include "Fader.h"
-#include "Enums.h"
-#include "SoundManager.h"
+typedef enum ButtonState {
+    ButtonStateIdle = 0,
+    ButtonStateClickLeft = 1,
+    ButtonStateClickRight = 2,
+    ButtonStateDrag = 3,
+    ButtonStateRelease = 4
+} ButtonState;
 
-typedef struct Sequence {
-    char *text;
-    Sint64 textSize;
-    Image *image;
-    char *currentLine;
-    int waitTicks;
-    bool isWaitingForClick;
-    bool wasSkipped;
-    bool isFinished;
-    Fader fader;
-} Sequence;
-
-Sequence *LoadSequence(const char *filename);
-void FreeSequence(Sequence *sequence);
-bool HandleMouseInSequence(Sequence *sequence, int x, int y, ButtonState buttonState);
-bool HandleKeyInSequence(Sequence *sequence, SDL_Keysym keysym);
-void UpdateSequence(Sequence *sequence, int deltaTicks, SoundManager *soundManager);
-void DrawSequence(Sequence *sequence);
-
-#endif /* Sequence_h */
+#endif /* Enums_h */

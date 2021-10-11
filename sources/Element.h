@@ -23,43 +23,56 @@
 
 #include <stdio.h>
 #include <stdbool.h>
-#include <SDL2/SDL.h>
+#include "SDL_includes.h"
 #include "Config.h"
 #include "Utils.h"
 #include "Image.h"
 #include "ImageSet.h"
 #include "NavigationMap.h"
 #include "Font.h"
+#include "Enums.h"
 
 typedef struct Location Location;
 
-enum ElementAction {
+extern const int MainPersonID;
+extern const int ForegroundID;
+
+typedef enum ElementAction {
     ElementActionIdle,
     ElementActionMove,
     ElementActionTalk,
     ElementActionAnimate,
     ElementActionTake
-};
+} ElementAction;
+
+typedef enum Layer {
+    LayerDeco,
+    LayerObjects,
+    LayerFields,
+    LayerPersons,
+    LayerForeground,
+    LayerTop
+} Layer;
 
 typedef struct Element {
     int id;
     Location *location;
     Vector position;
-    int layer;
+    Layer layer;
     bool isSelectable;
     SDL_Rect selectionRect;
     Vector target;
     bool isVisible;
     char name[ELEMENT_NAME_SIZE];
-    struct Image *image;
+    Image *image;
     int frameIndex;
     int frameTicks;
     int loopCount;
     bool isPaused;
-    struct ImageSet *imageSet;
+    ImageSet *imageSet;
     int imageId;
     Vector direction;
-    enum ElementAction action;
+    ElementAction action;
     NavigationPath *navigationPath;
     bool navigationIgnoresMap;
     int navigationIndex;

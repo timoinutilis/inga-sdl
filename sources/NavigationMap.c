@@ -19,7 +19,7 @@
 //
 
 #include "NavigationMap.h"
-#include <SDL2/SDL.h>
+#include "SDL_includes.h"
 #include "Utils.h"
 
 NavigationMap *LoadNavigationMap(const char *filename) {
@@ -83,8 +83,10 @@ NavigationPath *CreateNavigationPath(NavigationMap *navigationMap, Vector origin
         int dir = (destination.x > origin.x) ? 1 : -1;
         int safeX = fmin(fmax(0, origin.x), navigationMap->width - 1);
         int dstX = fmin(fmax(0, destination.x), navigationMap->width - 1);
-        for (int x = safeX; x != dstX; x += dir) {
-            if (navigationMap->topLimits[x] > navigationMap->bottomLimits[x]) {
+        int x = safeX;
+        while (x != dstX) {
+            x += dir;
+            if (navigationMap->topLimits[x] >= navigationMap->bottomLimits[x]) {
                 destination.x = safeX;
                 destination.y = (navigationMap->topLimits[safeX] + navigationMap->bottomLimits[safeX]) * 0.5;
                 path->reachesDestination = false;

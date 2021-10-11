@@ -18,17 +18,8 @@
 // 3. This notice may not be removed or altered from any source distribution.
 //
 
-#include <SDL2/SDL.h>
 #include <stdlib.h>
-
-#ifdef __APPLE__
-#include <SDL2_ttf/SDL_ttf.h>
-#include <SDL2_mixer/SDL_mixer.h>
-#else
-#include <SDL2/SDL_ttf.h>
-#include <SDL2/SDL_mixer.h>
-#endif
-
+#include "SDL_includes.h"
 #include "Config.h"
 #include "Global.h"
 #include "Game.h"
@@ -62,7 +53,7 @@ void ParseArguments(Arguments *arguments, int argc, char **argv) {
     }
 }
 
-void PrintHelp() {
+void PrintHelp(void) {
     printf("usage:\n"
            "  -h, --help         show help message and quit\n"
            "  -w, --window       enable window mode\n"
@@ -98,7 +89,7 @@ int main(int argc, char **argv) {
 
     SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
     
-    Uint32 windowFlags = SDL_WINDOW_SHOWN;
+    Uint32 windowFlags = SDL_WINDOW_SHOWN | SDL_WINDOW_ALLOW_HIGHDPI;
     if (!arguments.window) {
         windowFlags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
     }
@@ -150,7 +141,8 @@ int main(int argc, char **argv) {
 
     int mouseX = 0;
     int mouseY = 0;
-    int mouseButtonIndex = 0;
+    ButtonState buttonState = ButtonStateIdle;
+    bool isMouseDown = false;
     bool cheatInputActive = false;
     char cheatInput[MAX_CHEAT_SIZE];
     memset(cheatInput, 0, MAX_CHEAT_SIZE);
@@ -168,6 +160,11 @@ int main(int argc, char **argv) {
                 case SDL_QUIT:
                     SetShouldQuit();
                     break;
+#ifdef AUTOSAVE
+                case SDL_APP_WILLENTERBACKGROUND:
+                    AutosaveIfPossible(game);
+                    break;
+#endif
                 case SDL_MOUSEMOTION:
                     mouseX = event.motion.x;
                     mouseY = event.motion.y;
@@ -177,7 +174,20 @@ int main(int argc, char **argv) {
                     if (mouseY >= SCREEN_HEIGHT) mouseY = SCREEN_HEIGHT - 1;
                     break;
                 case SDL_MOUSEBUTTONDOWN:
-                    mouseButtonIndex = event.button.button;
+                    isMouseDown = true;
+                    if (event.button.button == SDL_BUTTON_LEFT) {
+                        buttonState = ButtonStateClickLeft;
+                    } else if (event.button.button == SDL_BUTTON_RIGHT) {
+                        buttonState = ButtonStateClickRight;
+                    }
+                    break;
+                case SDL_MOUSEBUTTONUP:
+                    isMouseDown = false;
+                    // On touchpads button down and up events might happen in the same loop,
+                    // so make sure not to overwrite the click states immediately.
+                    if (buttonState == ButtonStateDrag) {
+                        buttonState = ButtonStateRelease;
+                    }
                     break;
                 case SDL_KEYDOWN:
                     if (event.key.keysym.sym == SDLK_TAB) {
@@ -197,8 +207,8 @@ int main(int argc, char **argv) {
                     break;
             }
         }
-
-        HandleMouseInGame(game, mouseX, mouseY, mouseButtonIndex);
+        
+        HandleMouseInGame(game, mouseX, mouseY, buttonState);
         UpdateGame(game, deltaTicks);
 
         SDL_SetRenderTarget(renderer, prerenderTexture);
@@ -208,8 +218,13 @@ int main(int argc, char **argv) {
         SDL_RenderClear(renderer);
         SDL_RenderCopy(renderer, prerenderTexture, &screenRect, &screenRect);
         SDL_RenderPresent(renderer);
-
-        mouseButtonIndex = 0;
+        
+        if (buttonState == ButtonStateClickLeft || buttonState == ButtonStateClickRight) {
+            buttonState = isMouseDown ? ButtonStateDrag : ButtonStateRelease;
+        } else if (buttonState == ButtonStateRelease) {
+            buttonState = ButtonStateIdle;
+        }
+        
         lastTicks = ticks;
 
         // limit to 60 FPS

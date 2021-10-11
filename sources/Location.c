@@ -60,6 +60,10 @@ void DrawLocation(Location *location) {
     if (!location) return;
     DrawImage(location->image, MakeVector(0, 0));
     DrawElements(location);
+}
+
+void DrawLocationOverlays(Location *location) {
+    if (!location) return;
     DrawElementOverlays(location);
 }
 

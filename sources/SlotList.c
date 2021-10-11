@@ -19,7 +19,7 @@
 //
 
 #include "SlotList.h"
-#include <SDL2/SDL.h>
+#include "SDL_includes.h"
 #include "GameConfig.h"
 
 void SaveSlotList(SlotList *list, GameConfig *config);

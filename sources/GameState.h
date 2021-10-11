@@ -47,7 +47,7 @@ typedef struct GameState {
     int numVariables;
     InventoryItem *rootInventoryItem;
     int numInventoryItems;
-    unsigned long locationPtr;
+    char locationLabel[LABEL_NAME_SIZE];
     Vector startPosition;
     Vector startDirection;
     unsigned long playtimeTicks;
@@ -70,6 +70,6 @@ void AddInventoryItem(GameState *gameState, int id, const char *name, const char
 void RemoveInventoryItem(GameState *gameState, int id);
 
 void UpdatePlaytime(GameState *gameState, int deltaTicks);
-void GameStateName(GameState *gameState, char *name);
+void GameStateName(GameState *gameState, char *name, bool isAutosave);
 
 #endif /* GameState_h */
