@@ -28,6 +28,7 @@ void DragItem(Game *game, InventoryItem *focusedItem);
 void DropItem(Game *game, InventoryItem *focusedItem);
 void SetFocus(Game *game, int x, int y, const char *name);
 void UpdateIdleProg(Game *game, int deltaTicks);
+void DoGameAction(Game *game, GameAction action);
 void InitLogger(Game *game);
 
 Game *CreateGame(GameConfig *config) {
@@ -185,7 +186,7 @@ void HandleMouseInGame(Game *game, int x, int y, ButtonState buttonState) {
         if (buttonState == SelectionButtonState()) {
             if (game->inventoryBar->focusedButton == InventoryBarButtonMenu) {
                 RefreshGameState(game);
-                game->openMenuAfterFadeOut = true;
+                game->actionAfterFadeOut = GameActionOpenMenu;
                 FadeOut(&game->fader);
             }
         }
@@ -254,6 +255,7 @@ void LookAtItem(Game *game, InventoryItem *focusedItem) {
         fprintf(game->logFile, "Look at %s\n", focusedItem->name);
     }
     StartInteraction(game->mainThread, focusedItem->id, 0, VerbLook);
+    game->gameState->hasChangedSinceSave = true;
 }
 
 void DragItem(Game *game, InventoryItem *focusedItem) {
@@ -271,6 +273,7 @@ void DropItem(Game *game, InventoryItem *focusedItem) {
             }
             StartInteraction(game->mainThread, focusedItem->id, game->draggingItemView.item->id, VerbUse);
             game->inventoryBar->isVisible = false;
+            game->gameState->hasChangedSinceSave = true;
         }
     }
     game->draggingItemView.item = NULL;
@@ -348,9 +351,9 @@ void UpdateGame(Game *game, int deltaTicks) {
     UpdateFader(&game->fader, deltaTicks);
     
     if (game->fader.state == FaderStateClosed) {
-        if (game->openMenuAfterFadeOut) {
-            game->openMenuAfterFadeOut = false;
-            OpenMenu(game->menu);
+        if (game->actionAfterFadeOut != GameActionNone) {
+            DoGameAction(game, game->actionAfterFadeOut);
+            game->actionAfterFadeOut = GameActionNone;
         } else if (game->mainThread && !game->mainThread->isActive) {
             FadeIn(&game->fader);
         }
@@ -487,11 +490,44 @@ void AutosaveIfPossible(Game *game) {
     }
 }
 
+void SafeQuit(Game *game) {
+#ifdef AUTOSAVE
+    SetShouldQuit();
+#else
+    if (!game || !game->mainThread || !game->gameState) {
+        SetShouldQuit();
+        return;
+    }
+    // is it possible to save the game state?
+    if (game->gameState->hasChangedSinceSave && !game->mainThread->isActive && game->fader.state == FaderStateOpen) {
+        // ask for quit
+        game->actionAfterFadeOut = GameActionAskQuit;
+        FadeOut(&game->fader);
+    } else {
+        SetShouldQuit();
+    }
+#endif
+}
+
+void DoGameAction(Game *game, GameAction action) {
+    switch (action) {
+        case GameActionNone:
+            break;
+        case GameActionOpenMenu:
+            OpenMenu(game->menu, 0);
+            break;
+        case GameActionAskQuit:
+            OpenMenu(game->menu, 5);
+            break;
+    }
+}
+
 void MainPersonDidFinishWalking(Game *game) {
     if (game->selectedId) {
         StartInteraction(game->mainThread, game->selectedId, game->draggedId, game->selectedVerb);
         game->selectedId = 0;
         game->draggedId = 0;
+        game->gameState->hasChangedSinceSave = true;
     }
 }
 

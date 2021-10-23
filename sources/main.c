@@ -104,11 +104,9 @@ int main(int argc, char **argv) {
     }
 
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
-    if(!renderer) {
+    if (!renderer) {
+        // use software renderer as fallback
         renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_SOFTWARE);
-        printf("using software renderer\n");
-    } else {
-        printf("using hardware renderer\n");
     }
     
     if (!renderer) {
@@ -158,7 +156,7 @@ int main(int argc, char **argv) {
         while (SDL_PollEvent(&event)) {
             switch (event.type) {
                 case SDL_QUIT:
-                    SetShouldQuit();
+                    SafeQuit(game);
                     break;
 #ifdef AUTOSAVE
                 case SDL_APP_WILLENTERBACKGROUND:

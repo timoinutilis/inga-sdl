@@ -490,7 +490,6 @@ unsigned long LaufeINGA(Thread *thread, Game *game, unsigned long ptr, bool *wie
         unsigned long locationPtr = peekl(script, ptr + 2);
         Label *label = GetLabelWithPtr(game->script, locationPtr);
         if (label) {
-            printf("Label for ptr %lu: %s\n", locationPtr, label->name);
             strcpy(game->gameState->locationLabel, label->name);
         }
         game->gameState->startPosition = MakeVector(peekv(game, ptr + 6), peekv(game, ptr + 8));

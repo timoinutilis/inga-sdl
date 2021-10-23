@@ -62,9 +62,9 @@ void FreeMenu(Menu *menu) {
     free(menu);
 }
 
-void OpenMenu(Menu *menu) {
+void OpenMenu(Menu *menu, int startItem) {
     if (!menu) return;
-    HandleMenuItem(menu, 0);
+    HandleMenuItem(menu, startItem);
     SDL_SetCursor(menu->game->cursorNormal);
     FadeIn(&menu->fader);
 }
@@ -252,6 +252,9 @@ void HandleMenuItem(Menu *menu, int id) {
             break;
         case 5:
             SetMenuTitle(menu, "Willst du das Spiel wirklich beenden?");
+            if (menu->game->gameState->hasChangedSinceSave) {
+                AddMenuItem(menu, 3, "Spielstand speichern");
+            }
             AddMenuItem(menu, 50, "Beenden");
             AddMenuItem(menu, 0, "Abbruch");
             RefreshMenu(menu);
