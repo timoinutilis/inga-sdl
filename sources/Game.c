@@ -65,6 +65,9 @@ Game *CreateGame(GameConfig *config) {
         element->imageSet = LoadImageSet("Hauptperson", GetGlobalPalette(), true);
         game->mainPerson = element;
         
+        SDL_Color pauseColor = {255, 192, 0, 255};
+        game->pauseImage = CreateImageFromText("Spielpause", game->font, pauseColor);
+        
         HideCursor();
         
         Label *label = GetLabelWithName(game->script, game->gameState->locationLabel);
@@ -103,6 +106,13 @@ void FreeGame(Game *game) {
 
 void HandleMouseInGame(Game *game, int x, int y, ButtonState buttonState) {
     if (!game) return;
+    
+    if (game->isPaused) {
+        if (buttonState == ButtonStateRelease) {
+            game->isPaused = false;
+        }
+        return;
+    }
     
     if (HandleMouseInMenu(game->menu, x, y, buttonState)) {
         SetFocus(game, x, y, NULL);
@@ -282,12 +292,24 @@ void DropItem(Game *game, InventoryItem *focusedItem) {
 void HandleKeyInGame(Game *game, SDL_Keysym keysym) {
     if (!game) return;
     
+    if (keysym.sym == SDLK_SPACE) {
+        game->isPaused = !game->isPaused;
+    }
+    
+    if (game->isPaused) return;
+    
     if (HandleKeyInSequence(game->sequence, keysym)) {
         return;
     }
     
     if (game->fader.state != FaderStateOpen) {
         return;
+    }
+    
+    if (keysym.sym == SDLK_PERIOD) {
+        if (game->mainThread && game->mainThread->talkingElement) {
+            ElementSkipTalk(game->mainThread->talkingElement);
+        }
     }
 }
 
@@ -325,7 +347,7 @@ void HandleGameCheat(Game *game, const char *cheat) {
 }
 
 void UpdateGame(Game *game, int deltaTicks) {
-    if (!game) return;
+    if (!game || game->isPaused) return;
     
     if (UpdateMenu(game->menu, deltaTicks)) {
         game->inventoryBar->isVisible = false;
@@ -364,12 +386,12 @@ void DrawGame(Game *game) {
     if (!game) return;
     
     if (DrawMenu(game->menu)) {
-        return;
+        goto endOfDraw;
     }
     
     if (game->sequence) {
         DrawSequence(game->sequence);
-        return;
+        goto endOfDraw;
     }
     
     DrawLocation(game->location);
@@ -386,6 +408,11 @@ void DrawGame(Game *game) {
     DrawImage(game->focus.image, game->focus.position);
     DrawDialog(game->dialog);
     DrawFader(&game->fader);
+    
+endOfDraw:
+    if (game->isPaused && game->pauseImage) {
+        DrawImage(game->pauseImage, MakeVector((SCREEN_WIDTH - game->pauseImage->width) * 0.5, (SCREEN_HEIGHT - game->pauseImage->height) * 0.5));
+    }
 }
 
 void SetFocus(Game *game, int x, int y, const char *name) {
@@ -501,6 +528,7 @@ void SafeQuit(Game *game) {
     // is it possible to save the game state?
     if (game->gameState->hasChangedSinceSave && !game->mainThread->isActive && game->fader.state == FaderStateOpen) {
         // ask for quit
+        game->isPaused = false;
         game->actionAfterFadeOut = GameActionAskQuit;
         FadeOut(&game->fader);
     } else {

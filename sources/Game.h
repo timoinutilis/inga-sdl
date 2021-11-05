@@ -84,6 +84,8 @@ typedef struct Game {
     SoundManager *soundManager;
     FILE *logFile;
     GameAction actionAfterFadeOut;
+    bool isPaused;
+    Image *pauseImage;
 #ifdef TOUCH
     Image *inventoryButtonImage;
 #endif
