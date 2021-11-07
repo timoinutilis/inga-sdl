@@ -52,7 +52,7 @@ void UpdateFader(Fader *fader, int deltaTicks) {
 
 void DrawFader(Fader *fader) {
     if (!fader || fader->state == FaderStateOpen) return;
-    SDL_Rect rect = {0, 0, SCREEN_WIDTH, SCREEN_HEIGHT};
+    SDL_Rect rect = {0, 0, SCREEN_WIDTH + 1, SCREEN_HEIGHT + 1}; // +1 for rounding errors on some platforms
     SDL_SetRenderDrawBlendMode(GetGlobalRenderer(), SDL_BLENDMODE_BLEND);
     switch (fader->state) {
         case FaderStateClosed:

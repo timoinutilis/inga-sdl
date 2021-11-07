@@ -271,8 +271,21 @@ void ElementTalk(Element *element, const char *text, int imageId, Font *font, in
     Frame *frame = &element->image->animation->frames[element->frameIndex];
     SDL_Color color = {255, 255, 255, 255};
     element->talkImage = CreateImageFromText(text, font, color);
-    element->talkOffset = element->talkImage ? MakeVector(element->talkImage->width * -0.5, -frame->pivot.y - 24) : MakeVector(0, 0);
+    if (element->talkImage) {
+        if (element->position.y - frame->pivot.y > 0) {
+            // top of head
+            element->talkOffset = MakeVector(element->talkImage->width * -0.5, -frame->pivot.y - 32);
+        } else {
+            // below feet
+            element->talkOffset = MakeVector(element->talkImage->width * -0.5, frame->sourceRect.h - frame->pivot.y);
+        }
+    }
     element->talkTicks = (int)strlen(text) * 30 * (textSpeed + 1) + 1000;
+}
+
+void ElementSkipTalk(Element *element) {
+    if (!element || element->action != ElementActionTalk) return;
+    element->talkTicks = 0;
 }
 
 void ElementAnimate(Element *element, int imageId, int loopCount) {

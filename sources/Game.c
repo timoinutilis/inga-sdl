@@ -28,6 +28,7 @@ void DragItem(Game *game, InventoryItem *focusedItem);
 void DropItem(Game *game, InventoryItem *focusedItem);
 void SetFocus(Game *game, int x, int y, const char *name);
 void UpdateIdleProg(Game *game, int deltaTicks);
+void DoGameAction(Game *game, GameAction action);
 void InitLogger(Game *game);
 
 Game *CreateGame(GameConfig *config) {
@@ -63,6 +64,9 @@ Game *CreateGame(GameConfig *config) {
         element->layer = LayerPersons;
         element->imageSet = LoadImageSet("Hauptperson", GetGlobalPalette(), true);
         game->mainPerson = element;
+        
+        SDL_Color pauseColor = {255, 192, 0, 255};
+        game->pauseImage = CreateImageFromText("Spielpause", game->font, pauseColor);
         
         HideCursor();
         
@@ -102,6 +106,13 @@ void FreeGame(Game *game) {
 
 void HandleMouseInGame(Game *game, int x, int y, ButtonState buttonState) {
     if (!game) return;
+    
+    if (game->isPaused) {
+        if (buttonState == ButtonStateRelease) {
+            game->isPaused = false;
+        }
+        return;
+    }
     
     if (HandleMouseInMenu(game->menu, x, y, buttonState)) {
         SetFocus(game, x, y, NULL);
@@ -185,7 +196,7 @@ void HandleMouseInGame(Game *game, int x, int y, ButtonState buttonState) {
         if (buttonState == SelectionButtonState()) {
             if (game->inventoryBar->focusedButton == InventoryBarButtonMenu) {
                 RefreshGameState(game);
-                game->openMenuAfterFadeOut = true;
+                game->actionAfterFadeOut = GameActionOpenMenu;
                 FadeOut(&game->fader);
             }
         }
@@ -254,6 +265,7 @@ void LookAtItem(Game *game, InventoryItem *focusedItem) {
         fprintf(game->logFile, "Look at %s\n", focusedItem->name);
     }
     StartInteraction(game->mainThread, focusedItem->id, 0, VerbLook);
+    game->gameState->hasChangedSinceSave = true;
 }
 
 void DragItem(Game *game, InventoryItem *focusedItem) {
@@ -271,6 +283,7 @@ void DropItem(Game *game, InventoryItem *focusedItem) {
             }
             StartInteraction(game->mainThread, focusedItem->id, game->draggingItemView.item->id, VerbUse);
             game->inventoryBar->isVisible = false;
+            game->gameState->hasChangedSinceSave = true;
         }
     }
     game->draggingItemView.item = NULL;
@@ -279,12 +292,24 @@ void DropItem(Game *game, InventoryItem *focusedItem) {
 void HandleKeyInGame(Game *game, SDL_Keysym keysym) {
     if (!game) return;
     
+    if (keysym.sym == SDLK_SPACE) {
+        game->isPaused = !game->isPaused;
+    }
+    
+    if (game->isPaused) return;
+    
     if (HandleKeyInSequence(game->sequence, keysym)) {
         return;
     }
     
     if (game->fader.state != FaderStateOpen) {
         return;
+    }
+    
+    if (keysym.sym == SDLK_PERIOD) {
+        if (game->mainThread && game->mainThread->talkingElement) {
+            ElementSkipTalk(game->mainThread->talkingElement);
+        }
     }
 }
 
@@ -322,7 +347,7 @@ void HandleGameCheat(Game *game, const char *cheat) {
 }
 
 void UpdateGame(Game *game, int deltaTicks) {
-    if (!game) return;
+    if (!game || game->isPaused) return;
     
     if (UpdateMenu(game->menu, deltaTicks)) {
         game->inventoryBar->isVisible = false;
@@ -348,9 +373,9 @@ void UpdateGame(Game *game, int deltaTicks) {
     UpdateFader(&game->fader, deltaTicks);
     
     if (game->fader.state == FaderStateClosed) {
-        if (game->openMenuAfterFadeOut) {
-            game->openMenuAfterFadeOut = false;
-            OpenMenu(game->menu);
+        if (game->actionAfterFadeOut != GameActionNone) {
+            DoGameAction(game, game->actionAfterFadeOut);
+            game->actionAfterFadeOut = GameActionNone;
         } else if (game->mainThread && !game->mainThread->isActive) {
             FadeIn(&game->fader);
         }
@@ -361,12 +386,12 @@ void DrawGame(Game *game) {
     if (!game) return;
     
     if (DrawMenu(game->menu)) {
-        return;
+        goto endOfDraw;
     }
     
     if (game->sequence) {
         DrawSequence(game->sequence);
-        return;
+        goto endOfDraw;
     }
     
     DrawLocation(game->location);
@@ -383,6 +408,11 @@ void DrawGame(Game *game) {
     DrawImage(game->focus.image, game->focus.position);
     DrawDialog(game->dialog);
     DrawFader(&game->fader);
+    
+endOfDraw:
+    if (game->isPaused && game->pauseImage) {
+        DrawImage(game->pauseImage, MakeVector((SCREEN_WIDTH - game->pauseImage->width) * 0.5, (SCREEN_HEIGHT - game->pauseImage->height) * 0.5));
+    }
 }
 
 void SetFocus(Game *game, int x, int y, const char *name) {
@@ -487,11 +517,45 @@ void AutosaveIfPossible(Game *game) {
     }
 }
 
+void SafeQuit(Game *game) {
+#ifdef AUTOSAVE
+    SetShouldQuit();
+#else
+    if (!game || !game->mainThread || !game->gameState) {
+        SetShouldQuit();
+        return;
+    }
+    // is it possible to save the game state?
+    if (game->gameState->hasChangedSinceSave && !game->mainThread->isActive && game->fader.state == FaderStateOpen) {
+        // ask for quit
+        game->isPaused = false;
+        game->actionAfterFadeOut = GameActionAskQuit;
+        FadeOut(&game->fader);
+    } else {
+        SetShouldQuit();
+    }
+#endif
+}
+
+void DoGameAction(Game *game, GameAction action) {
+    switch (action) {
+        case GameActionNone:
+            break;
+        case GameActionOpenMenu:
+            OpenMenu(game->menu, 0);
+            break;
+        case GameActionAskQuit:
+            OpenMenu(game->menu, 5);
+            break;
+    }
+}
+
 void MainPersonDidFinishWalking(Game *game) {
     if (game->selectedId) {
         StartInteraction(game->mainThread, game->selectedId, game->draggedId, game->selectedVerb);
         game->selectedId = 0;
         game->draggedId = 0;
+        game->gameState->hasChangedSinceSave = true;
     }
 }
 

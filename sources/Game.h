@@ -53,6 +53,12 @@ typedef struct IdleScript {
     unsigned long scriptPtr;
 } IdleScript;
 
+typedef enum GameAction {
+    GameActionNone,
+    GameActionOpenMenu,
+    GameActionAskQuit
+} GameAction;
+
 typedef struct Game {
     GameConfig *config;
     Font *font;
@@ -77,7 +83,9 @@ typedef struct Game {
     SlotList *slotList;
     SoundManager *soundManager;
     FILE *logFile;
-    bool openMenuAfterFadeOut;
+    GameAction actionAfterFadeOut;
+    bool isPaused;
+    Image *pauseImage;
 #ifdef TOUCH
     Image *inventoryButtonImage;
 #endif
@@ -97,6 +105,7 @@ void RefreshGameState(Game *game);
 void SaveGameSlot(Game *game, int slot);
 void LoadGameSlot(Game *game, int slot);
 void AutosaveIfPossible(Game *game);
+void SafeQuit(Game *game);
 
 void MainPersonDidFinishWalking(Game *game);
 

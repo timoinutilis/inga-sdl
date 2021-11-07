@@ -103,6 +103,7 @@ void ElementSetDirection(Element *element, Vector direction);
 void ElementLookTo(Element *element, int x, int y, int imageId);
 void ElementMoveTo(Element *element, int x, int y, int imageId, bool ignoreNavMap);
 void ElementTalk(Element *element, const char *text, int imageId, Font *font, int textSpeed);
+void ElementSkipTalk(Element *element);
 void ElementAnimate(Element *element, int imageId, int loopCount);
 void ElementTake(Element *element, int imageId, Element *takeElement, int takeFrame);
 

@@ -126,6 +126,8 @@ void SaveGameState(GameState *gameState, const char *filename, GameConfig *confi
         SDL_WriteU8(file, gameState->textSpeed);
         
         SDL_RWclose(file);
+        
+        gameState->hasChangedSinceSave = false;
     }
 }
 
