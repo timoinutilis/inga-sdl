@@ -29,6 +29,11 @@
 #include <stdio.h>
 #include <string.h>
 
+#ifdef __amigaos4__
+#include "version.h"
+static const char* __attribute__((used)) version = VERSTAG;
+#endif
+
 // SDL_TEXTINPUTEVENT_TEXT_SIZE (0-terminator is already included)
 #define MAX_CHEAT_SIZE 32
 
