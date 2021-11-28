@@ -21,6 +21,12 @@
 #include <SDL2_mixer/SDL_mixer.h>
 #endif
 
+#elif _WIN32
+
+#include <SDL.h>
+#include <SDL_ttf.h>
+#include <SDL_mixer.h>
+
 #else
 
 #include <SDL2/SDL.h>
