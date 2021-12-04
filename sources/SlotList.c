@@ -29,7 +29,7 @@ void SlotPath(GameConfig *config, char *path);
 SlotList *CreateSlotList(GameConfig *config) {
     SlotList *list = calloc(1, sizeof(SlotList));
     if (!list) {
-        printf("CreateSlotList: Out of memory\n");
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "CreateSlotList: Out of memory\n");
     } else {
         for (int i = 0; i < NUM_SAVE_SLOTS; ++i) {
             sprintf(list->slotNames[i], "%d - Leer", i + 1);
@@ -38,7 +38,7 @@ SlotList *CreateSlotList(GameConfig *config) {
         SlotPath(config, path);
         SDL_RWops *file = SDL_RWFromFile(path, "rb");
         if (!file) {
-            printf("CreateSlotList: %s\n", SDL_GetError());
+            SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "CreateSlotList: %s\n", SDL_GetError());
         } else {
             SDL_RWread(file, list, sizeof(SlotList), 1);
             SDL_RWclose(file);
@@ -64,7 +64,7 @@ void SaveSlotList(SlotList *list, GameConfig *config) {
     SlotPath(config, path);
     SDL_RWops *file = SDL_RWFromFile(path, "wb");
     if (!file) {
-        printf("SaveSlotList: %s\n", SDL_GetError());
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SaveSlotList: %s\n", SDL_GetError());
     } else {
         SDL_RWwrite(file, list, sizeof(SlotList), 1);
         SDL_RWclose(file);

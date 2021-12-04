@@ -33,7 +33,7 @@ void UpdateMove(Element *element, int deltaTicks);
 Element *CreateElement(int id) {
     Element *element = calloc(1, sizeof(struct Element));
     if (!element) {
-        printf("CreateElement: Out of memory\n");
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "CreateElement: Out of memory\n");
     } else {
         element->id = id;
         element->isVisible = true;
@@ -207,7 +207,7 @@ void SetElementImageFromSet(Element *element, int imageId) {
     if (!element || !element->imageSet) return;
     Image *image = GetImageFromSet(element->imageSet, imageId, element->direction);
     if (!image) {
-        printf("SetElementImageFromSet: Image ID %d not found\n", imageId);
+        SDL_LogWarn(SDL_LOG_CATEGORY_APPLICATION, "SetElementImageFromSet: Image ID %d not found\n", imageId);
         return;
     }
     element->imageId = imageId;

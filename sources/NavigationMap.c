@@ -30,13 +30,13 @@ NavigationMap *LoadNavigationMap(const char *filename) {
     
     SDL_RWops *file = SDL_RWFromFile(path, "rb");
     if (!file) {
-        printf("LoadNavigationMapILK: %s\n", SDL_GetError());
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "LoadNavigationMapILK: %s\n", SDL_GetError());
     } else {
         int width = 640;
         int *topLimits = calloc(width, sizeof(int));
         int *bottomLimits = calloc(width, sizeof(int));
         if (!topLimits || !bottomLimits) {
-            printf("LoadNavigationMapILK: Out of memory\n");
+            SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "LoadNavigationMapILK: Out of memory\n");
             free(topLimits);
             free(bottomLimits);
         } else {
@@ -54,7 +54,7 @@ NavigationMap *LoadNavigationMap(const char *filename) {
                 navigationMap->topLimits = topLimits;
                 navigationMap->bottomLimits = bottomLimits;
             } else {
-                printf("LoadNavigationMapILK: Out of memory\n");
+                SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "LoadNavigationMapILK: Out of memory\n");
                 if (topLimits) free(topLimits);
                 if (bottomLimits) free(bottomLimits);
             }

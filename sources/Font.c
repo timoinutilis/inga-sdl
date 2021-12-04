@@ -30,11 +30,11 @@ Font *LoadFont(const char *filename, const int size) {
     
     TTF_Font *ttfFont = TTF_OpenFont(path, size);
     if (!ttfFont) {
-        printf("TTF_OpenFont: %s\n", TTF_GetError());
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "TTF_OpenFont: %s\n", TTF_GetError());
     } else {
         font = calloc(1, sizeof(Font));
         if (!font) {
-            printf("LoadFont: Out of memory\n");
+            SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "LoadFont: Out of memory\n");
         } else {
             font->ttfFont = ttfFont;
         }
@@ -61,18 +61,18 @@ Image *CreateImageFromText(const char *text, Font *font, SDL_Color color) {
     SDL_Surface *fgSurface = TTF_RenderText_Blended(font->ttfFont, text, color);
     
     if (!surface || !fgSurface) {
-        printf("TTF_RenderText_Blended: %s\n", TTF_GetError());
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "TTF_RenderText_Blended: %s\n", TTF_GetError());
     } else {
         SDL_Rect rect = {1, 1, fgSurface->w, fgSurface->h};
         SDL_BlitSurface(fgSurface, NULL, surface, &rect);
         SDL_Renderer *renderer = GetGlobalRenderer();
         SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, surface);
         if (!texture) {
-            printf("SDL_CreateTextureFromSurface: %s\n", SDL_GetError());
+            SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL_CreateTextureFromSurface: %s\n", SDL_GetError());
         } else {
             image = calloc(1, sizeof(Image));
             if (!image) {
-                printf("CreateImageFromText: Out of memory\n");
+                SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "CreateImageFromText: Out of memory\n");
             } else {
                 image->texture = texture;
                 image->width = surface->w;

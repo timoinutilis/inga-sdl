@@ -24,7 +24,7 @@
 InventoryBar *CreateInventoryBar(GameState *gameState) {
     InventoryBar *bar = calloc(1, sizeof(InventoryBar));
     if (!bar) {
-        printf("CreateInventoryBar: Out of memory\n");
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "CreateInventoryBar: Out of memory\n");
     } else {
         bar->gameState = gameState;
 #ifdef TOUCH

@@ -32,11 +32,11 @@ GameConfig *LoadGameConfig(void) {
     if (jsonString) {
         cJSON *json = cJSON_Parse(jsonString);
         if (!json) {
-            printf("LoadGameConfig: json parse error\n");
+            SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "LoadGameConfig: json parse error\n");
         } else {
             config = calloc(1, sizeof(GameConfig));
             if (!config) {
-                printf("LoadGameConfig: Out of memory\n");
+                SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "LoadGameConfig: Out of memory\n");
             } else {
                 config->json = json;
                 
@@ -61,7 +61,7 @@ GameConfig *LoadGameConfig(void) {
                 }
                 
                 if (!organizationName || !gameName || !paletteFilename || !version) {
-                    printf("LoadGameConfig: missing values\n");
+                    SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "LoadGameConfig: missing values\n");
                     FreeGameConfig(config);
                     config = NULL;
                 }

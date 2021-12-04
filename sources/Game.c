@@ -34,7 +34,7 @@ void InitLogger(Game *game);
 Game *CreateGame(GameConfig *config) {
     Game *game = calloc(1, sizeof(Game));
     if (!game) {
-        printf("CreateGame: Out of memory\n");
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "CreateGame: Out of memory\n");
     } else {
         game->config = config;
         game->font = LoadFont("Font", 16);
@@ -319,7 +319,7 @@ void HandleGameCheat(Game *game, const char *cheat) {
     if (cheat[0] == 'j' && cheat[1] == 'j' && cheat[2] == 'j') {
         long ptr = atol(cheat + 3);
         if (ptr >= 0) {
-            printf("jump %ld\n", ptr);
+            SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION, "jump %ld\n", ptr);
             RunThread(game->mainThread, ptr);
         }
     } else if (cheat[0] == 'v' && cheat[1] == 'v' && cheat[2] == 'v') {
@@ -329,7 +329,7 @@ void HandleGameCheat(Game *game, const char *cheat) {
             if (s) {
                 int value = atoi(s);
                 if (value > 0) {
-                    printf("variable %d = %d\n", id, value);
+                    SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION, "variable %d = %d\n", id, value);
                     SetVariable(game->gameState, id, value, false);
                 }
             }
@@ -337,7 +337,7 @@ void HandleGameCheat(Game *game, const char *cheat) {
     } else if (cheat[0] == 'i' && cheat[1] == 'i' && cheat[2] == 'i') {
         int id = atoi(cheat + 3);
         if (id >= 0) {
-            printf("inventory item %d\n", id);
+            SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION, "inventory item %d\n", id);
             char name[30];
             sprintf(name, "Test %d", id);
             AddInventoryItem(game->gameState, id, name, "Esc", false); // "Esc" is one of the few small standard images

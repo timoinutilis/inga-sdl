@@ -32,7 +32,7 @@ void UpdateThreads(Location *location);
 Location *CreateLocation(int id, const char *background) {
     Location *location = calloc(1, sizeof(Location));
     if (!location) {
-        printf("CreateLocation: Out of memory\n");
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "CreateLocation: Out of memory\n");
     } else {
         location->id = id;
         LoadLocationBackground(location, background);

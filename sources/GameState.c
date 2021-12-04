@@ -31,7 +31,7 @@ void FreeInventoryItem(InventoryItem *item);
 GameState *CreateGameState() {
     GameState *gameState = calloc(1, sizeof(GameState));
     if (!gameState) {
-        printf("CreateGameState: Out of memory\n");
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "CreateGameState: Out of memory\n");
     } else {
         gameState->startPosition = MakeVector(320, 360);
         gameState->startDirection = MakeVector(0, 1);
@@ -59,11 +59,11 @@ GameState *LoadGameState(const char *filename, GameConfig *config) {
     GameStatePath(config, filename, path);
     SDL_RWops *file = SDL_RWFromFile(path, "rb");
     if (!file) {
-        printf("LoadGameState: %s\n", SDL_GetError());
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "LoadGameState: %s\n", SDL_GetError());
     } else {
         gameState = calloc(1, sizeof(GameState));
         if (!gameState) {
-            printf("LoadGameState: Out of memory\n");
+            SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "LoadGameState: Out of memory\n");
         } else {
             SDL_RWread(file, gameState->locationLabel, sizeof(char), LABEL_NAME_SIZE);
             SDL_RWread(file, &gameState->startPosition, sizeof(Vector), 1);
@@ -99,7 +99,7 @@ void SaveGameState(GameState *gameState, const char *filename, GameConfig *confi
     GameStatePath(config, filename, path);
     SDL_RWops *file = SDL_RWFromFile(path, "wb");
     if (!file) {
-        printf("SaveGameState: %s\n", SDL_GetError());
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SaveGameState: %s\n", SDL_GetError());
     } else {
         SDL_RWwrite(file, gameState->locationLabel, sizeof(char), LABEL_NAME_SIZE);
         SDL_RWwrite(file, &gameState->startPosition, sizeof(Vector), 1);
@@ -161,7 +161,7 @@ void SetVariable(GameState *gameState, int id, unsigned short value, bool skipIf
     } else {
         variable = calloc(1, sizeof(Variable));
         if (!variable) {
-            printf("SetVariable: Out of memory\n");
+            SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SetVariable: Out of memory\n");
         } else {
             variable->id = id;
             variable->value = value;
@@ -201,7 +201,7 @@ void AddInventoryItem(GameState *gameState, int id, const char *name, const char
     if (!gameState) return;
     InventoryItem *item = calloc(1, sizeof(InventoryItem));
     if (!item) {
-        printf("AddInventoryItem: Out of memory\n");
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "AddInventoryItem: Out of memory\n");
     } else {
         item->id = id;
         strcpy(item->name, name);

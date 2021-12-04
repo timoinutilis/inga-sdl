@@ -42,11 +42,11 @@ Image *LoadImage(const char *filename, SDL_Palette *defaultPalette, bool createM
     
     SDL_RWops *file = SDL_RWFromFile(path, "rb");
     if (!file) {
-        printf("LoadImage: %s\n", SDL_GetError());
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "LoadImage: %s\n", SDL_GetError());
     } else {
         Uint32 head = SDL_ReadBE32(file);
         if (head != 0x49424D38) {
-            printf("LoadImage: Invalid file format\n");
+            SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "LoadImage: Invalid file format\n");
         } else {
             Uint16 width = SDL_ReadBE16(file);
             Uint16 height = SDL_ReadBE16(file);
@@ -87,12 +87,12 @@ Image *LoadImage(const char *filename, SDL_Palette *defaultPalette, bool createM
             const size_t size = bytesPerRow * height;
             Uint8 *pixels = calloc(sizeof(Uint8), size);
             if (!pixels) {
-                printf("LoadImage: Out of memory\n");
+                SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "LoadImage: Out of memory\n");
             } else {
                 SDL_RWread(file, pixels, sizeof(Uint8), size);
                 SDL_Surface *surface = SDL_CreateRGBSurfaceWithFormatFrom(pixels, width, height, depth, bytesPerRow, SDL_PIXELFORMAT_INDEX8);
                 if (!surface) {
-                    printf("LoadImage: Create surface failed\n");
+                    SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "LoadImage: Create surface failed\n");
                 } else {
                     SDL_Palette *surfacePalette = surface->format->palette;
                     if (ibmColors) {
@@ -117,11 +117,11 @@ Image *LoadImage(const char *filename, SDL_Palette *defaultPalette, bool createM
                     }
                     SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, surface);
                     if (!texture) {
-                        printf("LoadImage: Create texture failed\n");
+                        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "LoadImage: Create texture failed\n");
                     } else {
                         image = calloc(1, sizeof(Image));
                         if (!image) {
-                            printf("LoadImage: Out of memory\n");
+                            SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "LoadImage: Out of memory\n");
                         } else {
                             image->texture = texture;
                             if (keepSurface) {
@@ -175,11 +175,11 @@ Image *LoadMaskedImage(const char *filename, Image *sourceImage) {
     
     SDL_RWops *file = SDL_RWFromFile(path, "rb");
     if (!file) {
-        printf("LoadMaskedImage: %s\n", SDL_GetError());
+        SDL_LogWarn(SDL_LOG_CATEGORY_APPLICATION, "LoadMaskedImage: %s\n", SDL_GetError());
     } else {
         Uint32 head = SDL_ReadBE32(file);
         if (head != 0x494D5031) {
-            printf("LoadMaskedImage: Invalid file format\n");
+            SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "LoadMaskedImage: Invalid file format\n");
         } else {
             Uint16 width = SDL_ReadBE16(file);
             Uint16 height = SDL_ReadBE16(file);
@@ -187,12 +187,12 @@ Image *LoadMaskedImage(const char *filename, Image *sourceImage) {
             
             Uint8 *pixels = calloc(sizeof(Uint8), size);
             if (!pixels) {
-                printf("LoadMaskedImage: Out of memory\n");
+                SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "LoadMaskedImage: Out of memory\n");
             } else {
                 SDL_RWread(file, pixels, sizeof(Uint8), size);
                 SDL_Surface *surface = SDL_CreateRGBSurfaceWithFormatFrom(pixels, width, height, 1, size / height, SDL_PIXELFORMAT_INDEX1MSB);
                 if (!surface) {
-                    printf("LoadMaskedImage: Create surface failed\n");
+                    SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "LoadMaskedImage: Create surface failed\n");
                 } else {
                     SDL_Palette *surfacePalette = surface->format->palette;
                     SDL_Color colors[] = {{255, 0, 255, 255}, {255, 255, 255, 255}};
@@ -202,7 +202,7 @@ Image *LoadMaskedImage(const char *filename, Image *sourceImage) {
                     
                     SDL_Surface *targetSurface = SDL_CreateRGBSurfaceWithFormat(0, width, height, 32, SDL_PIXELFORMAT_RGBA32);
                     if (!targetSurface) {
-                        printf("LoadMaskedImage: Create surface failed\n");
+                        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "LoadMaskedImage: Create surface failed\n");
                     } else {
                         SDL_BlitSurface(sourceImage->surface, NULL, targetSurface, NULL);
                         SDL_BlitSurface(surface, NULL, targetSurface, NULL);
@@ -211,7 +211,7 @@ Image *LoadMaskedImage(const char *filename, Image *sourceImage) {
                         
                         SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, targetSurface);
                         if (!texture) {
-                            printf("LoadMaskedImage: Create texture failed\n");
+                            SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "LoadMaskedImage: Create texture failed\n");
                         } else {
                             image = calloc(1, sizeof(Image));
                             image->texture = texture;

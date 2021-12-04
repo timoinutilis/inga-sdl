@@ -29,7 +29,7 @@ unsigned short peekv(Game *game, unsigned long pointer);
 Thread *CreateThread(int id) {
     Thread *thread = calloc(1, sizeof(struct Thread));
     if (!thread) {
-        printf("CreateThread: Out of memory\n");
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "CreateThread: Out of memory\n");
     } else {
         thread->id = id;
         thread->isActive = true;
@@ -814,18 +814,17 @@ unsigned long LaufeINGA(Thread *thread, Game *game, unsigned long ptr, bool *wie
     }
     if (opc == 100) { //print.
 //        if (devmodus)
-        printf("%s\n", peeks(script, ptr + 2));
+        SDL_LogDebug(SDL_LOG_CATEGORY_APPLICATION, "%s\n", peeks(script, ptr + 2));
         return(ptr + 6);
     }
     if (opc == 101) { //printn.
 //        if (devmodus)
-        printf("%d\n", peekv(game, ptr + 2));
+        SDL_LogDebug(SDL_LOG_CATEGORY_APPLICATION, "%d\n", peekv(game, ptr + 2));
         return(ptr + 4);
     }
 
-    printf("PC: %ld Opc: %d\n", ptr, opc);
+    SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Unknown command, PC: %ld Opc: %d\n", ptr, opc);
     thread->isActive = false;
-//    Fehler(6, "Unbekannter Skriptbefehl");
     return(ptr);
 }
 

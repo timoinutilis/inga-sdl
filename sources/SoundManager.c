@@ -27,7 +27,7 @@ void FreeTrack(SoundManager *soundManager);
 SoundManager *CreateSoundManager() {
     SoundManager *soundManager = calloc(1, sizeof(struct SoundManager));
     if (!soundManager) {
-        printf("CreateSoundManager: Out of memory\n");
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "CreateSoundManager: Out of memory\n");
     } else {
     }
     return soundManager;
@@ -58,10 +58,10 @@ void PlayTrack(SoundManager *soundManager, int number) {
     
     soundManager->music = Mix_LoadMUS(path);
     if (!soundManager->music) {
-        printf("Mix_LoadMUS: %s\n", Mix_GetError());
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Mix_LoadMUS: %s\n", Mix_GetError());
     } else {
         if (Mix_PlayMusic(soundManager->music, -1) == -1) {
-            printf("Mix_PlayMusic: %s\n", Mix_GetError());
+            SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Mix_PlayMusic: %s\n", Mix_GetError());
         }
     }
     
@@ -99,7 +99,7 @@ void LoadSound(SoundManager *soundManager, int slot, const char *filename) {
     
     Mix_Chunk *sound = Mix_LoadWAV(path);
     if (!sound) {
-        printf("Mix_LoadWAV: %s\n", Mix_GetError());
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Mix_LoadWAV: %s\n", Mix_GetError());
     } else {
         soundManager->sounds[slot] = sound;
         soundManager->soundFilenames[slot] = filename;
@@ -131,7 +131,7 @@ void PlaySound(SoundManager *soundManager, int slot, int volume, int pan) {
     
     SetSoundPosition(0, volume, pan);
     if (Mix_PlayChannel(0, sound, 0) == -1) {
-        printf("Mix_PlayChannel: %s\n", Mix_GetError());
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Mix_PlayChannel: %s\n", Mix_GetError());
     }
 }
 
@@ -143,7 +143,7 @@ void PlaySoundLoop(SoundManager *soundManager, int slot, int volume, int pan) {
     
     SetSoundPosition(1, volume, pan);
     if (Mix_PlayChannel(1, sound, -1) == -1) {
-        printf("Mix_PlayChannel: %s\n", Mix_GetError());
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Mix_PlayChannel: %s\n", Mix_GetError());
     }
 }
 

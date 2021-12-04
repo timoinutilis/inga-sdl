@@ -44,7 +44,7 @@ Script *LoadScript(const char *filename) {
     if (inga && itxt && log) {
         script = calloc(1, sizeof(Script));
         if (!script) {
-            printf("LoadScript: Out of memory\n");
+            SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "LoadScript: Out of memory\n");
         } else {
             script->inga = inga;
             script->itxt = itxt;
@@ -106,7 +106,7 @@ void ParseLog(Script *script, void *log) {
             Label *label = calloc(sizeof(Label), 1);
             
             if (!label) {
-                printf("ParseLog: Out of memory\n");
+                SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "ParseLog: Out of memory\n");
                 return;
             } else {
                 char *space = strchr(lineStart, ' ');
@@ -144,7 +144,7 @@ Label *GetLabelWithName(Script *script, const char *name) {
         }
         label = label->next;
     }
-    printf("GetLabelWithName: Not found (%s)\n", name);
+    SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "GetLabelWithName: Not found (%s)\n", name);
     return NULL;
 }
 
@@ -157,6 +157,6 @@ Label *GetLabelWithPtr(Script *script, unsigned long ptr) {
         }
         label = label->next;
     }
-    printf("GetLabelWithPtr: Not found (%lu)\n", ptr);
+    SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "GetLabelWithPtr: Not found (%lu)\n", ptr);
     return NULL;
 }

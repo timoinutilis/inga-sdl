@@ -38,7 +38,7 @@ const char *MenuTextSpeed[] = {
 Menu *CreateMenu(Game *game) {
     Menu *menu = calloc(1, sizeof(Menu));
     if (!menu) {
-        printf("CreateMenu: Out of memory\n");
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "CreateMenu: Out of memory\n");
     } else {
         menu->game = game;
         menu->image = LoadImage("Menue", NULL, false, true);
@@ -151,7 +151,7 @@ void AddMenuItem(Menu *menu, int id, const char *text) {
     if (!menu) return;
     MenuItem *item = calloc(1, sizeof(MenuItem));
     if (!item) {
-        printf("AddMenuItem: Out of memory\n");
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "AddMenuItem: Out of memory\n");
     } else {
         SDL_Color color = {132, 161, 235, 255};
         SDL_Color focusColor = {255, 255, 255, 255};

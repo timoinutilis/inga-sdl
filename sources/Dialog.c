@@ -26,7 +26,7 @@
 Dialog *CreateDialog() {
     Dialog *dialog = calloc(1, sizeof(Dialog));
     if (!dialog) {
-        printf("CreateDialog: Out of memory\n");
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "CreateDialog: Out of memory\n");
     } else {
     }
     return dialog;
@@ -82,7 +82,7 @@ void AddDialogItem(Dialog *dialog, int id, const char *text, Font *font) {
     if (!dialog) return;
     DialogItem *item = calloc(1, sizeof(DialogItem));
     if (!item) {
-        printf("AddDialogItem: Out of memory\n");
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "AddDialogItem: Out of memory\n");
     } else {
         SDL_Color color = {132, 161, 235, 255};
         SDL_Color focusColor = {255, 255, 255, 255};

@@ -29,12 +29,12 @@ SDL_Cursor *LoadCursor(const char *filename) {
     
     SDL_Surface *surface = SDL_LoadBMP(path);
     if (!surface) {
-        printf("LoadCursor: %s\n", SDL_GetError());
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "LoadCursor: %s\n", SDL_GetError());
     } else {
         cursor = SDL_CreateColorCursor(surface, 0, 0);
         SDL_FreeSurface(surface);
         if (!cursor) {
-            printf("LoadCursor: %s\n", SDL_GetError());
+            SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "LoadCursor: %s\n", SDL_GetError());
         }
     }
     return cursor;

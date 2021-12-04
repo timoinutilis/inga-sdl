@@ -37,7 +37,7 @@ Sequence *LoadSequence(const char *filename) {
     if (text) {
         sequence = calloc(1, sizeof(Sequence));
         if (!sequence) {
-            printf("LoadSequence: Out of memory\n");
+            SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "LoadSequence: Out of memory\n");
             free(text);
         } else {
             // replace new lines with end of string

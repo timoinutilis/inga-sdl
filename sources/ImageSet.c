@@ -29,7 +29,7 @@ ImageSet *LoadImageSet(const char *filename, SDL_Palette *defaultPalette, bool c
     
     SDL_RWops *file = SDL_RWFromFile(path, "rb");
     if (!file) {
-        printf("LoadImageSetIPE: %s\n", SDL_GetError());
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "LoadImageSetIPE: %s\n", SDL_GetError());
     } else {
         Uint16 numItems = SDL_ReadBE16(file);
         

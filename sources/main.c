@@ -84,7 +84,7 @@ int main(int argc, char **argv) {
     int flags = MIX_INIT_OGG;
     const int inited = Mix_Init(flags);
     if ((inited & flags) != flags) {
-        printf("Mix_Init: %s\n", Mix_GetError());
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Mix_Init: %s\n", Mix_GetError());
     }
 
     GameConfig *config = LoadGameConfig();
@@ -104,7 +104,7 @@ int main(int argc, char **argv) {
     
     window = SDL_CreateWindow(config->gameName, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_WIDTH, SCREEN_HEIGHT, windowFlags);
     if (!window) {
-        printf("SDL_CreateWindow: %s\n", SDL_GetError());
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL_CreateWindow: %s\n", SDL_GetError());
         goto out;
     }
 
@@ -115,19 +115,19 @@ int main(int argc, char **argv) {
     }
     
     if (!renderer) {
-        printf("SDL_CreateRenderer: %s\n", SDL_GetError());
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL_CreateRenderer: %s\n", SDL_GetError());
         goto out;
     }
     
     SDL_RenderSetLogicalSize(renderer, SCREEN_WIDTH, SCREEN_HEIGHT);
     prerenderTexture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, SCREEN_WIDTH, SCREEN_HEIGHT);
     if (!prerenderTexture) {
-        printf("SDL_CreateTexture: %s\n", SDL_GetError());
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL_CreateTexture: %s\n", SDL_GetError());
         goto out;
     }
     
     if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 1024) == -1) {
-        printf("Mix_OpenAudio: %s\n", Mix_GetError());
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Mix_OpenAudio: %s\n", Mix_GetError());
     }
     Mix_AllocateChannels(2);
 

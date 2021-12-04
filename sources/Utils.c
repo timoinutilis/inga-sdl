@@ -50,15 +50,15 @@ void *LoadFile(const char *path, Sint64 *outSize) {
     void *content = NULL;
     SDL_RWops *file = SDL_RWFromFile(path, "rb");
     if (!file) {
-        printf("LoadFile: %s\n", SDL_GetError());
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "LoadFile: %s\n", SDL_GetError());
     } else {
         const Sint64 size = SDL_RWsize(file);
         if (size < 0) {
-            printf("LoadFile: %s\n", SDL_GetError());
+            SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "LoadFile: %s\n", SDL_GetError());
         } else {
             content = calloc(1, size + 1);
             if (!SDL_RWread(file, content, size, 1)) {
-                printf("LoadFile: %s\n", SDL_GetError());
+                SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "LoadFile: %s\n", SDL_GetError());
                 free(content);
                 content = NULL;
             } else {
