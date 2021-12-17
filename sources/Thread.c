@@ -23,6 +23,10 @@
 #include "Global.h"
 #include "Cursor.h"
 
+#if TARGET_OS_IPHONE
+#include "IOSBridge.h"
+#endif
+
 unsigned long LaufeINGA(Thread *thread, Game *game, unsigned long ptr, bool *wieder);
 unsigned short peekv(Game *game, unsigned long pointer);
 
@@ -794,10 +798,11 @@ unsigned long LaufeINGA(Thread *thread, Game *game, unsigned long ptr, bool *wie
         return(ptr + 2);
     }
     if (opc == 81) { //SpielEnde.
-//        FadeOut(4);
-//        SetShouldQuit();
         SetGameState(game, CreateGameState());
         *wieder = false;
+#if TARGET_OS_IPHONE
+        IOS_RequestReview();
+#endif
         return thread->ptr;
     }
     if (opc == 89) { //HoleZeit.
