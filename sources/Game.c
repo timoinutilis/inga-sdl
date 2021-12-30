@@ -40,7 +40,6 @@ Game *CreateGame(GameConfig *config) {
         game->font = LoadFont("Font", 16);
         game->cursorNormal = LoadCursor("CursorNormal");
         game->cursorDrag = LoadCursor("CursorDrag");
-        game->script = LoadScript("story");
 #ifdef AUTOSAVE
         GameState *autosaveGameState = LoadGameState("slot_0", config);
         game->gameState = autosaveGameState ? autosaveGameState : CreateGameState();
@@ -68,11 +67,11 @@ Game *CreateGame(GameConfig *config) {
         SDL_Color pauseColor = {255, 192, 0, 255};
         game->pauseImage = CreateImageFromText("Spielpause", game->font, pauseColor);
         
-        HideCursor();
-        
-        Label *label = GetLabelWithName(game->script, game->gameState->locationLabel);
-        if (label) {
-            RunThread(game->mainThread, label->ptr);
+        if (game->config->numLanguages > 0) {
+            // language selection
+            OpenMenu(game->menu, 8);
+        } else {
+            SetLanguage(game, NULL);
         }
     }
     return game;
@@ -441,6 +440,32 @@ void UpdateIdleProg(Game *game, int deltaTicks) {
     } else {
         game->idleScript.idleTicks = 0;
     }
+}
+
+void SetLanguage(Game *game, const char *language) {
+    if (!game) return;
+    
+    if (game->script) {
+        FreeScript(game->script);
+        game->script = NULL;
+    }
+    
+    game->language = language;
+    
+    if (language) {
+        char filename[30];
+        sprintf(filename, "story_%s", language);
+        game->script = LoadScript(filename);
+    } else {
+        game->script = LoadScript("story");
+    }
+    
+    Label *label = GetLabelWithName(game->script, game->gameState->locationLabel);
+    if (label) {
+        RunThread(game->mainThread, label->ptr);
+    }
+    
+    HideCursor();
 }
 
 void SetLocation(Game *game, int id, const char *background) {

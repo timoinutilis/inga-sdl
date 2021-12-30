@@ -215,6 +215,9 @@ void HandleMenuItem(Menu *menu, int id) {
             AddMenuItem(menu, 2, "Spielstand laden");
             AddMenuItem(menu, 3, "Spielstand speichern");
             AddMenuItem(menu, 6, MenuTextSpeed[menu->game->gameState->textSpeed]);
+            if (menu->game->config->numLanguages > 0) {
+                AddMenuItem(menu, 7, "Sprache/Language/Idioma");
+            }
             AddMenuItem(menu, 1, "Spiel neu beginnen");
 #ifndef AUTOSAVE
             AddMenuItem(menu, 5, "Spiel beenden");
@@ -269,6 +272,21 @@ void HandleMenuItem(Menu *menu, int id) {
             }
             HandleMenuItem(menu, 0);
             break;
+        case 7:
+            SetMenuTitle(menu, "");
+            for (int i = 0; i < menu->game->config->numLanguages; i++) {
+                AddMenuItem(menu, 70 + i, menu->game->config->languageNames[i]);
+            }
+            AddMenuItem(menu, 0, "Abbruch");
+            RefreshMenu(menu);
+            break;
+        case 8:
+            SetMenuTitle(menu, "");
+            for (int i = 0; i < menu->game->config->numLanguages; i++) {
+                AddMenuItem(menu, 70 + i, menu->game->config->languageNames[i]);
+            }
+            RefreshMenu(menu);
+            break;
         default:
             if (id >= 20 && id < 30) {
                 // load
@@ -282,6 +300,10 @@ void HandleMenuItem(Menu *menu, int id) {
                 SetMenuTitle(menu, "Der Spielstand wurde gespeichert.");
                 AddMenuItem(menu, 0, "OK");
                 RefreshMenu(menu);
+            } else if (id >= 70 && id < 80) {
+                int langIndex = id - 70;
+                SetLanguage(menu->game, menu->game->config->languageCodes[langIndex]);
+                CloseMenu(menu);
             }
             break;
     }

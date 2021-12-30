@@ -60,6 +60,28 @@ GameConfig *LoadGameConfig(void) {
                     config->version = version->valuestring;
                 }
                 
+                const cJSON *languageNames = cJSON_GetObjectItemCaseSensitive(json, "languageNames");
+                const cJSON *languageCodes = cJSON_GetObjectItemCaseSensitive(json, "languageCodes");
+                if (cJSON_IsArray(languageNames) && cJSON_IsArray(languageCodes)) {
+                    int num = cJSON_GetArraySize(languageNames);
+                    int numCodes = cJSON_GetArraySize(languageCodes);
+                    if (num > 0 && numCodes == num) {
+                        config->languageNames = calloc(num, sizeof(char *));
+                        config->languageCodes = calloc(num, sizeof(char *));
+                        if (!config->languageNames || !config->languageCodes) {
+                            printf("LoadGameConfig: Out of memory\n");
+                            FreeGameConfig(config);
+                            config = NULL;
+                        } else {
+                            config->numLanguages = num;
+                            for (int i = 0; i < num; i++) {
+                                config->languageNames[i] = cJSON_GetArrayItem(languageNames, i)->valuestring;
+                                config->languageCodes[i] = cJSON_GetArrayItem(languageCodes, i)->valuestring;
+                            }
+                        }
+                    }
+                }
+                                
                 if (!organizationName || !gameName || !paletteFilename || !version) {
                     printf("LoadGameConfig: missing values\n");
                     FreeGameConfig(config);
@@ -74,6 +96,12 @@ GameConfig *LoadGameConfig(void) {
 
 void FreeGameConfig(GameConfig *config) {
     if (!config) return;
+    if (config->languageNames) {
+        free(config->languageNames);
+    }
+    if (config->languageCodes) {
+        free(config->languageCodes);
+    }
     cJSON_Delete(config->json);
     free(config);
 }

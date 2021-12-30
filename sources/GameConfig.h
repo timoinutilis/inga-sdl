@@ -30,6 +30,9 @@ typedef struct GameConfig {
     const char *gameName;
     const char *paletteFilename;
     const char *version;
+    int numLanguages;
+    const char **languageNames;
+    const char **languageCodes;
 } GameConfig;
 
 GameConfig *LoadGameConfig(void);
