@@ -266,11 +266,11 @@ void UpdatePlaytime(GameState *gameState, int deltaTicks) {
     gameState->playtimeTicks += deltaTicks;
 }
 
-void GameStateName(GameState *gameState, char *name, bool isAutosave) {
+void GameStateName(GameState *gameState, char *name, bool isAutosave, const char *textAuto, const char *textTime) {
     unsigned long seconds = gameState->playtimeTicks / 1000;
     unsigned long minutes = seconds / 60;
     unsigned long hours = minutes / 60;
-    char *title = isAutosave ? "Automatisch" : "Spielzeit";
+    const char *title = isAutosave ? textAuto : textTime;
     if (hours > 0) {
         sprintf(name, "%s %luh %lum %lus", title, hours, minutes % 60, seconds % 60);
     } else {

@@ -29,9 +29,9 @@ void ResetMenu(Menu *menu);
 void HandleMenuItem(Menu *menu, int id);
 
 const char *MenuTextSpeed[] = {
-    "Text: schnell",
-    "Text: mittelschnell",
-    "Text: langsam"
+    "text_speed_fast",
+    "text_speed_medium",
+    "text_speed_slow"
 };
 
 
@@ -208,82 +208,83 @@ void ResetMenu(Menu *menu) {
 
 void HandleMenuItem(Menu *menu, int id) {
     ResetMenu(menu);
+    Game *game = menu->game;
     switch (id) {
         case 0:
-            SetMenuTitle(menu, "Hauptmen\xFC");
-            AddMenuItem(menu, 4, "Weiterspielen");
-            AddMenuItem(menu, 2, "Spielstand laden");
-            AddMenuItem(menu, 3, "Spielstand speichern");
-            AddMenuItem(menu, 6, MenuTextSpeed[menu->game->gameState->textSpeed]);
-            if (menu->game->config->numLanguages > 0) {
-                AddMenuItem(menu, 7, "Sprache/Language/Idioma");
+            SetMenuTitle(menu, GetText(game, "main_menu_title"));
+            AddMenuItem(menu, 4, GetText(game, "resume_playing"));
+            AddMenuItem(menu, 2, GetText(game, "load_game"));
+            AddMenuItem(menu, 3, GetText(game, "save_game"));
+            AddMenuItem(menu, 6, GetText(game, MenuTextSpeed[game->gameState->textSpeed]));
+            if (game->config->numLanguages > 0) {
+                AddMenuItem(menu, 7, GetText(game, "language"));
             }
-            AddMenuItem(menu, 1, "Spiel neu beginnen");
+            AddMenuItem(menu, 1, GetText(game, "restart_game"));
 #ifndef AUTOSAVE
-            AddMenuItem(menu, 5, "Spiel beenden");
+            AddMenuItem(menu, 5, GetText(game, "quit_game"));
 #endif
             RefreshMenu(menu);
             break;
         case 1:
-            SetMenuTitle(menu, "Willst du das Spiel wirklich neu beginnen?");
-            AddMenuItem(menu, 10, "Neu beginnen");
-            AddMenuItem(menu, 0, "Abbruch");
+            SetMenuTitle(menu, GetText(game, "restart_game_alert"));
+            AddMenuItem(menu, 10, GetText(game, "restart"));
+            AddMenuItem(menu, 0, GetText(game, "cancel"));
             RefreshMenu(menu);
             break;
         case 10:
-            SetGameState(menu->game, CreateGameState());
+            SetGameState(game, CreateGameState());
             CloseMenu(menu);
             break;
         case 2:
-            SetMenuTitle(menu, "W\xE4hle Spielstand zum Laden:");
+            SetMenuTitle(menu, GetText(game, "load_game_title"));
             for (int i = 0; i < NUM_SAVE_SLOTS; ++i) {
-                AddMenuItem(menu, 20 + i, menu->game->slotList->slotNames[i]);
+                AddMenuItem(menu, 20 + i, game->slotList->slotNames[i]);
             }
-            AddMenuItem(menu, 0, "Abbruch");
+            AddMenuItem(menu, 0, GetText(game, "cancel"));
             RefreshMenu(menu);
             break;
         case 3:
-            SetMenuTitle(menu, "W\xE4hle Spielstand zum Speichern:");
+            SetMenuTitle(menu, GetText(game, "save_game_title"));
             for (int i = 0; i < NUM_SAVE_SLOTS; ++i) {
-                AddMenuItem(menu, 30 + i, menu->game->slotList->slotNames[i]);
+                AddMenuItem(menu, 30 + i, game->slotList->slotNames[i]);
             }
-            AddMenuItem(menu, 0, "Abbruch");
+            AddMenuItem(menu, 0, GetText(game, "cancel"));
             RefreshMenu(menu);
             break;
         case 4:
             CloseMenu(menu);
             break;
         case 5:
-            SetMenuTitle(menu, "Willst du das Spiel wirklich beenden?");
-            if (menu->game->gameState->hasChangedSinceSave) {
-                AddMenuItem(menu, 3, "Spielstand speichern");
+            SetMenuTitle(menu, GetText(game, "quit_game_alert"));
+            if (game->gameState->hasChangedSinceSave) {
+                AddMenuItem(menu, 3, GetText(game, "save_game"));
             }
-            AddMenuItem(menu, 50, "Beenden");
-            AddMenuItem(menu, 0, "Abbruch");
+            AddMenuItem(menu, 50, GetText(game, "quit"));
+            AddMenuItem(menu, 0, GetText(game, "cancel"));
             RefreshMenu(menu);
             break;
         case 50:
             SetShouldQuit();
             break;
         case 6:
-            ++menu->game->gameState->textSpeed;
-            if (menu->game->gameState->textSpeed > MAX_TEXT_SPEED) {
-                menu->game->gameState->textSpeed = 0;
+            ++game->gameState->textSpeed;
+            if (game->gameState->textSpeed > MAX_TEXT_SPEED) {
+                game->gameState->textSpeed = 0;
             }
             HandleMenuItem(menu, 0);
             break;
         case 7:
             SetMenuTitle(menu, "");
-            for (int i = 0; i < menu->game->config->numLanguages; i++) {
-                AddMenuItem(menu, 70 + i, menu->game->config->languageNames[i]);
+            for (int i = 0; i < game->config->numLanguages; i++) {
+                AddMenuItem(menu, 70 + i, game->config->languageNames[i]);
             }
-            AddMenuItem(menu, 0, "Abbruch");
+            AddMenuItem(menu, 0, GetText(game, "cancel"));
             RefreshMenu(menu);
             break;
         case 8:
             SetMenuTitle(menu, "");
-            for (int i = 0; i < menu->game->config->numLanguages; i++) {
-                AddMenuItem(menu, 70 + i, menu->game->config->languageNames[i]);
+            for (int i = 0; i < game->config->numLanguages; i++) {
+                AddMenuItem(menu, 70 + i, game->config->languageNames[i]);
             }
             RefreshMenu(menu);
             break;
@@ -291,18 +292,18 @@ void HandleMenuItem(Menu *menu, int id) {
             if (id >= 20 && id < 30) {
                 // load
                 int slot = id - 20;
-                LoadGameSlot(menu->game, slot);
+                LoadGameSlot(game, slot);
                 CloseMenu(menu);
             } else if (id >= 30 && id < 40) {
                 // save
                 int slot = id - 30;
-                SaveGameSlot(menu->game, slot);
-                SetMenuTitle(menu, "Der Spielstand wurde gespeichert.");
-                AddMenuItem(menu, 0, "OK");
+                SaveGameSlot(game, slot);
+                SetMenuTitle(menu, GetText(game, "game_saved_message"));
+                AddMenuItem(menu, 0, GetText(game, "ok"));
                 RefreshMenu(menu);
             } else if (id >= 70 && id < 80) {
                 int langIndex = id - 70;
-                SetLanguage(menu->game, menu->game->config->languageCodes[langIndex]);
+                SetLanguage(game, game->config->languageCodes[langIndex]);
                 CloseMenu(menu);
             }
             break;

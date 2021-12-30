@@ -71,6 +71,6 @@ void AddInventoryItem(GameState *gameState, int id, const char *name, const char
 void RemoveInventoryItem(GameState *gameState, int id);
 
 void UpdatePlaytime(GameState *gameState, int deltaTicks);
-void GameStateName(GameState *gameState, char *name, bool isAutosave);
+void GameStateName(GameState *gameState, char *name, bool isAutosave, const char *textAuto, const char *textTime);
 
 #endif /* GameState_h */

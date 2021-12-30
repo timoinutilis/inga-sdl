@@ -40,6 +40,7 @@
 #include "GameConfig.h"
 #include "SoundManager.h"
 #include "Enums.h"
+#include "cJSON.h"
 
 typedef struct Focus {
     const char *name;
@@ -64,7 +65,7 @@ typedef struct Game {
     Font *font;
     SDL_Cursor *cursorNormal;
     SDL_Cursor *cursorDrag;
-    const char *language;
+    cJSON *menuTexts;
     Script *script;
     GameState *gameState;
     Thread *mainThread;
@@ -110,5 +111,7 @@ void AutosaveIfPossible(Game *game);
 void SafeQuit(Game *game);
 
 void MainPersonDidFinishWalking(Game *game);
+
+const char *GetText(Game *game, const char *key);
 
 #endif /* Game_h */
