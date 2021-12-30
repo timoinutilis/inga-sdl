@@ -21,6 +21,7 @@
 #include "Game.h"
 #include "Global.h"
 #include "Cursor.h"
+#include "Utils.h"
 #include <time.h>
 
 void LookAtItem(Game *game, InventoryItem *focusedItem);
@@ -63,12 +64,18 @@ Game *CreateGame(GameConfig *config) {
         element->layer = LayerPersons;
         element->imageSet = LoadImageSet("Hauptperson", GetGlobalPalette(), true);
         game->mainPerson = element;
-                
+        
+        // select language, if needed
         if (game->config->numLanguages > 0) {
-            // language selection
-            OpenMenu(game->menu, 8);
+            char language[LANGUAGE_SIZE];
+            if (LoadPref(language, LANGUAGE_SIZE, "language", game->config)) {
+                SetLanguage(game, language, false);
+            } else {
+                // language selection
+                OpenMenu(game->menu, 8);
+            }
         } else {
-            SetLanguage(game, NULL);
+            SetLanguage(game, NULL, false);
         }
     }
     return game;
@@ -443,7 +450,7 @@ void UpdateIdleProg(Game *game, int deltaTicks) {
     }
 }
 
-void SetLanguage(Game *game, const char *language) {
+void SetLanguage(Game *game, const char *language, bool save) {
     if (!game) return;
     
     FreeScript(game->script);
@@ -457,6 +464,11 @@ void SetLanguage(Game *game, const char *language) {
         game->menuTexts = NULL;
     }
     
+    if (save && language) {
+        SavePref("language", language, game->config);
+    }
+    
+    // menu texts
     if (language) {
         char path[FILENAME_MAX];
         GameFilePath(path, "MenuTexts", language, "json");
@@ -470,9 +482,7 @@ void SetLanguage(Game *game, const char *language) {
         }
     }
     
-    SDL_Color pauseColor = {255, 192, 0, 255};
-    game->pauseImage = CreateImageFromText(GetText(game, "game_paused"), game->font, pauseColor);
-    
+    // story
     if (language) {
         char filename[30];
         sprintf(filename, "story_%s", language);
@@ -480,6 +490,9 @@ void SetLanguage(Game *game, const char *language) {
     } else {
         game->script = LoadScript("story");
     }
+    
+    SDL_Color pauseColor = {255, 192, 0, 255};
+    game->pauseImage = CreateImageFromText(GetText(game, "game_paused"), game->font, pauseColor);
     
     Label *label = GetLabelWithName(game->script, game->gameState->locationLabel);
     if (label) {

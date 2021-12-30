@@ -94,3 +94,35 @@ void GameFilePath(char *dest, const char *subfolder, const char *filename, const
         strcat(dest, extension);
     }
 }
+
+void GamePrefPath(char *dest, const char *filename, GameConfig *config) {
+    char *prefPath = SDL_GetPrefPath(config->organizationName, config->gameName);
+    sprintf(dest, "%s%s", prefPath, filename);
+    SDL_free(prefPath);
+}
+
+void SavePref(const char *name, const char *value, GameConfig *config) {
+    char path[FILENAME_MAX];
+    GamePrefPath(path, name, config);
+    FILE *file = fopen(path, "w");
+    if (!file) {
+        printf("SavePref: cannot open file\n");
+    } else {
+        fputs(value, file);
+        fclose(file);
+    }
+}
+
+bool LoadPref(char *dest, int size, const char *name, GameConfig *config) {
+    char path[FILENAME_MAX];
+    GamePrefPath(path, name, config);
+    FILE *file = fopen(path, "r");
+    if (!file) {
+        printf("LoadPref: cannot open file\n");
+    } else {
+        char *result = fgets(dest, size, file);
+        fclose(file);
+        return result != NULL;
+    }
+    return false;
+}

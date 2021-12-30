@@ -23,6 +23,7 @@
 #include <string.h>
 #include "Global.h"
 #include "GameConfig.h"
+#include "Utils.h"
 
 void FreeVariables(GameState *gameState);
 void FreeInventoryItems(GameState *gameState);
@@ -47,16 +48,10 @@ void FreeGameState(GameState *gameState) {
     free(gameState);
 }
 
-void GameStatePath(GameConfig *config, const char *filename, char *path) {
-    char *prefPath = SDL_GetPrefPath(config->organizationName, config->gameName);
-    sprintf(path, "%s%s", prefPath, filename);
-    SDL_free(prefPath);
-}
-
 GameState *LoadGameState(const char *filename, GameConfig *config) {
     GameState *gameState = NULL;
     char path[FILENAME_MAX];
-    GameStatePath(config, filename, path);
+    GamePrefPath(path, filename, config);
     SDL_RWops *file = SDL_RWFromFile(path, "rb");
     if (!file) {
         printf("LoadGameState: %s\n", SDL_GetError());
@@ -96,7 +91,7 @@ GameState *LoadGameState(const char *filename, GameConfig *config) {
 
 void SaveGameState(GameState *gameState, const char *filename, GameConfig *config) {
     char path[FILENAME_MAX];
-    GameStatePath(config, filename, path);
+    GamePrefPath(path, filename, config);
     SDL_RWops *file = SDL_RWFromFile(path, "wb");
     if (!file) {
         printf("SaveGameState: %s\n", SDL_GetError());

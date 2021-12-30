@@ -22,7 +22,9 @@
 #define Utils_h
 
 #include <stdio.h>
+#include <stdbool.h>
 #include "SDL_includes.h"
+#include "GameConfig.h"
 
 typedef struct Vector {
     float x;
@@ -33,7 +35,13 @@ Vector MakeVector(float x, float y);
 SDL_Rect MakeRect(int x, int y, int width, int height);
 SDL_Rect MakeRectFromTo(int x1, int y1, int x2, int y2);
 void SetRectToMinimumSize(SDL_Rect *rect, int min);
+
 void *LoadFile(const char *path, Sint64 *outSize);
+
 void GameFilePath(char *dest, const char *subfolder, const char *filename, const char *extension);
+void GamePrefPath(char *dest, const char *filename, GameConfig *config);
+
+void SavePref(const char *name, const char *value, GameConfig *config);
+bool LoadPref(char *dest, int size, const char *name, GameConfig *config);
 
 #endif /* Utils_h */

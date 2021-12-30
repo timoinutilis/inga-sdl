@@ -274,6 +274,7 @@ void HandleMenuItem(Menu *menu, int id) {
             HandleMenuItem(menu, 0);
             break;
         case 7:
+            // language in-game menu
             SetMenuTitle(menu, "");
             for (int i = 0; i < game->config->numLanguages; i++) {
                 AddMenuItem(menu, 70 + i, game->config->languageNames[i]);
@@ -282,6 +283,7 @@ void HandleMenuItem(Menu *menu, int id) {
             RefreshMenu(menu);
             break;
         case 8:
+            // language start menu (without cancel)
             SetMenuTitle(menu, "");
             for (int i = 0; i < game->config->numLanguages; i++) {
                 AddMenuItem(menu, 70 + i, game->config->languageNames[i]);
@@ -303,7 +305,7 @@ void HandleMenuItem(Menu *menu, int id) {
                 RefreshMenu(menu);
             } else if (id >= 70 && id < 80) {
                 int langIndex = id - 70;
-                SetLanguage(game, game->config->languageCodes[langIndex]);
+                SetLanguage(game, game->config->languageCodes[langIndex], true);
                 CloseMenu(menu);
             }
             break;

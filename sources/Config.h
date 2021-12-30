@@ -27,6 +27,7 @@
 #define ELEMENT_NAME_SIZE 61
 #define FILE_NAME_SIZE 31
 #define LABEL_NAME_SIZE 41
+#define LANGUAGE_SIZE 10
 
 #define MAX_PATH_SIZE 10
 

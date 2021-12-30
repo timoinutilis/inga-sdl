@@ -101,7 +101,7 @@ void HandleGameCheat(Game *game, const char *cheat);
 void UpdateGame(Game *game, int deltaTicks);
 void DrawGame(Game *game);
 
-void SetLanguage(Game *game, const char *language);
+void SetLanguage(Game *game, const char *language, bool save);
 void SetLocation(Game *game, int id, const char *background);
 void SetGameState(Game *game, GameState *gameState);
 void RefreshGameState(Game *game);
