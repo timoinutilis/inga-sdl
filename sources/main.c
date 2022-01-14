@@ -65,7 +65,11 @@ void PrintHelp(void) {
            "  -b, --borderless   removes window border (for better screenshots)\n");
 }
 
+#if __ANDROID__
+int SDL_main(int argc, char* argv[]) {
+#else
 int main(int argc, char **argv) {
+#endif
     Arguments arguments;
     
     ParseArguments(&arguments, argc, argv);
