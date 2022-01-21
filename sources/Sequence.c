@@ -25,7 +25,7 @@
 #include "Config.h"
 #include "Global.h"
 
-Sequence *LoadSequence(const char *filename) {
+Sequence *LoadSequence(const char *filename, Font *font) {
     Sequence *sequence = NULL;
     
     char path[FILENAME_MAX];
@@ -48,6 +48,7 @@ Sequence *LoadSequence(const char *filename) {
             sequence->text = text;
             sequence->textSize = size;
             sequence->currentLine = text;
+            sequence->font = font;
             InitFader(&sequence->fader, SEQUENCE_FADE_DURATION);
         }
     }
@@ -120,6 +121,10 @@ void UpdateSequence(Sequence *sequence, int deltaTicks, SoundManager *soundManag
             char *filename = &sequence->currentLine[2];
             FreeImage(sequence->image);
             sequence->image = LoadImage(filename, NULL, false, false);
+            if (!sequence->image) {
+                SDL_Color errorColor = {255, 0, 0, 255};
+                sequence->image = CreateImageFromText(filename, sequence->font, errorColor);
+            }
             FadeIn(&sequence->fader);
         } else if (command == 'W') {
             // wait

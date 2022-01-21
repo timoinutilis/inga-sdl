@@ -27,6 +27,7 @@
 #include "Fader.h"
 #include "Enums.h"
 #include "SoundManager.h"
+#include "Font.h"
 
 typedef struct Sequence {
     char *text;
@@ -38,9 +39,10 @@ typedef struct Sequence {
     bool wasSkipped;
     bool isFinished;
     Fader fader;
+    Font *font;
 } Sequence;
 
-Sequence *LoadSequence(const char *filename);
+Sequence *LoadSequence(const char *filename, Font *font);
 void FreeSequence(Sequence *sequence);
 bool HandleMouseInSequence(Sequence *sequence, int x, int y, ButtonState buttonState);
 bool HandleKeyInSequence(Sequence *sequence, SDL_Keysym keysym);
