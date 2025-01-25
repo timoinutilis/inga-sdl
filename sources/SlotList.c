@@ -32,7 +32,7 @@ SlotList *CreateSlotList(GameConfig *config) {
         printf("CreateSlotList: Out of memory\n");
     } else {
         for (int i = 0; i < NUM_SAVE_SLOTS; ++i) {
-            sprintf(list->slotNames[i], "%d - Leer", i + 1);
+            sprintf(list->slotNames[i], "%d - ---", i + 1);
         }
         char path[FILENAME_MAX];
         SlotPath(config, path);
